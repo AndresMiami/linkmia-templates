@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkMia Templates</title>
+    <meta name="description" content="Choose from our collection of link-in-bio page templates.">
+    <meta name="theme-color" content="#FF6B35">
+
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+            --text-muted: #888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+
+        .header { text-align: center; margin-bottom: 48px; }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        h1 { font-size: 28px; margin: 16px 0 8px; }
+        .subtitle { color: var(--text-muted); }
+
+        .templates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .template-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .template-card .icon { font-size: 40px; margin-bottom: 16px; }
+        .template-card h3 { font-size: 18px; margin-bottom: 8px; }
+        .template-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+
+        .template-card .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover { color: var(--primary); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container { animation: fadeIn 0.5s ease-out; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="logo">LinkMia</a>
+            <h1>Templates</h1>
+            <p class="subtitle">Choose a style for your link page</p>
+        </div>
+
+        <div class="templates">
+            <a href="minimal/" class="template-card">
+                <div class="icon">⚪</div>
+                <h3>Minimal</h3>
+                <p>Clean, simple design with circular logo. Perfect for quick setups.</p>
+                <span class="tag">Light Theme</span>
+            </a>
+
+            <a href="hero/" class="template-card">
+                <div class="icon">🖼️</div>
+                <h3>Hero</h3>
+                <p>Large header image with overlay. Great for food photography.</p>
+                <span class="tag">Visual</span>
+            </a>
+
+            <a href="card/" class="template-card">
+                <div class="icon">🃏</div>
+                <h3>Card</h3>
+                <p>Card-based modern layout. Organized sections for many links.</p>
+                <span class="tag">Modern</span>
+            </a>
+
+            <a href="service/" class="template-card">
+                <div class="icon">🌙</div>
+                <h3>Service</h3>
+                <p>Dark-themed landing with CTA buttons. Ideal for service businesses.</p>
+                <span class="tag">Dark Theme</span>
+            </a>
+        </div>
+
+        <a href="/" class="back-link">← Back to LinkMia</a>
+    </div>
+</body>
+</html>

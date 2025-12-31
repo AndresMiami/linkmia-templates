@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkMia - Custom Link Pages</title>
+    <meta name="description" content="Custom link-in-bio pages for Miami businesses. Simple, beautiful, yours.">
+    <meta name="theme-color" content="#FF6B35">
+
+    <meta property="og:title" content="LinkMia - Custom Link Pages">
+    <meta property="og:description" content="Custom link-in-bio pages for Miami businesses.">
+    <meta property="og:type" content="website">
+
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+            --text-muted: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 48px;
+        }
+
+        h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .link-card:hover {
+            transform: translateX(4px);
+            background: #252525;
+        }
+
+        .link-card .icon {
+            font-size: 24px;
+        }
+
+        .link-card .info {
+            text-align: left;
+        }
+
+        .link-card .name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .link-card .desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .link-card .arrow {
+            margin-left: auto;
+            color: var(--text-muted);
+        }
+
+        .cta {
+            display: inline-block;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--primary), #F7931E);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            color: #333;
+            font-size: 12px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">LinkMia</div>
+        <p class="tagline">Custom link pages for Miami businesses</p>
+
+        <h2>Featured Pages</h2>
+
+        <div class="links">
+            <a href="/airport" class="link-card">
+                <span class="icon">✈️</span>
+                <div class="info">
+                    <div class="name">LinkMia Airport Transfers</div>
+                    <div class="desc">Premium Miami airport transportation</div>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="/templates" class="link-card">
+                <span class="icon">🎨</span>
+                <div class="info">
+                    <div class="name">View Templates</div>
+                    <div class="desc">See our link page designs</div>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+
+        <a href="https://wa.me/17865093955?text=Hi!%20I%27m%20interested%20in%20a%20custom%20link%20page" class="cta">
+            Get Your Own Page
+        </a>
+    </div>
+
+    <div class="footer">Made in Miami</div>
+</body>
+</html>
