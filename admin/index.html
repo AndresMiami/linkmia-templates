@@ -12,163 +12,171 @@
         }
 
         :root {
-            --primary: #FF6B35;
-            --primary-hover: #e55a2b;
-            --bg: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --card-border: #2a2a2a;
-            --text: #ffffff;
-            --text-muted: #888;
-            --success: #22c55e;
-            --danger: #ef4444;
+            --admin-primary: #FF6B35;
+            --admin-primary-hover: #e55a2b;
+            --admin-bg: #0a0a0a;
+            --admin-card-bg: #141414;
+            --admin-card-border: #252525;
+            --admin-text: #ffffff;
+            --admin-text-muted: #888;
+            --admin-success: #22c55e;
+            --admin-danger: #ef4444;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: var(--admin-bg);
+            color: var(--admin-text);
             min-height: 100vh;
-            padding: 20px;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        h1 span {
-            color: var(--primary);
-        }
-
-        h2 {
-            font-size: 1.1rem;
-            margin-bottom: 16px;
-            color: var(--text-muted);
-        }
-
-        /* Login Screen */
+        /* ========== LOGIN & SETUP SCREENS ========== */
         .login-screen, .setup-screen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 80vh;
-            text-align: center;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .login-box, .setup-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 32px;
+            background: var(--admin-card-bg);
+            border: 1px solid var(--admin-card-border);
+            border-radius: 16px;
+            padding: 40px;
             width: 100%;
             max-width: 400px;
+            text-align: center;
         }
 
         .login-box h2, .setup-box h2 {
-            color: var(--text);
+            font-size: 1.5rem;
             margin-bottom: 8px;
         }
 
         .login-box p, .setup-box p {
-            color: var(--text-muted);
+            color: var(--admin-text-muted);
             font-size: 0.9rem;
             margin-bottom: 24px;
         }
 
-        /* Forms */
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .logo-text span {
+            color: var(--admin-primary);
+        }
+
+        /* ========== FORM ELEMENTS ========== */
         .form-group {
             margin-bottom: 16px;
             text-align: left;
         }
 
-        label {
+        .form-group label {
             display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--admin-text-muted);
             margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px;
-            background: var(--bg);
-            border: 1px solid var(--card-border);
+            padding: 12px 14px;
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-card-border);
             border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
+            color: var(--admin-text);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--admin-primary);
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
+        input::placeholder {
+            color: #555;
         }
 
+        /* ========== BUTTONS ========== */
         .btn {
-            padding: 12px 24px;
+            padding: 12px 20px;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: var(--admin-primary);
             color: white;
         }
 
         .btn-primary:hover {
-            background: var(--primary-hover);
+            background: var(--admin-primary-hover);
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
-            background: var(--card-bg);
-            color: var(--text);
-            border: 1px solid var(--card-border);
+            background: var(--admin-card-bg);
+            color: var(--admin-text);
+            border: 1px solid var(--admin-card-border);
         }
 
         .btn-secondary:hover {
-            border-color: var(--primary);
+            border-color: var(--admin-primary);
         }
 
         .btn-danger {
-            background: var(--danger);
-            color: white;
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--admin-danger);
+            border: 1px solid transparent;
         }
 
         .btn-danger:hover {
-            background: #dc2626;
+            background: var(--admin-danger);
+            color: white;
         }
 
         .btn-sm {
-            padding: 8px 16px;
-            font-size: 0.85rem;
+            padding: 8px 14px;
+            font-size: 0.8rem;
         }
 
         .btn-block {
             width: 100%;
-            justify-content: center;
         }
 
-        /* Header */
-        .header {
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 8px;
+        }
+
+        /* ========== DASHBOARD ========== */
+        .dashboard {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -177,253 +185,584 @@
             gap: 16px;
         }
 
-        .header-actions {
+        .dashboard-header h1 {
+            font-size: 1.4rem;
             display: flex;
-            gap: 12px;
-        }
-
-        /* Page List */
-        .page-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .page-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .page-info h3 {
-            font-size: 1rem;
-            margin-bottom: 4px;
-        }
-
-        .page-info p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .page-info a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .page-info a:hover {
-            text-decoration: underline;
-        }
-
-        .page-actions {
-            display: flex;
             gap: 8px;
         }
 
-        .status-badge {
+        .dashboard-header h1 span {
+            color: var(--admin-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ========== PAGE LIST ========== */
+        .page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .page-card {
+            background: var(--admin-card-bg);
+            border: 1px solid var(--admin-card-border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .page-card:hover {
+            border-color: var(--admin-primary);
+            transform: translateY(-2px);
+        }
+
+        .page-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .page-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .page-card .url {
+            font-size: 0.85rem;
+            color: var(--admin-primary);
+            text-decoration: none;
+        }
+
+        .page-card .url:hover {
+            text-decoration: underline;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            margin-left: 8px;
         }
 
-        .status-active {
-            background: rgba(34, 197, 94, 0.2);
-            color: var(--success);
+        .status-dot.active {
+            background: var(--admin-success);
+            box-shadow: 0 0 8px var(--admin-success);
         }
 
-        .status-inactive {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
+        .status-dot.inactive {
+            background: var(--admin-danger);
         }
 
-        /* Modal */
-        .modal-overlay {
+        .page-card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .page-card-actions .btn {
+            flex: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--admin-text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            color: var(--admin-text);
+            margin-bottom: 8px;
+        }
+
+        /* ========== EDITOR (SPLIT VIEW) ========== */
+        .editor-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: var(--admin-bg);
             z-index: 1000;
-            overflow-y: auto;
-            padding: 20px;
+            overflow: hidden;
         }
 
-        .modal-overlay.active {
+        .editor-overlay.active {
             display: flex;
-            align-items: flex-start;
-            justify-content: center;
         }
 
-        .modal {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
+        .editor-container {
+            display: flex;
             width: 100%;
-            max-width: 600px;
-            margin: 40px 0;
+            height: 100%;
         }
 
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--card-border);
+        /* Editor Sidebar (Form) */
+        .editor-sidebar {
+            width: 420px;
+            min-width: 420px;
+            background: var(--admin-card-bg);
+            border-right: 1px solid var(--admin-card-border);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .editor-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--admin-card-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .modal-header h3 {
+        .editor-header h2 {
             font-size: 1.1rem;
         }
 
-        .modal-close {
+        .editor-close {
             background: none;
             border: none;
-            color: var(--text-muted);
+            color: var(--admin-text-muted);
             font-size: 1.5rem;
             cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
         }
 
-        .modal-body {
-            padding: 20px;
-            max-height: 60vh;
-            overflow-y: auto;
+        .editor-close:hover {
+            background: var(--admin-card-border);
+            color: var(--admin-text);
         }
 
-        .modal-footer {
-            padding: 20px;
-            border-top: 1px solid var(--card-border);
+        .editor-tabs {
             display: flex;
-            justify-content: flex-end;
+            border-bottom: 1px solid var(--admin-card-border);
+        }
+
+        .editor-tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: var(--admin-text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .editor-tab:hover {
+            color: var(--admin-text);
+        }
+
+        .editor-tab.active {
+            color: var(--admin-primary);
+            border-bottom-color: var(--admin-primary);
+        }
+
+        .editor-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .editor-section {
+            display: none;
+        }
+
+        .editor-section.active {
+            display: block;
+        }
+
+        .editor-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--admin-card-border);
+            display: flex;
             gap: 12px;
         }
 
-        /* Buttons Section */
-        .buttons-section {
-            background: var(--bg);
-            border-radius: 8px;
-            padding: 16px;
+        .editor-footer .btn {
+            flex: 1;
+        }
+
+        /* Preview Area */
+        .preview-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+            background-image:
+                radial-gradient(circle at 1px 1px, #333 1px, transparent 0);
+            background-size: 20px 20px;
+            padding: 40px;
+        }
+
+        .preview-frame {
+            width: 375px;
+            height: 700px;
+            background: #000;
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .preview-frame::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 24px;
+            background: #000;
+            border-radius: 12px;
+            z-index: 10;
+        }
+
+        .preview-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 32px;
+            overflow: hidden;
+            background: var(--preview-bg, #1a1a1a);
+        }
+
+        .preview-content {
+            height: 100%;
+            overflow-y: auto;
+            padding: 60px 20px 20px;
+        }
+
+        /* Preview Styles */
+        .preview-content {
+            --p-primary: #FF6B35;
+            --p-text: #ffffff;
+            --p-text-muted: #888;
+            --p-card-bg: #2a2a2a;
+        }
+
+        .preview-hero {
+            text-align: center;
+            padding-bottom: 24px;
+        }
+
+        .preview-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--p-primary);
             margin-bottom: 16px;
+            background: var(--p-card-bg);
+        }
+
+        .preview-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--p-text);
+            margin-bottom: 4px;
+        }
+
+        .preview-tagline {
+            font-size: 0.9rem;
+            color: var(--p-text-muted);
+            margin-bottom: 8px;
+        }
+
+        .preview-location {
+            font-size: 0.8rem;
+            color: var(--p-text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .preview-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .preview-btn {
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Button Styles */
+        .preview-btn.style-filled {
+            background: var(--p-primary);
+            color: white;
+        }
+
+        .preview-btn.style-outline {
+            background: transparent;
+            border: 2px solid var(--p-primary);
+            color: var(--p-primary);
+        }
+
+        .preview-btn.style-soft {
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--p-primary);
+        }
+
+        .preview-btn.style-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--p-text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Button Shapes */
+        .preview-btn.shape-rounded {
+            border-radius: 50px;
+        }
+
+        .preview-btn.shape-square {
+            border-radius: 0;
+        }
+
+        .preview-btn.shape-default {
+            border-radius: 8px;
+        }
+
+        /* Button Shadow */
+        .preview-btn.shadow-on {
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .preview-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .preview-social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--p-card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--p-text);
+        }
+
+        .preview-social-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .preview-footer {
+            text-align: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.75rem;
+            color: var(--p-text-muted);
+        }
+
+        /* ========== THEME PRESETS ========== */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .theme-option {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .theme-option:hover {
+            transform: scale(1.05);
+        }
+
+        .theme-option.selected {
+            border-color: var(--admin-primary);
+        }
+
+        .theme-option::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            right: 4px;
+            font-size: 0.6rem;
+            text-align: center;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* ========== BUTTON EDITOR ========== */
+        .button-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 100px;
         }
 
         .button-item {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-
-        .button-item input {
-            flex: 1;
-        }
-
-        .button-item select {
-            width: 120px;
-        }
-
-        .button-item .btn-remove {
-            padding: 8px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        /* Color inputs */
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .color-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .color-input-wrapper input[type="color"] {
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border: none;
-            cursor: pointer;
-        }
-
-        .color-input-wrapper input[type="text"] {
-            flex: 1;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 16px 24px;
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-card-border);
             border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 2000;
-            animation: slideIn 0.3s ease;
+            padding: 12px;
+            cursor: grab;
+            transition: all 0.2s;
         }
 
-        .toast-success {
-            background: var(--success);
+        .button-item:hover {
+            border-color: var(--admin-primary);
         }
 
-        .toast-error {
-            background: var(--danger);
+        .button-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .button-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .page-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .page-actions {
-                width: 100%;
-            }
-
-            .page-actions .btn {
-                flex: 1;
-                justify-content: center;
-            }
-
-            .button-item {
-                flex-wrap: wrap;
-            }
-
-            .button-item input {
-                width: 100%;
-            }
-
-            .color-grid {
-                grid-template-columns: 1fr;
-            }
+        .drag-handle {
+            color: var(--admin-text-muted);
+            cursor: grab;
         }
 
+        .button-item-inputs {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px;
+        }
+
+        .button-item-inputs input {
+            padding: 8px 10px;
+            font-size: 0.85rem;
+        }
+
+        .emoji-btn {
+            width: 40px;
+            padding: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .button-item-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .button-item-row select {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.8rem;
+        }
+
+        /* ========== BUTTON STYLE OPTIONS ========== */
+        .style-options {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .style-option {
+            flex: 1;
+            padding: 10px;
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-card-border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--admin-text-muted);
+            transition: all 0.2s;
+        }
+
+        .style-option:hover {
+            border-color: var(--admin-text-muted);
+        }
+
+        .style-option.selected {
+            border-color: var(--admin-primary);
+            color: var(--admin-primary);
+        }
+
+        .style-option-preview {
+            height: 24px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        /* ========== EMOJI PICKER ========== */
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            background: var(--admin-card-bg);
+            border: 1px solid var(--admin-card-border);
+            border-radius: 12px;
+            padding: 12px;
+            z-index: 100;
+            width: 280px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .emoji-picker.active {
+            display: block;
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .emoji-item {
+            padding: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .emoji-item:hover {
+            background: var(--admin-card-border);
+        }
+
+        /* ========== UTILITIES ========== */
         .hidden {
             display: none !important;
         }
@@ -433,229 +772,408 @@
             pointer-events: none;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
+        .divider {
+            height: 1px;
+            background: var(--admin-card-border);
+            margin: 20px 0;
         }
 
-        .empty-state h3 {
-            margin-bottom: 8px;
-            color: var(--text);
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--admin-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 14px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast-success { background: var(--admin-success); }
+        .toast-error { background: var(--admin-danger); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Color picker row */
+        .color-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .color-input {
+            width: 50px;
+            height: 40px;
+            padding: 2px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .color-row input[type="text"] {
+            flex: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .editor-container {
+                flex-direction: column;
+            }
+
+            .editor-sidebar {
+                width: 100%;
+                min-width: 100%;
+                height: 60vh;
+            }
+
+            .preview-area {
+                height: 40vh;
+                padding: 20px;
+            }
+
+            .preview-frame {
+                width: 280px;
+                height: auto;
+                aspect-ratio: 9/16;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
+    <!-- ========== LOGIN SCREEN ========== -->
     <div id="login-screen" class="login-screen">
         <div class="login-box">
-            <h2>LinkMia Admin</h2>
-            <p>Enter your admin password to continue</p>
+            <div class="logo-text"><span>Link</span>Mia</div>
+            <p>Admin Dashboard</p>
             <div class="form-group">
-                <input type="password" id="password-input" placeholder="Password" autocomplete="current-password">
+                <input type="password" id="password-input" placeholder="Enter password" autocomplete="current-password">
             </div>
             <button class="btn btn-primary btn-block" onclick="checkPassword()">Login</button>
         </div>
     </div>
 
-    <!-- Setup Screen (GitHub PAT) -->
+    <!-- ========== SETUP SCREEN ========== -->
     <div id="setup-screen" class="setup-screen hidden">
         <div class="setup-box">
-            <h2>One-Time Setup</h2>
-            <p>To save pages, you need a GitHub Personal Access Token with repo access.</p>
+            <div class="logo-text"><span>Link</span>Mia</div>
+            <p>One-time setup: Connect your GitHub repository</p>
             <div class="form-group">
                 <label>GitHub Personal Access Token</label>
                 <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxx">
             </div>
             <div class="form-group">
-                <label>Repository (owner/repo)</label>
-                <input type="text" id="repo-input" value="AndresMiami/linkmia-templates" placeholder="username/repo">
+                <label>Repository</label>
+                <input type="text" id="repo-input" value="AndresMiami/linkmia-templates">
             </div>
             <button class="btn btn-primary btn-block" onclick="savePAT()">Save & Continue</button>
-            <p style="margin-top: 16px; font-size: 0.8rem;">
-                <a href="https://github.com/settings/tokens/new?scopes=repo&description=LinkMia%20Admin" target="_blank" style="color: var(--primary);">
-                    Create a token here
+            <p style="margin-top: 16px; font-size: 0.8rem; color: var(--admin-text-muted);">
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=LinkMia%20Admin" target="_blank" style="color: var(--admin-primary);">
+                    Create a token here →
                 </a>
             </p>
         </div>
     </div>
 
-    <!-- Main Dashboard -->
-    <div id="dashboard" class="container hidden">
-        <div class="header">
-            <h1><span>LinkMia</span> Admin</h1>
+    <!-- ========== MAIN DASHBOARD ========== -->
+    <div id="dashboard" class="dashboard hidden">
+        <div class="dashboard-header">
+            <h1><span>Link</span>Mia <span style="font-weight: 400; color: var(--admin-text-muted);">Admin</span></h1>
             <div class="header-actions">
-                <button class="btn btn-primary" onclick="openCreateModal()">+ New Page</button>
+                <button class="btn btn-primary" onclick="openEditor()">+ New Page</button>
                 <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
             </div>
         </div>
 
-        <h2>Your Pages</h2>
-        <div id="page-list" class="page-list">
-            <!-- Pages will be rendered here -->
+        <div id="page-grid" class="page-grid">
+            <!-- Pages rendered here -->
         </div>
     </div>
 
-    <!-- Create/Edit Modal -->
-    <div id="page-modal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="modal-title">Create New Page</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="edit-index" value="-1">
-
-                <div class="form-group">
-                    <label>URL Slug *</label>
-                    <input type="text" id="input-slug" placeholder="my-business" pattern="[a-z0-9-]+" title="Lowercase letters, numbers, and hyphens only">
-                    <small style="color: var(--text-muted);">link.linkmia.com/p/<strong id="slug-preview">your-slug</strong></small>
+    <!-- ========== PAGE EDITOR ========== -->
+    <div id="editor" class="editor-overlay">
+        <div class="editor-container">
+            <!-- Sidebar Form -->
+            <div class="editor-sidebar">
+                <div class="editor-header">
+                    <h2 id="editor-title">Create Page</h2>
+                    <button class="editor-close" onclick="closeEditor()">×</button>
                 </div>
 
-                <div class="form-group">
-                    <label>Business Name *</label>
-                    <input type="text" id="input-name" placeholder="My Business Name">
+                <div class="editor-tabs">
+                    <button class="editor-tab active" data-tab="content" onclick="switchTab('content')">Content</button>
+                    <button class="editor-tab" data-tab="buttons" onclick="switchTab('buttons')">Buttons</button>
+                    <button class="editor-tab" data-tab="style" onclick="switchTab('style')">Style</button>
                 </div>
 
-                <div class="form-group">
-                    <label>Tagline</label>
-                    <input type="text" id="input-tagline" placeholder="Your catchy tagline">
-                </div>
+                <div class="editor-body">
+                    <!-- CONTENT TAB -->
+                    <div id="tab-content" class="editor-section active">
+                        <input type="hidden" id="edit-index" value="-1">
 
-                <div class="form-group">
-                    <label>Location</label>
-                    <input type="text" id="input-location" placeholder="Miami, FL">
-                </div>
-
-                <div class="form-group">
-                    <label>Hours</label>
-                    <input type="text" id="input-hours" placeholder="Open Daily 9am - 9pm">
-                </div>
-
-                <div class="form-group">
-                    <label>Layout Style</label>
-                    <select id="input-layout">
-                        <option value="minimal">Minimal (Circular Logo)</option>
-                        <option value="hero">Hero (Large Banner)</option>
-                        <option value="card">Card (Centered Box)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Logo URL</label>
-                    <input type="url" id="input-logo" placeholder="https://...">
-                </div>
-
-                <div class="form-group">
-                    <label>Hero Background URL (for Hero layout)</label>
-                    <input type="url" id="input-hero-bg" placeholder="https://...">
-                </div>
-
-                <div class="form-group">
-                    <label>Colors</label>
-                    <div class="color-grid">
-                        <div class="color-input-wrapper">
-                            <input type="color" id="input-color-primary" value="#FF6B35">
-                            <input type="text" id="input-color-primary-text" value="#FF6B35" placeholder="Primary">
+                        <div class="form-group">
+                            <label>URL Slug</label>
+                            <input type="text" id="input-slug" placeholder="my-business" oninput="updateSlug(this); updatePreview();">
+                            <small style="color: var(--admin-text-muted); font-size: 0.75rem;">link.linkmia.com/p/<strong id="slug-preview">your-slug</strong></small>
                         </div>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="input-color-bg" value="#1a1a1a">
-                            <input type="text" id="input-color-bg-text" value="#1a1a1a" placeholder="Background">
+
+                        <div class="form-group">
+                            <label>Business Name</label>
+                            <input type="text" id="input-name" placeholder="Your Business" oninput="updatePreview()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tagline</label>
+                            <input type="text" id="input-tagline" placeholder="Your catchy tagline" oninput="updatePreview()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="input-location" placeholder="Miami, FL" oninput="updatePreview()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Hours</label>
+                            <input type="text" id="input-hours" placeholder="Open Daily 9am - 9pm">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Profile Image URL</label>
+                            <input type="url" id="input-logo" placeholder="https://..." oninput="updatePreview()">
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-title">Social Links</div>
+
+                        <div class="form-group">
+                            <input type="url" id="input-instagram" placeholder="Instagram URL" oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <input type="url" id="input-facebook" placeholder="Facebook URL" oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <input type="url" id="input-tiktok" placeholder="TikTok URL" oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <input type="url" id="input-whatsapp" placeholder="WhatsApp URL" oninput="updatePreview()">
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="input-active" checked>
+                                <span>Page is active</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- BUTTONS TAB -->
+                    <div id="tab-buttons" class="editor-section">
+                        <div class="section-title">Link Buttons</div>
+                        <p style="font-size: 0.8rem; color: var(--admin-text-muted); margin-bottom: 16px;">
+                            Drag to reorder. Click emoji to add icon.
+                        </p>
+
+                        <div id="button-list" class="button-list">
+                            <!-- Button items rendered here -->
+                        </div>
+
+                        <button class="btn btn-secondary btn-block" style="margin-top: 12px;" onclick="addButton()">
+                            + Add Button
+                        </button>
+                    </div>
+
+                    <!-- STYLE TAB -->
+                    <div id="tab-style" class="editor-section">
+                        <div class="section-title">Theme Presets</div>
+                        <div class="theme-grid" id="theme-grid">
+                            <!-- Themes rendered here -->
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-title">Colors</div>
+
+                        <div class="form-group">
+                            <label>Primary Color</label>
+                            <div class="color-row">
+                                <input type="color" id="input-color-primary" class="color-input" value="#FF6B35" oninput="syncColor('primary'); updatePreview();">
+                                <input type="text" id="input-color-primary-text" value="#FF6B35" oninput="syncColorText('primary'); updatePreview();">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Background Color</label>
+                            <div class="color-row">
+                                <input type="color" id="input-color-bg" class="color-input" value="#1a1a1a" oninput="syncColor('bg'); updatePreview();">
+                                <input type="text" id="input-color-bg-text" value="#1a1a1a" oninput="syncColorText('bg'); updatePreview();">
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-title">Button Style</div>
+
+                        <div class="form-group">
+                            <label>Fill Style</label>
+                            <div class="style-options" id="style-fill">
+                                <div class="style-option selected" data-value="filled" onclick="selectStyle('fill', 'filled')">
+                                    <div class="style-option-preview" style="background: var(--admin-primary);"></div>
+                                    Filled
+                                </div>
+                                <div class="style-option" data-value="outline" onclick="selectStyle('fill', 'outline')">
+                                    <div class="style-option-preview" style="border: 2px solid var(--admin-primary);"></div>
+                                    Outline
+                                </div>
+                                <div class="style-option" data-value="soft" onclick="selectStyle('fill', 'soft')">
+                                    <div class="style-option-preview" style="background: rgba(255,107,53,0.2);"></div>
+                                    Soft
+                                </div>
+                                <div class="style-option" data-value="glass" onclick="selectStyle('fill', 'glass')">
+                                    <div class="style-option-preview" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);"></div>
+                                    Glass
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Shape</label>
+                            <div class="style-options" id="style-shape">
+                                <div class="style-option" data-value="square" onclick="selectStyle('shape', 'square')">
+                                    <div class="style-option-preview" style="background: var(--admin-primary); border-radius: 0;"></div>
+                                    Square
+                                </div>
+                                <div class="style-option selected" data-value="default" onclick="selectStyle('shape', 'default')">
+                                    <div class="style-option-preview" style="background: var(--admin-primary); border-radius: 4px;"></div>
+                                    Rounded
+                                </div>
+                                <div class="style-option" data-value="rounded" onclick="selectStyle('shape', 'rounded')">
+                                    <div class="style-option-preview" style="background: var(--admin-primary); border-radius: 12px;"></div>
+                                    Pill
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="input-shadow" onchange="updatePreview()">
+                                <span>Button Shadow</span>
+                            </label>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-title">Layout</div>
+                        <div class="form-group">
+                            <select id="input-layout" onchange="updatePreview()">
+                                <option value="minimal">Minimal (Circular Logo)</option>
+                                <option value="hero">Hero (Large Banner)</option>
+                                <option value="card">Card (Centered Box)</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Buttons</label>
-                    <div class="buttons-section" id="buttons-container">
-                        <!-- Button items will be added here -->
-                    </div>
-                    <button class="btn btn-secondary btn-sm" type="button" onclick="addButton()">+ Add Button</button>
-                </div>
-
-                <div class="form-group">
-                    <label>Social Links</label>
-                    <div style="display: grid; gap: 8px;">
-                        <input type="url" id="input-instagram" placeholder="Instagram URL">
-                        <input type="url" id="input-facebook" placeholder="Facebook URL">
-                        <input type="url" id="input-tiktok" placeholder="TikTok URL">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="input-active" checked> Active (visible to public)
-                    </label>
+                <div class="editor-footer">
+                    <button class="btn btn-secondary" onclick="closeEditor()">Cancel</button>
+                    <button class="btn btn-primary" onclick="savePage()">Save Page</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="savePage()">Save Page</button>
+
+            <!-- Preview Area -->
+            <div class="preview-area">
+                <div class="preview-frame">
+                    <div class="preview-screen" id="preview-screen">
+                        <div class="preview-content" id="preview-content">
+                            <!-- Preview rendered here -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+
+    <!-- ========== EMOJI PICKER ========== -->
+    <div id="emoji-picker" class="emoji-picker">
+        <div class="emoji-grid" id="emoji-grid"></div>
     </div>
 
     <script>
         // ============================================
-        // CONFIGURATION
+        // CONFIG
         // ============================================
-        const ADMIN_PASSWORD = 'linkmia2024'; // Change this!
+        const ADMIN_PASSWORD = 'linkmia2024';
         const DATA_FILE_PATH = 'data/pages.json';
 
+        // Theme presets
+        const THEMES = [
+            { name: 'Coral', primary: '#FF6B35', bg: '#1a1a1a' },
+            { name: 'Ocean', primary: '#0EA5E9', bg: '#0c1929' },
+            { name: 'Forest', primary: '#22C55E', bg: '#0f1f14' },
+            { name: 'Sunset', primary: '#F59E0B', bg: '#1c1408' },
+            { name: 'Berry', primary: '#EC4899', bg: '#1f0a18' },
+            { name: 'Grape', primary: '#8B5CF6', bg: '#13101f' },
+            { name: 'Mint', primary: '#14B8A6', bg: '#0a1917' },
+            { name: 'Light', primary: '#FF6B35', bg: '#f5f5f5', textColor: '#1a1a1a' },
+        ];
+
+        // Common emojis for buttons
+        const EMOJIS = [
+            '🔗', '📱', '💬', '📧', '📞', '🛒', '🛵', '🍕', '🍔', '🌮', '☕', '🍺',
+            '📍', '🗺️', '📖', '📋', '💰', '💳', '🎁', '⭐', '❤️', '🔥', '✨', '🎉',
+            '👋', '👍', '🙏', '💪', '🎯', '🚀', '💡', '🎵', '🎬', '📸', '🎨', '✅',
+            '📅', '⏰', '🏠', '🏢', '🚗', '✈️', '🌐', '💼', '📝', '🔔', '🎤', '🎧'
+        ];
+
         let pagesData = { pages: [] };
-        let githubConfig = {
-            token: '',
-            repo: 'AndresMiami/linkmia-templates',
-            branch: 'main'
-        };
+        let githubConfig = { token: '', repo: 'AndresMiami/linkmia-templates', branch: 'main' };
+        let currentButtons = [];
+        let currentStyles = { fill: 'filled', shape: 'default' };
+        let activeEmojiInput = null;
 
         // ============================================
         // INITIALIZATION
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
-            // Check if already logged in
             if (localStorage.getItem('linkmia_auth') === 'true') {
                 checkGitHubSetup();
             }
 
-            // Slug preview
-            document.getElementById('input-slug').addEventListener('input', (e) => {
-                const slug = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
-                e.target.value = slug;
-                document.getElementById('slug-preview').textContent = slug || 'your-slug';
-            });
-
-            // Color sync
-            syncColorInputs('input-color-primary', 'input-color-primary-text');
-            syncColorInputs('input-color-bg', 'input-color-bg-text');
-
-            // Enter key for login
             document.getElementById('password-input').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') checkPassword();
             });
-        });
 
-        function syncColorInputs(colorId, textId) {
-            const colorInput = document.getElementById(colorId);
-            const textInput = document.getElementById(textId);
+            renderThemes();
+            renderEmojiPicker();
+            initDragAndDrop();
 
-            colorInput.addEventListener('input', () => {
-                textInput.value = colorInput.value;
-            });
-
-            textInput.addEventListener('input', () => {
-                if (/^#[0-9A-Fa-f]{6}$/.test(textInput.value)) {
-                    colorInput.value = textInput.value;
+            // Close emoji picker on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.emoji-picker') && !e.target.closest('.emoji-btn')) {
+                    document.getElementById('emoji-picker').classList.remove('active');
                 }
             });
-        }
+        });
 
         // ============================================
-        // AUTHENTICATION
+        // AUTH
         // ============================================
         function checkPassword() {
-            const password = document.getElementById('password-input').value;
-            if (password === ADMIN_PASSWORD) {
+            if (document.getElementById('password-input').value === ADMIN_PASSWORD) {
                 localStorage.setItem('linkmia_auth', 'true');
                 checkGitHubSetup();
             } else {
@@ -665,7 +1183,6 @@
 
         function checkGitHubSetup() {
             document.getElementById('login-screen').classList.add('hidden');
-
             const savedToken = localStorage.getItem('linkmia_github_token');
             const savedRepo = localStorage.getItem('linkmia_github_repo');
 
@@ -691,7 +1208,6 @@
             localStorage.setItem('linkmia_github_repo', repo);
             githubConfig.token = token;
             githubConfig.repo = repo;
-
             showDashboard();
         }
 
@@ -707,33 +1223,29 @@
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
-
             await loadPages();
         }
 
         async function loadPages() {
-            const listEl = document.getElementById('page-list');
-            listEl.innerHTML = '<p style="color: var(--text-muted);">Loading...</p>';
+            const grid = document.getElementById('page-grid');
+            grid.innerHTML = '<p style="color: var(--admin-text-muted);">Loading...</p>';
 
             try {
                 const response = await fetch(`https://raw.githubusercontent.com/${githubConfig.repo}/${githubConfig.branch}/${DATA_FILE_PATH}?t=${Date.now()}`);
-
-                if (!response.ok) throw new Error('Failed to load pages');
-
+                if (!response.ok) throw new Error('Failed to load');
                 pagesData = await response.json();
-                renderPageList();
+                renderPageGrid();
             } catch (error) {
-                console.error('Error loading pages:', error);
-                listEl.innerHTML = `<div class="empty-state"><h3>Error loading pages</h3><p>${error.message}</p></div>`;
+                grid.innerHTML = `<div class="empty-state"><h3>Error loading pages</h3><p>${error.message}</p></div>`;
             }
         }
 
-        function renderPageList() {
-            const listEl = document.getElementById('page-list');
+        function renderPageGrid() {
+            const grid = document.getElementById('page-grid');
 
             if (pagesData.pages.length === 0) {
-                listEl.innerHTML = `
-                    <div class="empty-state">
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
                         <h3>No pages yet</h3>
                         <p>Create your first link page to get started</p>
                     </div>
@@ -741,22 +1253,18 @@
                 return;
             }
 
-            listEl.innerHTML = pagesData.pages.map((page, index) => `
+            grid.innerHTML = pagesData.pages.map((page, index) => `
                 <div class="page-card">
-                    <div class="page-info">
-                        <h3>
-                            ${page.name}
-                            <span class="status-badge ${page.isActive ? 'status-active' : 'status-inactive'}">
-                                ${page.isActive ? 'Active' : 'Inactive'}
-                            </span>
-                        </h3>
-                        <p>
-                            <a href="https://link.linkmia.com/p/${page.slug}" target="_blank">
+                    <div class="page-card-header">
+                        <div>
+                            <h3>${page.name}</h3>
+                            <a class="url" href="https://link.linkmia.com/p/${page.slug}" target="_blank">
                                 link.linkmia.com/p/${page.slug}
                             </a>
-                        </p>
+                        </div>
+                        <span class="status-dot ${page.isActive !== false ? 'active' : 'inactive'}" title="${page.isActive !== false ? 'Active' : 'Inactive'}"></span>
                     </div>
-                    <div class="page-actions">
+                    <div class="page-card-actions">
                         <button class="btn btn-secondary btn-sm" onclick="editPage(${index})">Edit</button>
                         <button class="btn btn-danger btn-sm" onclick="deletePage(${index})">Delete</button>
                     </div>
@@ -765,66 +1273,37 @@
         }
 
         // ============================================
-        // MODAL HANDLING
+        // EDITOR
         // ============================================
-        function openCreateModal() {
-            document.getElementById('modal-title').textContent = 'Create New Page';
-            document.getElementById('edit-index').value = -1;
-            clearForm();
-            addButton(); // Add one empty button by default
-            document.getElementById('page-modal').classList.add('active');
-        }
-
-        function editPage(index) {
-            const page = pagesData.pages[index];
-
-            document.getElementById('modal-title').textContent = 'Edit Page';
+        function openEditor(index = -1) {
             document.getElementById('edit-index').value = index;
+            document.getElementById('editor-title').textContent = index === -1 ? 'Create Page' : 'Edit Page';
 
-            // Fill form
-            document.getElementById('input-slug').value = page.slug;
-            document.getElementById('slug-preview').textContent = page.slug;
-            document.getElementById('input-name').value = page.name;
-            document.getElementById('input-tagline').value = page.tagline || '';
-            document.getElementById('input-location').value = page.location || '';
-            document.getElementById('input-hours').value = page.hours || '';
-            document.getElementById('input-layout').value = page.layout?.style || 'minimal';
-            document.getElementById('input-logo').value = page.layout?.image?.url || '';
-            document.getElementById('input-hero-bg').value = page.layout?.image?.heroBackground || '';
+            if (index === -1) {
+                clearEditor();
+                currentButtons = [{ text: '', url: '', emoji: '🔗' }];
+            } else {
+                loadPageToEditor(pagesData.pages[index]);
+            }
 
-            const primaryColor = page.layout?.colors?.primary || '#FF6B35';
-            const bgColor = page.layout?.background?.value || '#1a1a1a';
-            document.getElementById('input-color-primary').value = primaryColor;
-            document.getElementById('input-color-primary-text').value = primaryColor;
-            document.getElementById('input-color-bg').value = bgColor;
-            document.getElementById('input-color-bg-text').value = bgColor;
-
-            document.getElementById('input-instagram').value = page.social?.instagram || '';
-            document.getElementById('input-facebook').value = page.social?.facebook || '';
-            document.getElementById('input-tiktok').value = page.social?.tiktok || '';
-            document.getElementById('input-active').checked = page.isActive !== false;
-
-            // Buttons
-            document.getElementById('buttons-container').innerHTML = '';
-            (page.buttons || []).forEach(btn => addButton(btn));
-
-            document.getElementById('page-modal').classList.add('active');
+            renderButtons();
+            updatePreview();
+            switchTab('content');
+            document.getElementById('editor').classList.add('active');
         }
 
-        function closeModal() {
-            document.getElementById('page-modal').classList.remove('active');
+        function closeEditor() {
+            document.getElementById('editor').classList.remove('active');
         }
 
-        function clearForm() {
+        function clearEditor() {
             document.getElementById('input-slug').value = '';
             document.getElementById('slug-preview').textContent = 'your-slug';
             document.getElementById('input-name').value = '';
             document.getElementById('input-tagline').value = '';
             document.getElementById('input-location').value = '';
             document.getElementById('input-hours').value = '';
-            document.getElementById('input-layout').value = 'minimal';
             document.getElementById('input-logo').value = '';
-            document.getElementById('input-hero-bg').value = '';
             document.getElementById('input-color-primary').value = '#FF6B35';
             document.getElementById('input-color-primary-text').value = '#FF6B35';
             document.getElementById('input-color-bg').value = '#1a1a1a';
@@ -832,51 +1311,324 @@
             document.getElementById('input-instagram').value = '';
             document.getElementById('input-facebook').value = '';
             document.getElementById('input-tiktok').value = '';
+            document.getElementById('input-whatsapp').value = '';
             document.getElementById('input-active').checked = true;
-            document.getElementById('buttons-container').innerHTML = '';
+            document.getElementById('input-layout').value = 'minimal';
+            document.getElementById('input-shadow').checked = false;
+            currentStyles = { fill: 'filled', shape: 'default' };
+            updateStyleSelection();
+        }
+
+        function loadPageToEditor(page) {
+            document.getElementById('input-slug').value = page.slug || '';
+            document.getElementById('slug-preview').textContent = page.slug || 'your-slug';
+            document.getElementById('input-name').value = page.name || '';
+            document.getElementById('input-tagline').value = page.tagline || '';
+            document.getElementById('input-location').value = page.location || '';
+            document.getElementById('input-hours').value = page.hours || '';
+            document.getElementById('input-logo').value = page.layout?.image?.url || '';
+
+            const primary = page.layout?.colors?.primary || '#FF6B35';
+            const bg = page.layout?.background?.value || '#1a1a1a';
+            document.getElementById('input-color-primary').value = primary;
+            document.getElementById('input-color-primary-text').value = primary;
+            document.getElementById('input-color-bg').value = bg;
+            document.getElementById('input-color-bg-text').value = bg;
+
+            document.getElementById('input-instagram').value = page.social?.instagram || '';
+            document.getElementById('input-facebook').value = page.social?.facebook || '';
+            document.getElementById('input-tiktok').value = page.social?.tiktok || '';
+            document.getElementById('input-whatsapp').value = page.social?.whatsapp || '';
+            document.getElementById('input-active').checked = page.isActive !== false;
+            document.getElementById('input-layout').value = page.layout?.style || 'minimal';
+            document.getElementById('input-shadow').checked = page.layout?.buttonShadow || false;
+
+            currentStyles = {
+                fill: page.layout?.buttonStyle || 'filled',
+                shape: page.layout?.buttonShape || 'default'
+            };
+            updateStyleSelection();
+
+            currentButtons = (page.buttons || []).map(b => ({
+                text: b.text || '',
+                url: b.url || '',
+                emoji: b.emoji || ''
+            }));
+            if (currentButtons.length === 0) {
+                currentButtons = [{ text: '', url: '', emoji: '🔗' }];
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.editor-section').forEach(s => s.classList.remove('active'));
+            document.querySelector(`.editor-tab[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        function updateSlug(input) {
+            const slug = input.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+            input.value = slug;
+            document.getElementById('slug-preview').textContent = slug || 'your-slug';
+        }
+
+        // ============================================
+        // THEME PRESETS
+        // ============================================
+        function renderThemes() {
+            const grid = document.getElementById('theme-grid');
+            grid.innerHTML = THEMES.map((theme, i) => `
+                <div class="theme-option" data-index="${i}" data-name="${theme.name}"
+                     style="background: linear-gradient(135deg, ${theme.primary} 0%, ${theme.bg} 100%);"
+                     onclick="selectTheme(${i})">
+                </div>
+            `).join('');
+        }
+
+        function selectTheme(index) {
+            const theme = THEMES[index];
+            document.getElementById('input-color-primary').value = theme.primary;
+            document.getElementById('input-color-primary-text').value = theme.primary;
+            document.getElementById('input-color-bg').value = theme.bg;
+            document.getElementById('input-color-bg-text').value = theme.bg;
+
+            document.querySelectorAll('.theme-option').forEach(t => t.classList.remove('selected'));
+            document.querySelector(`.theme-option[data-index="${index}"]`).classList.add('selected');
+
+            updatePreview();
         }
 
         // ============================================
         // BUTTON MANAGEMENT
         // ============================================
-        function addButton(data = {}) {
-            const container = document.getElementById('buttons-container');
-            const id = Date.now();
-
-            const html = `
-                <div class="button-item" id="btn-${id}">
-                    <input type="text" placeholder="Button Text" value="${data.text || ''}" class="btn-text">
-                    <input type="url" placeholder="URL" value="${data.url || ''}" class="btn-url">
-                    <select class="btn-type">
-                        <option value="primary" ${data.type === 'primary' ? 'selected' : ''}>Primary</option>
-                        <option value="secondary" ${data.type === 'secondary' ? 'selected' : ''}>Secondary</option>
-                    </select>
-                    <button type="button" class="btn-remove" onclick="removeButton(${id})">×</button>
+        function renderButtons() {
+            const list = document.getElementById('button-list');
+            list.innerHTML = currentButtons.map((btn, i) => `
+                <div class="button-item" draggable="true" data-index="${i}">
+                    <div class="button-item-header">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span style="flex:1; font-size: 0.85rem; color: var(--admin-text-muted);">Button ${i + 1}</span>
+                        <button class="btn btn-danger btn-sm btn-icon" onclick="removeButton(${i})" ${currentButtons.length <= 1 ? 'disabled' : ''}>×</button>
+                    </div>
+                    <div class="button-item-inputs">
+                        <input type="text" class="emoji-btn" value="${btn.emoji || '🔗'}" readonly onclick="openEmojiPicker(this, ${i})">
+                        <input type="text" placeholder="Button text" value="${btn.text || ''}" oninput="updateButton(${i}, 'text', this.value)">
+                    </div>
+                    <div class="button-item-row">
+                        <input type="url" placeholder="URL" value="${btn.url || ''}" oninput="updateButton(${i}, 'url', this.value)" style="flex: 1;">
+                    </div>
                 </div>
-            `;
+            `).join('');
 
-            container.insertAdjacentHTML('beforeend', html);
+            initDragAndDrop();
         }
 
-        function removeButton(id) {
-            document.getElementById(`btn-${id}`)?.remove();
+        function addButton() {
+            currentButtons.push({ text: '', url: '', emoji: '🔗' });
+            renderButtons();
+            updatePreview();
         }
 
-        function getButtons() {
-            const items = document.querySelectorAll('.button-item');
-            const buttons = [];
+        function removeButton(index) {
+            if (currentButtons.length > 1) {
+                currentButtons.splice(index, 1);
+                renderButtons();
+                updatePreview();
+            }
+        }
 
-            items.forEach(item => {
-                const text = item.querySelector('.btn-text').value.trim();
-                const url = item.querySelector('.btn-url').value.trim();
-                const type = item.querySelector('.btn-type').value;
+        function updateButton(index, field, value) {
+            currentButtons[index][field] = value;
+            updatePreview();
+        }
 
-                if (text && url) {
-                    buttons.push({ text, url, type });
-                }
+        // ============================================
+        // DRAG AND DROP
+        // ============================================
+        function initDragAndDrop() {
+            const list = document.getElementById('button-list');
+            let draggedItem = null;
+
+            list.querySelectorAll('.button-item').forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedItem = item;
+                    item.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                    draggedItem = null;
+                });
+
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (draggedItem && draggedItem !== item) {
+                        const rect = item.getBoundingClientRect();
+                        const midY = rect.top + rect.height / 2;
+                        if (e.clientY < midY) {
+                            list.insertBefore(draggedItem, item);
+                        } else {
+                            list.insertBefore(draggedItem, item.nextSibling);
+                        }
+                    }
+                });
+
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    // Reorder the currentButtons array based on DOM order
+                    const newOrder = [];
+                    list.querySelectorAll('.button-item').forEach(el => {
+                        const idx = parseInt(el.dataset.index);
+                        newOrder.push(currentButtons[idx]);
+                    });
+                    currentButtons = newOrder;
+                    renderButtons();
+                    updatePreview();
+                });
             });
+        }
 
-            return buttons;
+        // ============================================
+        // EMOJI PICKER
+        // ============================================
+        function renderEmojiPicker() {
+            const grid = document.getElementById('emoji-grid');
+            grid.innerHTML = EMOJIS.map(emoji => `
+                <div class="emoji-item" onclick="selectEmoji('${emoji}')">${emoji}</div>
+            `).join('');
+        }
+
+        function openEmojiPicker(input, buttonIndex) {
+            activeEmojiInput = { input, buttonIndex };
+            const picker = document.getElementById('emoji-picker');
+            const rect = input.getBoundingClientRect();
+            picker.style.top = (rect.bottom + 8) + 'px';
+            picker.style.left = rect.left + 'px';
+            picker.classList.add('active');
+        }
+
+        function selectEmoji(emoji) {
+            if (activeEmojiInput) {
+                activeEmojiInput.input.value = emoji;
+                currentButtons[activeEmojiInput.buttonIndex].emoji = emoji;
+                updatePreview();
+            }
+            document.getElementById('emoji-picker').classList.remove('active');
+        }
+
+        // ============================================
+        // STYLE OPTIONS
+        // ============================================
+        function selectStyle(type, value) {
+            currentStyles[type] = value;
+            updateStyleSelection();
+            updatePreview();
+        }
+
+        function updateStyleSelection() {
+            ['fill', 'shape'].forEach(type => {
+                document.querySelectorAll(`#style-${type} .style-option`).forEach(opt => {
+                    opt.classList.toggle('selected', opt.dataset.value === currentStyles[type]);
+                });
+            });
+        }
+
+        // ============================================
+        // COLOR SYNC
+        // ============================================
+        function syncColor(type) {
+            const color = document.getElementById(`input-color-${type}`).value;
+            document.getElementById(`input-color-${type}-text`).value = color;
+        }
+
+        function syncColorText(type) {
+            const text = document.getElementById(`input-color-${type}-text`).value;
+            if (/^#[0-9A-Fa-f]{6}$/.test(text)) {
+                document.getElementById(`input-color-${type}`).value = text;
+            }
+        }
+
+        // ============================================
+        // LIVE PREVIEW
+        // ============================================
+        function updatePreview() {
+            const primary = document.getElementById('input-color-primary-text').value || '#FF6B35';
+            const bg = document.getElementById('input-color-bg-text').value || '#1a1a1a';
+            const name = document.getElementById('input-name').value || 'Your Business';
+            const tagline = document.getElementById('input-tagline').value || 'Your tagline here';
+            const location = document.getElementById('input-location').value || 'Miami, FL';
+            const logo = document.getElementById('input-logo').value;
+            const shadow = document.getElementById('input-shadow').checked;
+
+            const screen = document.getElementById('preview-screen');
+            const content = document.getElementById('preview-content');
+
+            // Determine if light theme
+            const isLight = isLightColor(bg);
+
+            screen.style.background = bg;
+            content.style.setProperty('--p-primary', primary);
+            content.style.setProperty('--p-text', isLight ? '#1a1a1a' : '#ffffff');
+            content.style.setProperty('--p-text-muted', isLight ? '#666' : '#888');
+            content.style.setProperty('--p-card-bg', isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.1)');
+
+            // Build social icons
+            const socials = [];
+            if (document.getElementById('input-instagram').value) socials.push('instagram');
+            if (document.getElementById('input-facebook').value) socials.push('facebook');
+            if (document.getElementById('input-tiktok').value) socials.push('tiktok');
+            if (document.getElementById('input-whatsapp').value) socials.push('whatsapp');
+
+            const socialHTML = socials.map(s => `
+                <div class="preview-social-link">${getSocialIcon(s)}</div>
+            `).join('');
+
+            // Build buttons
+            const buttonsHTML = currentButtons
+                .filter(b => b.text || b.url)
+                .map(b => `
+                    <div class="preview-btn style-${currentStyles.fill} shape-${currentStyles.shape} ${shadow ? 'shadow-on' : ''}">
+                        ${b.emoji ? `<span>${b.emoji}</span>` : ''}
+                        ${b.text || 'Button'}
+                    </div>
+                `).join('');
+
+            content.innerHTML = `
+                <div class="preview-hero">
+                    <img class="preview-avatar" src="${logo || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%220.35em%22 font-size=%2240%22 fill=%22%23666%22>?</text></svg>'}" alt="Logo">
+                    <div class="preview-name">${name}</div>
+                    <div class="preview-tagline">${tagline}</div>
+                    <div class="preview-location">
+                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                        ${location}
+                    </div>
+                </div>
+                <div class="preview-buttons">
+                    ${buttonsHTML || '<div class="preview-btn style-filled shape-default">🔗 Add your first button</div>'}
+                </div>
+                ${socialHTML ? `<div class="preview-social">${socialHTML}</div>` : ''}
+                <div class="preview-footer">Powered by LinkMia</div>
+            `;
+        }
+
+        function isLightColor(hex) {
+            const c = hex.replace('#', '');
+            const r = parseInt(c.substr(0, 2), 16);
+            const g = parseInt(c.substr(2, 2), 16);
+            const b = parseInt(c.substr(4, 2), 16);
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness > 155;
+        }
+
+        function getSocialIcon(platform) {
+            const icons = {
+                instagram: '<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+                facebook: '<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+                tiktok: '<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>',
+                whatsapp: '<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>'
+            };
+            return icons[platform] || '';
         }
 
         // ============================================
@@ -892,9 +1644,8 @@
             }
 
             const editIndex = parseInt(document.getElementById('edit-index').value);
-
-            // Check for duplicate slug
             const existingIndex = pagesData.pages.findIndex(p => p.slug === slug);
+
             if (existingIndex !== -1 && existingIndex !== editIndex) {
                 showToast('A page with this slug already exists', 'error');
                 return;
@@ -910,7 +1661,7 @@
                     style: document.getElementById('input-layout').value,
                     image: {
                         url: document.getElementById('input-logo').value.trim(),
-                        heroBackground: document.getElementById('input-hero-bg').value.trim()
+                        heroBackground: ''
                     },
                     background: {
                         type: 'color',
@@ -924,22 +1675,31 @@
                         textMuted: '#888888',
                         cardBackground: '#2a2a2a'
                     },
-                    spacing: 'comfortable'
+                    spacing: 'comfortable',
+                    buttonStyle: currentStyles.fill,
+                    buttonShape: currentStyles.shape,
+                    buttonShadow: document.getElementById('input-shadow').checked
                 },
-                buttons: getButtons(),
+                buttons: currentButtons.filter(b => b.text || b.url).map(b => ({
+                    text: b.text,
+                    url: b.url,
+                    emoji: b.emoji,
+                    type: 'primary'
+                })),
                 social: {
                     instagram: document.getElementById('input-instagram').value.trim() || undefined,
                     facebook: document.getElementById('input-facebook').value.trim() || undefined,
-                    tiktok: document.getElementById('input-tiktok').value.trim() || undefined
+                    tiktok: document.getElementById('input-tiktok').value.trim() || undefined,
+                    whatsapp: document.getElementById('input-whatsapp').value.trim() || undefined
                 },
                 isActive: document.getElementById('input-active').checked,
                 createdAt: editIndex === -1 ? new Date().toISOString() : pagesData.pages[editIndex]?.createdAt,
                 updatedAt: new Date().toISOString()
             };
 
-            // Clean undefined social links
-            Object.keys(page.social).forEach(key => {
-                if (!page.social[key]) delete page.social[key];
+            // Clean undefined values
+            Object.keys(page.social).forEach(k => {
+                if (!page.social[k]) delete page.social[k];
             });
 
             if (editIndex === -1) {
@@ -952,8 +1712,7 @@
         }
 
         async function deletePage(index) {
-            if (!confirm('Are you sure you want to delete this page?')) return;
-
+            if (!confirm('Delete this page?')) return;
             pagesData.pages.splice(index, 1);
             await saveToGitHub();
         }
@@ -966,24 +1725,16 @@
             dashboard.classList.add('loading');
 
             try {
-                // Get current file SHA
                 const fileResponse = await fetch(
                     `https://api.github.com/repos/${githubConfig.repo}/contents/${DATA_FILE_PATH}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${githubConfig.token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
+                    { headers: { 'Authorization': `token ${githubConfig.token}`, 'Accept': 'application/vnd.github.v3+json' } }
                 );
 
                 let sha = '';
                 if (fileResponse.ok) {
-                    const fileData = await fileResponse.json();
-                    sha = fileData.sha;
+                    sha = (await fileResponse.json()).sha;
                 }
 
-                // Update file
                 const content = btoa(unescape(encodeURIComponent(JSON.stringify(pagesData, null, 2))));
 
                 const updateResponse = await fetch(
@@ -996,7 +1747,7 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: `Update pages via LinkMia Admin`,
+                            message: 'Update pages via LinkMia Admin',
                             content,
                             sha: sha || undefined,
                             branch: githubConfig.branch
@@ -1005,24 +1756,21 @@
                 );
 
                 if (!updateResponse.ok) {
-                    const error = await updateResponse.json();
-                    throw new Error(error.message || 'Failed to save');
+                    throw new Error((await updateResponse.json()).message || 'Failed to save');
                 }
 
-                showToast('Saved! Deploying in ~30 seconds...', 'success');
-                closeModal();
-                renderPageList();
-
+                showToast('Saved! Deploying...', 'success');
+                closeEditor();
+                renderPageGrid();
             } catch (error) {
-                console.error('Error saving to GitHub:', error);
-                showToast('Failed to save: ' + error.message, 'error');
+                showToast('Failed: ' + error.message, 'error');
             } finally {
                 dashboard.classList.remove('loading');
             }
         }
 
         // ============================================
-        // TOAST NOTIFICATIONS
+        // TOAST
         // ============================================
         function showToast(message, type = 'success') {
             const existing = document.querySelector('.toast');
@@ -1032,8 +1780,14 @@
             toast.className = `toast toast-${type}`;
             toast.textContent = message;
             document.body.appendChild(toast);
-
             setTimeout(() => toast.remove(), 4000);
+        }
+
+        // ============================================
+        // EDIT PAGE (called from grid)
+        // ============================================
+        function editPage(index) {
+            openEditor(index);
         }
     </script>
 </body>

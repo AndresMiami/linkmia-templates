@@ -209,6 +209,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
             padding: 16px 24px;
             border-radius: 12px;
             font-size: 1rem;
@@ -218,14 +219,32 @@
             text-align: center;
         }
 
-        .btn-primary {
+        .btn-emoji {
+            font-size: 1.1em;
+        }
+
+        /* Button Fill Styles */
+        .btn-filled, .btn-primary {
             background: var(--primary-color);
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-soft {
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--primary-color);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-secondary {
@@ -234,9 +253,40 @@
             border: 1px solid #444;
         }
 
+        /* Button Shapes */
+        .btn-shape-square {
+            border-radius: 0;
+        }
+
+        .btn-shape-default {
+            border-radius: 12px;
+        }
+
+        .btn-shape-rounded {
+            border-radius: 50px;
+        }
+
+        /* Button Shadow */
+        .btn-shadow {
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Hover states */
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-filled:hover, .btn-primary:hover {
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
         .btn-secondary:hover {
             border-color: var(--primary-color);
-            transform: translateY(-2px);
         }
 
         /* Spacing variants */
@@ -477,7 +527,7 @@
                 document.getElementById('card-location-text').textContent = config.location || '';
                 document.getElementById('card-hours').textContent = config.hours || '';
 
-                renderButtons(config.buttons || [], 'card-button-grid');
+                renderButtons(config.buttons || [], 'card-button-grid', config);
                 renderSocial(config.social || {}, 'card-social-links');
             } else {
                 // Minimal or Hero Layout
@@ -496,7 +546,7 @@
                 document.getElementById('location-text').textContent = config.location || '';
                 document.getElementById('hours').textContent = config.hours || '';
 
-                renderButtons(config.buttons || [], 'button-grid');
+                renderButtons(config.buttons || [], 'button-grid', config);
                 renderSocial(config.social || {}, 'social-links');
             }
 
@@ -504,15 +554,36 @@
             document.getElementById('loading').style.display = 'none';
         }
 
-        function renderButtons(buttons, containerId) {
+        function renderButtons(buttons, containerId, config) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
+
+            const buttonStyle = config?.layout?.buttonStyle || 'filled';
+            const buttonShape = config?.layout?.buttonShape || 'default';
+            const buttonShadow = config?.layout?.buttonShadow || false;
 
             buttons.forEach(button => {
                 const btn = document.createElement('a');
                 btn.href = button.url;
-                btn.className = `btn btn-${button.type || 'primary'}`;
-                btn.textContent = button.text;
+
+                // Build class list
+                const classes = ['btn', `btn-${buttonStyle}`, `btn-shape-${buttonShape}`];
+                if (buttonShadow) classes.push('btn-shadow');
+                btn.className = classes.join(' ');
+
+                // Add emoji if present
+                if (button.emoji) {
+                    const emojiSpan = document.createElement('span');
+                    emojiSpan.className = 'btn-emoji';
+                    emojiSpan.textContent = button.emoji;
+                    btn.appendChild(emojiSpan);
+                }
+
+                // Add text
+                const textSpan = document.createElement('span');
+                textSpan.textContent = button.text;
+                btn.appendChild(textSpan);
+
                 btn.target = '_blank';
                 btn.rel = 'noopener';
                 container.appendChild(btn);
