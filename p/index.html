@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="page-title">LinkMia</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" id="theme-color" content="#FF6B35">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- SEO & Social -->
+    <meta name="description" id="page-description" content="Connect with us">
+    <meta property="og:title" id="og-title" content="LinkMia">
+    <meta property="og:description" id="og-description" content="Connect with us">
+    <meta property="og:image" id="og-image" content="">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #F7931E;
+            --background-color: #1a1a1a;
+            --card-background: #2a2a2a;
+            --text-color: #ffffff;
+            --text-muted: #888;
+            --spacing: 16px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        body.has-bg-image::before {
+            opacity: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* LAYOUT: MINIMAL */
+        .layout-minimal .hero {
+            text-align: center;
+            padding: 40px 0 32px;
+        }
+
+        .layout-minimal .hero-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+            display: block;
+        }
+
+        /* LAYOUT: HERO */
+        .layout-hero {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .layout-hero .hero {
+            position: relative;
+            min-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px 40px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .layout-hero .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+            z-index: 0;
+        }
+
+        .layout-hero .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .layout-hero .hero-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 4px solid white;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .layout-hero .container {
+            flex: 1;
+            padding-top: 0;
+        }
+
+        /* LAYOUT: CARD */
+        .layout-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .layout-card .card-wrapper {
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .layout-card .hero {
+            text-align: center;
+            padding-bottom: 24px;
+        }
+
+        .layout-card .hero-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            border: 4px solid var(--primary-color);
+        }
+
+        /* Typography */
+        .restaurant-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .location {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .location svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Buttons */
+        .button-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--card-background);
+            color: var(--text-color);
+            border: 1px solid #444;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Spacing variants */
+        .spacing-compact .button-grid { gap: 8px; }
+        .spacing-compact .btn { padding: 12px 20px; }
+        .spacing-spacious .button-grid { gap: 16px; }
+        .spacing-spacious .btn { padding: 20px 28px; }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-background);
+            border-radius: 50%;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding-top: 16px;
+            border-top: 1px solid #333;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .powered-by a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            border: 3px solid #333;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error State */
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .error-state h1 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .error-state p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .error-state a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <div id="error-state" class="error-state hidden">
+        <h1>Page Not Found</h1>
+        <p>This link page doesn't exist or has been removed.</p>
+        <a href="https://link.linkmia.com">Go to LinkMia</a>
+    </div>
+
+    <!-- Minimal & Hero Layout -->
+    <div id="content-default" class="hidden">
+        <div class="hero" id="hero">
+            <img id="hero-image" class="hero-image" src="" alt="Logo">
+            <h1 class="restaurant-name" id="restaurant-name"></h1>
+            <p class="tagline" id="tagline"></p>
+            <p class="location" id="location">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                </svg>
+                <span id="location-text"></span>
+            </p>
+        </div>
+
+        <div class="container" id="container">
+            <div class="button-grid" id="button-grid"></div>
+            <div class="social-links" id="social-links"></div>
+            <div class="footer">
+                <p id="hours"></p>
+                <p class="powered-by">Powered by <a href="https://linkmia.com" target="_blank">LinkMia</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Layout -->
+    <div id="content-card" class="layout-card hidden">
+        <div class="card-wrapper">
+            <div class="hero">
+                <img id="card-hero-image" class="hero-image" src="" alt="Logo">
+                <h1 class="restaurant-name" id="card-restaurant-name"></h1>
+                <p class="tagline" id="card-tagline"></p>
+                <p class="location">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span id="card-location-text"></span>
+                </p>
+            </div>
+            <div class="button-grid" id="card-button-grid"></div>
+            <div class="social-links" id="card-social-links"></div>
+            <div class="footer">
+                <p id="card-hours"></p>
+                <p class="powered-by">Powered by <a href="https://linkmia.com" target="_blank">LinkMia</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // GET SLUG FROM URL
+        // ============================================
+        function getSlugFromURL() {
+            const path = window.location.pathname;
+            // Handle /p/slug or /p/slug/
+            const match = path.match(/\/p\/([^\/]+)/);
+            return match ? match[1] : null;
+        }
+
+        // ============================================
+        // SOCIAL ICONS
+        // ============================================
+        const socialIcons = {
+            instagram: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+            facebook: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+            tiktok: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>',
+            twitter: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>',
+            youtube: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+            whatsapp: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>'
+        };
+
+        // ============================================
+        // RENDER PAGE
+        // ============================================
+        function renderPage(config) {
+            const isCard = config.layout?.style === 'card';
+
+            // Set CSS variables
+            document.documentElement.style.setProperty('--primary-color', config.layout?.colors?.primary || '#FF6B35');
+            document.documentElement.style.setProperty('--secondary-color', config.layout?.colors?.secondary || '#F7931E');
+            document.documentElement.style.setProperty('--text-color', config.layout?.colors?.text || '#ffffff');
+            document.documentElement.style.setProperty('--text-muted', config.layout?.colors?.textMuted || '#888888');
+            document.documentElement.style.setProperty('--card-background', config.layout?.colors?.cardBackground || '#2a2a2a');
+
+            // Set page metadata
+            document.getElementById('page-title').textContent = config.name;
+            document.getElementById('page-description').content = `${config.name} - ${config.tagline || 'Connect with us'}`;
+            document.getElementById('theme-color').content = config.layout?.colors?.primary || '#FF6B35';
+            document.getElementById('og-title').content = config.name;
+            document.getElementById('og-description').content = config.tagline || 'Connect with us';
+            if (config.layout?.image?.url) {
+                document.getElementById('og-image').content = config.layout.image.url;
+            }
+
+            // Apply background
+            if (config.layout?.background?.type === 'image') {
+                document.body.style.backgroundImage = `url(${config.layout.background.value})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.backgroundAttachment = 'fixed';
+                document.body.classList.add('has-bg-image');
+            } else {
+                document.body.style.backgroundColor = config.layout?.background?.value || '#1a1a1a';
+            }
+
+            if (isCard) {
+                // Card Layout
+                document.body.classList.add('layout-card');
+                document.getElementById('content-card').classList.remove('hidden');
+
+                document.getElementById('card-hero-image').src = config.layout?.image?.url || '';
+                document.getElementById('card-hero-image').alt = `${config.name} Logo`;
+                document.getElementById('card-restaurant-name').textContent = config.name;
+                document.getElementById('card-tagline').textContent = config.tagline || '';
+                document.getElementById('card-location-text').textContent = config.location || '';
+                document.getElementById('card-hours').textContent = config.hours || '';
+
+                renderButtons(config.buttons || [], 'card-button-grid');
+                renderSocial(config.social || {}, 'card-social-links');
+            } else {
+                // Minimal or Hero Layout
+                document.body.className = `layout-${config.layout?.style || 'minimal'} spacing-${config.layout?.spacing || 'comfortable'}`;
+                document.getElementById('content-default').classList.remove('hidden');
+
+                // Hero background for hero layout
+                if (config.layout?.style === 'hero' && config.layout?.image?.heroBackground) {
+                    document.getElementById('hero').style.backgroundImage = `url(${config.layout.image.heroBackground})`;
+                }
+
+                document.getElementById('hero-image').src = config.layout?.image?.url || '';
+                document.getElementById('hero-image').alt = `${config.name} Logo`;
+                document.getElementById('restaurant-name').textContent = config.name;
+                document.getElementById('tagline').textContent = config.tagline || '';
+                document.getElementById('location-text').textContent = config.location || '';
+                document.getElementById('hours').textContent = config.hours || '';
+
+                renderButtons(config.buttons || [], 'button-grid');
+                renderSocial(config.social || {}, 'social-links');
+            }
+
+            // Hide loading
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function renderButtons(buttons, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            buttons.forEach(button => {
+                const btn = document.createElement('a');
+                btn.href = button.url;
+                btn.className = `btn btn-${button.type || 'primary'}`;
+                btn.textContent = button.text;
+                btn.target = '_blank';
+                btn.rel = 'noopener';
+                container.appendChild(btn);
+            });
+        }
+
+        function renderSocial(social, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            Object.entries(social).forEach(([platform, url]) => {
+                if (url && socialIcons[platform]) {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.className = 'social-link';
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                    link.title = platform.charAt(0).toUpperCase() + platform.slice(1);
+                    link.innerHTML = socialIcons[platform];
+                    container.appendChild(link);
+                }
+            });
+        }
+
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-state').classList.remove('hidden');
+        }
+
+        // ============================================
+        // LOAD DATA
+        // ============================================
+        async function init() {
+            const slug = getSlugFromURL();
+
+            if (!slug) {
+                showError();
+                return;
+            }
+
+            try {
+                // Fetch pages.json
+                const response = await fetch('/data/pages.json?t=' + Date.now());
+                if (!response.ok) throw new Error('Failed to load data');
+
+                const data = await response.json();
+                const page = data.pages.find(p => p.slug === slug && p.isActive !== false);
+
+                if (!page) {
+                    showError();
+                    return;
+                }
+
+                renderPage(page);
+
+            } catch (error) {
+                console.error('Error loading page:', error);
+                showError();
+            }
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

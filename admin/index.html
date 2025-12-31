@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkMia Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-hover: #e55a2b;
+            --bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --card-border: #2a2a2a;
+            --text: #ffffff;
+            --text-muted: #888;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+        }
+
+        /* Login Screen */
+        .login-screen, .setup-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+        }
+
+        .login-box, .setup-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 32px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h2, .setup-box h2 {
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .login-box p, .setup-box p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Page List */
+        .page-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .page-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-info h3 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .page-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .page-info a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .page-info a:hover {
+            text-decoration: underline;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+
+        .status-active {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            margin: 40px 0;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Buttons Section */
+        .buttons-section {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .button-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .button-item input {
+            flex: 1;
+        }
+
+        .button-item select {
+            width: 120px;
+        }
+
+        .button-item .btn-remove {
+            padding: 8px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Color inputs */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-input-wrapper input[type="color"] {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        .color-input-wrapper input[type="text"] {
+            flex: 1;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast-success {
+            background: var(--success);
+        }
+
+        .toast-error {
+            background: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .page-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .page-actions {
+                width: 100%;
+            }
+
+            .page-actions .btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .button-item {
+                flex-wrap: wrap;
+            }
+
+            .button-item input {
+                width: 100%;
+            }
+
+            .color-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-box">
+            <h2>LinkMia Admin</h2>
+            <p>Enter your admin password to continue</p>
+            <div class="form-group">
+                <input type="password" id="password-input" placeholder="Password" autocomplete="current-password">
+            </div>
+            <button class="btn btn-primary btn-block" onclick="checkPassword()">Login</button>
+        </div>
+    </div>
+
+    <!-- Setup Screen (GitHub PAT) -->
+    <div id="setup-screen" class="setup-screen hidden">
+        <div class="setup-box">
+            <h2>One-Time Setup</h2>
+            <p>To save pages, you need a GitHub Personal Access Token with repo access.</p>
+            <div class="form-group">
+                <label>GitHub Personal Access Token</label>
+                <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label>Repository (owner/repo)</label>
+                <input type="text" id="repo-input" value="AndresMiami/linkmia-templates" placeholder="username/repo">
+            </div>
+            <button class="btn btn-primary btn-block" onclick="savePAT()">Save & Continue</button>
+            <p style="margin-top: 16px; font-size: 0.8rem;">
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=LinkMia%20Admin" target="_blank" style="color: var(--primary);">
+                    Create a token here
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="container hidden">
+        <div class="header">
+            <h1><span>LinkMia</span> Admin</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="openCreateModal()">+ New Page</button>
+                <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <h2>Your Pages</h2>
+        <div id="page-list" class="page-list">
+            <!-- Pages will be rendered here -->
+        </div>
+    </div>
+
+    <!-- Create/Edit Modal -->
+    <div id="page-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Create New Page</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-index" value="-1">
+
+                <div class="form-group">
+                    <label>URL Slug *</label>
+                    <input type="text" id="input-slug" placeholder="my-business" pattern="[a-z0-9-]+" title="Lowercase letters, numbers, and hyphens only">
+                    <small style="color: var(--text-muted);">link.linkmia.com/p/<strong id="slug-preview">your-slug</strong></small>
+                </div>
+
+                <div class="form-group">
+                    <label>Business Name *</label>
+                    <input type="text" id="input-name" placeholder="My Business Name">
+                </div>
+
+                <div class="form-group">
+                    <label>Tagline</label>
+                    <input type="text" id="input-tagline" placeholder="Your catchy tagline">
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="input-location" placeholder="Miami, FL">
+                </div>
+
+                <div class="form-group">
+                    <label>Hours</label>
+                    <input type="text" id="input-hours" placeholder="Open Daily 9am - 9pm">
+                </div>
+
+                <div class="form-group">
+                    <label>Layout Style</label>
+                    <select id="input-layout">
+                        <option value="minimal">Minimal (Circular Logo)</option>
+                        <option value="hero">Hero (Large Banner)</option>
+                        <option value="card">Card (Centered Box)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Logo URL</label>
+                    <input type="url" id="input-logo" placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label>Hero Background URL (for Hero layout)</label>
+                    <input type="url" id="input-hero-bg" placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label>Colors</label>
+                    <div class="color-grid">
+                        <div class="color-input-wrapper">
+                            <input type="color" id="input-color-primary" value="#FF6B35">
+                            <input type="text" id="input-color-primary-text" value="#FF6B35" placeholder="Primary">
+                        </div>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="input-color-bg" value="#1a1a1a">
+                            <input type="text" id="input-color-bg-text" value="#1a1a1a" placeholder="Background">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Buttons</label>
+                    <div class="buttons-section" id="buttons-container">
+                        <!-- Button items will be added here -->
+                    </div>
+                    <button class="btn btn-secondary btn-sm" type="button" onclick="addButton()">+ Add Button</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Social Links</label>
+                    <div style="display: grid; gap: 8px;">
+                        <input type="url" id="input-instagram" placeholder="Instagram URL">
+                        <input type="url" id="input-facebook" placeholder="Facebook URL">
+                        <input type="url" id="input-tiktok" placeholder="TikTok URL">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="input-active" checked> Active (visible to public)
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="savePage()">Save Page</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const ADMIN_PASSWORD = 'linkmia2024'; // Change this!
+        const DATA_FILE_PATH = 'data/pages.json';
+
+        let pagesData = { pages: [] };
+        let githubConfig = {
+            token: '',
+            repo: 'AndresMiami/linkmia-templates',
+            branch: 'main'
+        };
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if already logged in
+            if (localStorage.getItem('linkmia_auth') === 'true') {
+                checkGitHubSetup();
+            }
+
+            // Slug preview
+            document.getElementById('input-slug').addEventListener('input', (e) => {
+                const slug = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+                e.target.value = slug;
+                document.getElementById('slug-preview').textContent = slug || 'your-slug';
+            });
+
+            // Color sync
+            syncColorInputs('input-color-primary', 'input-color-primary-text');
+            syncColorInputs('input-color-bg', 'input-color-bg-text');
+
+            // Enter key for login
+            document.getElementById('password-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkPassword();
+            });
+        });
+
+        function syncColorInputs(colorId, textId) {
+            const colorInput = document.getElementById(colorId);
+            const textInput = document.getElementById(textId);
+
+            colorInput.addEventListener('input', () => {
+                textInput.value = colorInput.value;
+            });
+
+            textInput.addEventListener('input', () => {
+                if (/^#[0-9A-Fa-f]{6}$/.test(textInput.value)) {
+                    colorInput.value = textInput.value;
+                }
+            });
+        }
+
+        // ============================================
+        // AUTHENTICATION
+        // ============================================
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('linkmia_auth', 'true');
+                checkGitHubSetup();
+            } else {
+                showToast('Invalid password', 'error');
+            }
+        }
+
+        function checkGitHubSetup() {
+            document.getElementById('login-screen').classList.add('hidden');
+
+            const savedToken = localStorage.getItem('linkmia_github_token');
+            const savedRepo = localStorage.getItem('linkmia_github_repo');
+
+            if (savedToken && savedRepo) {
+                githubConfig.token = savedToken;
+                githubConfig.repo = savedRepo;
+                showDashboard();
+            } else {
+                document.getElementById('setup-screen').classList.remove('hidden');
+            }
+        }
+
+        function savePAT() {
+            const token = document.getElementById('pat-input').value.trim();
+            const repo = document.getElementById('repo-input').value.trim();
+
+            if (!token || !repo) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            localStorage.setItem('linkmia_github_token', token);
+            localStorage.setItem('linkmia_github_repo', repo);
+            githubConfig.token = token;
+            githubConfig.repo = repo;
+
+            showDashboard();
+        }
+
+        function logout() {
+            localStorage.removeItem('linkmia_auth');
+            location.reload();
+        }
+
+        // ============================================
+        // DASHBOARD
+        // ============================================
+        async function showDashboard() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+
+            await loadPages();
+        }
+
+        async function loadPages() {
+            const listEl = document.getElementById('page-list');
+            listEl.innerHTML = '<p style="color: var(--text-muted);">Loading...</p>';
+
+            try {
+                const response = await fetch(`https://raw.githubusercontent.com/${githubConfig.repo}/${githubConfig.branch}/${DATA_FILE_PATH}?t=${Date.now()}`);
+
+                if (!response.ok) throw new Error('Failed to load pages');
+
+                pagesData = await response.json();
+                renderPageList();
+            } catch (error) {
+                console.error('Error loading pages:', error);
+                listEl.innerHTML = `<div class="empty-state"><h3>Error loading pages</h3><p>${error.message}</p></div>`;
+            }
+        }
+
+        function renderPageList() {
+            const listEl = document.getElementById('page-list');
+
+            if (pagesData.pages.length === 0) {
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No pages yet</h3>
+                        <p>Create your first link page to get started</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = pagesData.pages.map((page, index) => `
+                <div class="page-card">
+                    <div class="page-info">
+                        <h3>
+                            ${page.name}
+                            <span class="status-badge ${page.isActive ? 'status-active' : 'status-inactive'}">
+                                ${page.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                        </h3>
+                        <p>
+                            <a href="https://link.linkmia.com/p/${page.slug}" target="_blank">
+                                link.linkmia.com/p/${page.slug}
+                            </a>
+                        </p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="editPage(${index})">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deletePage(${index})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================
+        // MODAL HANDLING
+        // ============================================
+        function openCreateModal() {
+            document.getElementById('modal-title').textContent = 'Create New Page';
+            document.getElementById('edit-index').value = -1;
+            clearForm();
+            addButton(); // Add one empty button by default
+            document.getElementById('page-modal').classList.add('active');
+        }
+
+        function editPage(index) {
+            const page = pagesData.pages[index];
+
+            document.getElementById('modal-title').textContent = 'Edit Page';
+            document.getElementById('edit-index').value = index;
+
+            // Fill form
+            document.getElementById('input-slug').value = page.slug;
+            document.getElementById('slug-preview').textContent = page.slug;
+            document.getElementById('input-name').value = page.name;
+            document.getElementById('input-tagline').value = page.tagline || '';
+            document.getElementById('input-location').value = page.location || '';
+            document.getElementById('input-hours').value = page.hours || '';
+            document.getElementById('input-layout').value = page.layout?.style || 'minimal';
+            document.getElementById('input-logo').value = page.layout?.image?.url || '';
+            document.getElementById('input-hero-bg').value = page.layout?.image?.heroBackground || '';
+
+            const primaryColor = page.layout?.colors?.primary || '#FF6B35';
+            const bgColor = page.layout?.background?.value || '#1a1a1a';
+            document.getElementById('input-color-primary').value = primaryColor;
+            document.getElementById('input-color-primary-text').value = primaryColor;
+            document.getElementById('input-color-bg').value = bgColor;
+            document.getElementById('input-color-bg-text').value = bgColor;
+
+            document.getElementById('input-instagram').value = page.social?.instagram || '';
+            document.getElementById('input-facebook').value = page.social?.facebook || '';
+            document.getElementById('input-tiktok').value = page.social?.tiktok || '';
+            document.getElementById('input-active').checked = page.isActive !== false;
+
+            // Buttons
+            document.getElementById('buttons-container').innerHTML = '';
+            (page.buttons || []).forEach(btn => addButton(btn));
+
+            document.getElementById('page-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('page-modal').classList.remove('active');
+        }
+
+        function clearForm() {
+            document.getElementById('input-slug').value = '';
+            document.getElementById('slug-preview').textContent = 'your-slug';
+            document.getElementById('input-name').value = '';
+            document.getElementById('input-tagline').value = '';
+            document.getElementById('input-location').value = '';
+            document.getElementById('input-hours').value = '';
+            document.getElementById('input-layout').value = 'minimal';
+            document.getElementById('input-logo').value = '';
+            document.getElementById('input-hero-bg').value = '';
+            document.getElementById('input-color-primary').value = '#FF6B35';
+            document.getElementById('input-color-primary-text').value = '#FF6B35';
+            document.getElementById('input-color-bg').value = '#1a1a1a';
+            document.getElementById('input-color-bg-text').value = '#1a1a1a';
+            document.getElementById('input-instagram').value = '';
+            document.getElementById('input-facebook').value = '';
+            document.getElementById('input-tiktok').value = '';
+            document.getElementById('input-active').checked = true;
+            document.getElementById('buttons-container').innerHTML = '';
+        }
+
+        // ============================================
+        // BUTTON MANAGEMENT
+        // ============================================
+        function addButton(data = {}) {
+            const container = document.getElementById('buttons-container');
+            const id = Date.now();
+
+            const html = `
+                <div class="button-item" id="btn-${id}">
+                    <input type="text" placeholder="Button Text" value="${data.text || ''}" class="btn-text">
+                    <input type="url" placeholder="URL" value="${data.url || ''}" class="btn-url">
+                    <select class="btn-type">
+                        <option value="primary" ${data.type === 'primary' ? 'selected' : ''}>Primary</option>
+                        <option value="secondary" ${data.type === 'secondary' ? 'selected' : ''}>Secondary</option>
+                    </select>
+                    <button type="button" class="btn-remove" onclick="removeButton(${id})">×</button>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeButton(id) {
+            document.getElementById(`btn-${id}`)?.remove();
+        }
+
+        function getButtons() {
+            const items = document.querySelectorAll('.button-item');
+            const buttons = [];
+
+            items.forEach(item => {
+                const text = item.querySelector('.btn-text').value.trim();
+                const url = item.querySelector('.btn-url').value.trim();
+                const type = item.querySelector('.btn-type').value;
+
+                if (text && url) {
+                    buttons.push({ text, url, type });
+                }
+            });
+
+            return buttons;
+        }
+
+        // ============================================
+        // SAVE PAGE
+        // ============================================
+        async function savePage() {
+            const slug = document.getElementById('input-slug').value.trim();
+            const name = document.getElementById('input-name').value.trim();
+
+            if (!slug || !name) {
+                showToast('Slug and name are required', 'error');
+                return;
+            }
+
+            const editIndex = parseInt(document.getElementById('edit-index').value);
+
+            // Check for duplicate slug
+            const existingIndex = pagesData.pages.findIndex(p => p.slug === slug);
+            if (existingIndex !== -1 && existingIndex !== editIndex) {
+                showToast('A page with this slug already exists', 'error');
+                return;
+            }
+
+            const page = {
+                slug,
+                name,
+                tagline: document.getElementById('input-tagline').value.trim(),
+                location: document.getElementById('input-location').value.trim(),
+                hours: document.getElementById('input-hours').value.trim(),
+                layout: {
+                    style: document.getElementById('input-layout').value,
+                    image: {
+                        url: document.getElementById('input-logo').value.trim(),
+                        heroBackground: document.getElementById('input-hero-bg').value.trim()
+                    },
+                    background: {
+                        type: 'color',
+                        value: document.getElementById('input-color-bg-text').value,
+                        blur: 0
+                    },
+                    colors: {
+                        primary: document.getElementById('input-color-primary-text').value,
+                        secondary: '#F7931E',
+                        text: '#ffffff',
+                        textMuted: '#888888',
+                        cardBackground: '#2a2a2a'
+                    },
+                    spacing: 'comfortable'
+                },
+                buttons: getButtons(),
+                social: {
+                    instagram: document.getElementById('input-instagram').value.trim() || undefined,
+                    facebook: document.getElementById('input-facebook').value.trim() || undefined,
+                    tiktok: document.getElementById('input-tiktok').value.trim() || undefined
+                },
+                isActive: document.getElementById('input-active').checked,
+                createdAt: editIndex === -1 ? new Date().toISOString() : pagesData.pages[editIndex]?.createdAt,
+                updatedAt: new Date().toISOString()
+            };
+
+            // Clean undefined social links
+            Object.keys(page.social).forEach(key => {
+                if (!page.social[key]) delete page.social[key];
+            });
+
+            if (editIndex === -1) {
+                pagesData.pages.push(page);
+            } else {
+                pagesData.pages[editIndex] = page;
+            }
+
+            await saveToGitHub();
+        }
+
+        async function deletePage(index) {
+            if (!confirm('Are you sure you want to delete this page?')) return;
+
+            pagesData.pages.splice(index, 1);
+            await saveToGitHub();
+        }
+
+        // ============================================
+        // GITHUB API
+        // ============================================
+        async function saveToGitHub() {
+            const dashboard = document.getElementById('dashboard');
+            dashboard.classList.add('loading');
+
+            try {
+                // Get current file SHA
+                const fileResponse = await fetch(
+                    `https://api.github.com/repos/${githubConfig.repo}/contents/${DATA_FILE_PATH}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${githubConfig.token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+
+                let sha = '';
+                if (fileResponse.ok) {
+                    const fileData = await fileResponse.json();
+                    sha = fileData.sha;
+                }
+
+                // Update file
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(pagesData, null, 2))));
+
+                const updateResponse = await fetch(
+                    `https://api.github.com/repos/${githubConfig.repo}/contents/${DATA_FILE_PATH}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${githubConfig.token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Update pages via LinkMia Admin`,
+                            content,
+                            sha: sha || undefined,
+                            branch: githubConfig.branch
+                        })
+                    }
+                );
+
+                if (!updateResponse.ok) {
+                    const error = await updateResponse.json();
+                    throw new Error(error.message || 'Failed to save');
+                }
+
+                showToast('Saved! Deploying in ~30 seconds...', 'success');
+                closeModal();
+                renderPageList();
+
+            } catch (error) {
+                console.error('Error saving to GitHub:', error);
+                showToast('Failed to save: ' + error.message, 'error');
+            } finally {
+                dashboard.classList.remove('loading');
+            }
+        }
+
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        function showToast(message, type = 'success') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>

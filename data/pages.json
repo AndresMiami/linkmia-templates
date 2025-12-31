@@ -1,0 +1,117 @@
+{
+  "pages": [
+    {
+      "slug": "airport",
+      "name": "LinkMia Airport Transfers",
+      "tagline": "Premium Miami airport transportation",
+      "location": "Miami, FL",
+      "hours": "Available 24/7",
+      "layout": {
+        "style": "minimal",
+        "image": {
+          "url": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=400&fit=crop",
+          "heroBackground": ""
+        },
+        "background": {
+          "type": "color",
+          "value": "#1a1a1a",
+          "blur": 0
+        },
+        "colors": {
+          "primary": "#FF6B35",
+          "secondary": "#F7931E",
+          "text": "#ffffff",
+          "textMuted": "#888888",
+          "cardBackground": "#2a2a2a"
+        },
+        "spacing": "comfortable"
+      },
+      "buttons": [
+        {
+          "text": "Book Airport Transfer",
+          "url": "https://linkmia.com/indexMVP.html?book=1",
+          "type": "primary"
+        },
+        {
+          "text": "Chat on WhatsApp",
+          "url": "https://wa.me/17865093955",
+          "type": "primary"
+        },
+        {
+          "text": "Call Us",
+          "url": "tel:+17865093955",
+          "type": "secondary"
+        }
+      ],
+      "social": {
+        "instagram": "https://instagram.com/linkmia",
+        "facebook": "https://facebook.com/linkmia"
+      },
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "slug": "paisa",
+      "name": "El Paisa Tacos",
+      "tagline": "Authentic Mexican Street Food",
+      "location": "Miami, FL",
+      "hours": "Open Daily 11am - 10pm",
+      "layout": {
+        "style": "minimal",
+        "image": {
+          "url": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=400&fit=crop",
+          "heroBackground": ""
+        },
+        "background": {
+          "type": "color",
+          "value": "#1a1a1a",
+          "blur": 0
+        },
+        "colors": {
+          "primary": "#FF6B35",
+          "secondary": "#F7931E",
+          "text": "#ffffff",
+          "textMuted": "#888888",
+          "cardBackground": "#2a2a2a"
+        },
+        "spacing": "comfortable"
+      },
+      "buttons": [
+        {
+          "text": "Order Delivery",
+          "url": "https://order.doordash.com/store/el-paisa-tacos",
+          "type": "primary"
+        },
+        {
+          "text": "Order Pickup",
+          "url": "https://order.doordash.com/store/el-paisa-tacos?service_type=pickup",
+          "type": "primary"
+        },
+        {
+          "text": "Get Directions",
+          "url": "https://maps.google.com/?q=El+Paisa+Tacos+Miami",
+          "type": "secondary"
+        },
+        {
+          "text": "Call Us",
+          "url": "tel:+13055551234",
+          "type": "secondary"
+        },
+        {
+          "text": "View Menu",
+          "url": "https://example.com/menu.pdf",
+          "type": "secondary"
+        }
+      ],
+      "social": {
+        "instagram": "https://instagram.com/elpaisatacos",
+        "facebook": "https://facebook.com/elpaisatacos",
+        "tiktok": "https://tiktok.com/@elpaisatacos"
+      },
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
