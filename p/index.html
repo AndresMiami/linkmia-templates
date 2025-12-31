@@ -460,6 +460,52 @@
 
     <script>
         // ============================================
+        // ANALYTICS (Cookie-free tracking)
+        // ============================================
+        const ANALYTICS_KEY = 'linkmia_analytics';
+
+        function trackPageView(slug) {
+            try {
+                let analytics = {};
+                const stored = localStorage.getItem(ANALYTICS_KEY);
+                if (stored) {
+                    analytics = JSON.parse(stored);
+                }
+
+                if (!analytics[slug]) {
+                    analytics[slug] = { views: 0, clicks: 0, lastVisit: null };
+                }
+
+                analytics[slug].views = (analytics[slug].views || 0) + 1;
+                analytics[slug].lastVisit = new Date().toISOString();
+
+                localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analytics));
+            } catch (e) {
+                // Analytics tracking failed silently
+            }
+        }
+
+        function trackClick(slug) {
+            try {
+                let analytics = {};
+                const stored = localStorage.getItem(ANALYTICS_KEY);
+                if (stored) {
+                    analytics = JSON.parse(stored);
+                }
+
+                if (!analytics[slug]) {
+                    analytics[slug] = { views: 0, clicks: 0, lastVisit: null };
+                }
+
+                analytics[slug].clicks = (analytics[slug].clicks || 0) + 1;
+
+                localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analytics));
+            } catch (e) {
+                // Analytics tracking failed silently
+            }
+        }
+
+        // ============================================
         // GET SLUG FROM URL
         // ============================================
         function getSlugFromURL() {
@@ -561,6 +607,7 @@
             const buttonStyle = config?.layout?.buttonStyle || 'filled';
             const buttonShape = config?.layout?.buttonShape || 'default';
             const buttonShadow = config?.layout?.buttonShadow || false;
+            const slug = config?.slug;
 
             buttons.forEach(button => {
                 const btn = document.createElement('a');
@@ -586,6 +633,12 @@
 
                 btn.target = '_blank';
                 btn.rel = 'noopener';
+
+                // Track clicks (cookie-free)
+                btn.addEventListener('click', () => {
+                    if (slug) trackClick(slug);
+                });
+
                 container.appendChild(btn);
             });
         }
@@ -636,6 +689,9 @@
                     showError();
                     return;
                 }
+
+                // Track page view (cookie-free)
+                trackPageView(slug);
 
                 renderPage(page);
 

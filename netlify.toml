@@ -10,6 +10,13 @@
   to = "/p/index.html"
   status = 200
 
+# Short link redirects
+# /s/code -> /s/index.html (handles short link redirects)
+[[redirects]]
+  from = "/s/*"
+  to = "/s/index.html"
+  status = 200
+
 # Security headers
 [[headers]]
   for = "/*"

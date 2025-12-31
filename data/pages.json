@@ -2,6 +2,7 @@
   "pages": [
     {
       "slug": "airport",
+      "shortCode": "air123",
       "name": "LinkMia Airport Transfers",
       "tagline": "Premium Miami airport transportation",
       "location": "Miami, FL",
@@ -53,6 +54,7 @@
     },
     {
       "slug": "paisa",
+      "shortCode": "paisa1",
       "name": "El Paisa Tacos",
       "tagline": "Authentic Mexican Street Food",
       "location": "Miami, FL",
