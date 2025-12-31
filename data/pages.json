@@ -1,8 +1,7 @@
 {
   "pages": [
     {
-      "slug": "airport",
-      "shortCode": "air123",
+      "slug": "miamiridez",
       "name": "LinkMia Airport Transfers",
       "tagline": "Premium Miami airport transportation",
       "location": "Miami, FL",
@@ -15,33 +14,39 @@
         },
         "background": {
           "type": "color",
-          "value": "#1a1a1a",
+          "value": "#13101f",
           "blur": 0
         },
         "colors": {
-          "primary": "#FF6B35",
+          "primary": "#8B5CF6",
           "secondary": "#F7931E",
           "text": "#ffffff",
           "textMuted": "#888888",
           "cardBackground": "#2a2a2a"
         },
-        "spacing": "comfortable"
+        "spacing": "comfortable",
+        "buttonStyle": "glass",
+        "buttonShape": "rounded",
+        "buttonShadow": false
       },
       "buttons": [
         {
-          "text": "Book Airport Transfer",
-          "url": "https://linkmia.com/indexMVP.html?book=1",
+          "text": "Chat on WhatsApp",
+          "url": "https://wa.me/17865093955",
+          "emoji": "",
           "type": "primary"
         },
         {
-          "text": "Chat on WhatsApp",
-          "url": "https://wa.me/17865093955",
+          "text": "Book Airport Transfer",
+          "url": "https://linkmia.com/indexMVP.html?book=1",
+          "emoji": "",
           "type": "primary"
         },
         {
           "text": "Call Us",
           "url": "tel:+17865093955",
-          "type": "secondary"
+          "emoji": "",
+          "type": "primary"
         }
       ],
       "social": {
@@ -50,11 +55,10 @@
       },
       "isActive": true,
       "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2025-12-31T15:16:49.779Z"
+      "updatedAt": "2025-12-31T17:01:19.514Z"
     },
     {
       "slug": "paisa",
-      "shortCode": "paisa1",
       "name": "El Paisa Tacos",
       "tagline": "Authentic Mexican Street Food",
       "location": "Miami, FL",
