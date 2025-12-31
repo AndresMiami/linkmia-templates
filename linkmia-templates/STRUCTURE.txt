@@ -1,0 +1,26 @@
+.
+├── GITHUB_SETUP.md
+├── LICENSE
+├── README.md
+├── STRUCTURE.txt
+├── assets
+│   ├── fonts
+│   └── images
+├── docs
+│   ├── DEPLOYMENT_GUIDE.md
+│   └── SETUP_GUIDE.md
+├── examples
+│   ├── elpaisa-card.html
+│   ├── elpaisa-hero.html
+│   └── elpaisa-minimal.html
+├── scripts
+│   └── generate.py
+└── templates
+    ├── card
+    │   └── index.html
+    ├── hero
+    │   └── index.html
+    └── minimal
+        └── index.html
+
+10 directories, 13 files
