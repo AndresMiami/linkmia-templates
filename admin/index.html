@@ -1106,6 +1106,186 @@
             padding: 8px;
             font-size: 0.75rem;
         }
+
+        /* ========== FONT SELECTOR ========== */
+        .font-preview {
+            padding: 10px;
+            background: var(--admin-bg);
+            border-radius: 6px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* ========== GRADIENT PICKER ========== */
+        .gradient-presets {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .gradient-preset {
+            aspect-ratio: 2/1;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .gradient-preset:hover {
+            transform: scale(1.05);
+        }
+
+        .gradient-preset.selected {
+            border-color: var(--admin-primary);
+        }
+
+        /* ========== BACKGROUND TYPE TABS ========== */
+        .bg-type-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 12px;
+            background: var(--admin-bg);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .bg-type-tab {
+            flex: 1;
+            padding: 8px 12px;
+            background: none;
+            border: none;
+            color: var(--admin-text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .bg-type-tab:hover {
+            color: var(--admin-text);
+        }
+
+        .bg-type-tab.active {
+            background: var(--admin-primary);
+            color: white;
+        }
+
+        .bg-type-content {
+            display: none;
+        }
+
+        .bg-type-content.active {
+            display: block;
+        }
+
+        /* ========== ANIMATION OPTIONS ========== */
+        .animation-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .animation-option {
+            padding: 12px;
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-card-border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .animation-option:hover {
+            border-color: var(--admin-text-muted);
+        }
+
+        .animation-option.selected {
+            border-color: var(--admin-primary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .animation-option-icon {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        /* Bio textarea */
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        /* Preview Bio */
+        .preview-bio {
+            font-size: 0.85rem;
+            color: var(--p-text-muted);
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* Button animations in preview */
+        .preview-btn.anim-fade {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .preview-btn.anim-slide {
+            animation: slideUp 0.4s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .preview-btn.anim-scale {
+            animation: scaleIn 0.3s ease forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .preview-btn.anim-bounce {
+            animation: bounceIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Hover animations */
+        .preview-btn.hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .preview-btn.hover-glow:hover {
+            box-shadow: 0 0 20px var(--p-primary), 0 0 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .preview-btn.hover-pulse:hover {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
     </style>
 </head>
 <body>
@@ -1262,6 +1442,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label>Bio</label>
+                            <textarea id="input-bio" placeholder="Tell your story... (optional)" oninput="updatePreview()"></textarea>
+                        </div>
+
+                        <div class="form-group">
                             <label>Location</label>
                             <input type="text" id="input-location" placeholder="Miami, FL" oninput="updatePreview()">
                         </div>
@@ -1328,6 +1513,26 @@
 
                         <div class="divider"></div>
 
+                        <div class="section-title">Font</div>
+                        <div class="form-group">
+                            <select id="input-font" onchange="updatePreview()">
+                                <option value="system">System Default</option>
+                                <option value="Inter">Inter</option>
+                                <option value="Poppins">Poppins</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="Open Sans">Open Sans</option>
+                                <option value="Lato">Lato</option>
+                                <option value="Playfair Display">Playfair Display</option>
+                                <option value="Raleway">Raleway</option>
+                                <option value="Nunito">Nunito</option>
+                                <option value="Oswald">Oswald</option>
+                            </select>
+                            <div class="font-preview" id="font-preview">The quick brown fox</div>
+                        </div>
+
+                        <div class="divider"></div>
+
                         <div class="section-title">Colors</div>
 
                         <div class="form-group">
@@ -1338,11 +1543,42 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Background Color</label>
-                            <div class="color-row">
-                                <input type="color" id="input-color-bg" class="color-input" value="#1a1a1a" oninput="syncColor('bg'); updatePreview();">
-                                <input type="text" id="input-color-bg-text" value="#1a1a1a" oninput="syncColorText('bg'); updatePreview();">
+                        <div class="divider"></div>
+
+                        <div class="section-title">Background</div>
+                        <div class="bg-type-tabs">
+                            <button class="bg-type-tab active" data-type="color" onclick="switchBgType('color')">Color</button>
+                            <button class="bg-type-tab" data-type="gradient" onclick="switchBgType('gradient')">Gradient</button>
+                            <button class="bg-type-tab" data-type="image" onclick="switchBgType('image')">Image</button>
+                        </div>
+
+                        <div id="bg-color" class="bg-type-content active">
+                            <div class="form-group">
+                                <div class="color-row">
+                                    <input type="color" id="input-color-bg" class="color-input" value="#1a1a1a" oninput="syncColor('bg'); updatePreview();">
+                                    <input type="text" id="input-color-bg-text" value="#1a1a1a" oninput="syncColorText('bg'); updatePreview();">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="bg-gradient" class="bg-type-content">
+                            <div class="gradient-presets" id="gradient-presets">
+                                <!-- Gradient presets rendered here -->
+                            </div>
+                            <div class="form-group">
+                                <label>Custom Gradient</label>
+                                <input type="text" id="input-gradient" placeholder="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" oninput="updatePreview()">
+                            </div>
+                        </div>
+
+                        <div id="bg-image" class="bg-type-content">
+                            <div class="form-group">
+                                <label>Background Image URL</label>
+                                <input type="url" id="input-bg-image" placeholder="https://..." oninput="updatePreview()">
+                            </div>
+                            <div class="form-group">
+                                <label>Overlay Opacity</label>
+                                <input type="range" id="input-bg-overlay" min="0" max="100" value="50" oninput="updatePreview()">
                             </div>
                         </div>
 
@@ -1395,6 +1631,53 @@
                                 <input type="checkbox" id="input-shadow" onchange="updatePreview()">
                                 <span>Button Shadow</span>
                             </label>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-title">Button Animation</div>
+                        <div class="form-group">
+                            <label>Entrance Effect</label>
+                            <div class="animation-options" id="anim-entrance">
+                                <div class="animation-option selected" data-value="none" onclick="selectAnimation('entrance', 'none')">
+                                    <div class="animation-option-icon">—</div>
+                                    None
+                                </div>
+                                <div class="animation-option" data-value="fade" onclick="selectAnimation('entrance', 'fade')">
+                                    <div class="animation-option-icon">✨</div>
+                                    Fade In
+                                </div>
+                                <div class="animation-option" data-value="slide" onclick="selectAnimation('entrance', 'slide')">
+                                    <div class="animation-option-icon">⬆️</div>
+                                    Slide Up
+                                </div>
+                                <div class="animation-option" data-value="scale" onclick="selectAnimation('entrance', 'scale')">
+                                    <div class="animation-option-icon">🔍</div>
+                                    Scale In
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Hover Effect</label>
+                            <div class="animation-options" id="anim-hover">
+                                <div class="animation-option selected" data-value="none" onclick="selectAnimation('hover', 'none')">
+                                    <div class="animation-option-icon">—</div>
+                                    None
+                                </div>
+                                <div class="animation-option" data-value="lift" onclick="selectAnimation('hover', 'lift')">
+                                    <div class="animation-option-icon">🚀</div>
+                                    Lift
+                                </div>
+                                <div class="animation-option" data-value="glow" onclick="selectAnimation('hover', 'glow')">
+                                    <div class="animation-option-icon">💡</div>
+                                    Glow
+                                </div>
+                                <div class="animation-option" data-value="pulse" onclick="selectAnimation('hover', 'pulse')">
+                                    <div class="animation-option-icon">💓</div>
+                                    Pulse
+                                </div>
+                            </div>
                         </div>
 
                         <div class="divider"></div>
@@ -1453,6 +1736,21 @@
             { name: 'Light', primary: '#FF6B35', bg: '#f5f5f5', textColor: '#1a1a1a' },
         ];
 
+        // Gradient presets
+        const GRADIENTS = [
+            { name: 'Sunset', value: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+            { name: 'Ocean', value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+            { name: 'Mint', value: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)' },
+            { name: 'Fire', value: 'linear-gradient(135deg, #f12711 0%, #f5af19 100%)' },
+            { name: 'Purple', value: 'linear-gradient(135deg, #a855f7 0%, #6366f1 100%)' },
+            { name: 'Night', value: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)' },
+            { name: 'Coral', value: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)' },
+            { name: 'Cool', value: 'linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)' },
+        ];
+
+        // Google Fonts to load
+        const GOOGLE_FONTS = ['Inter', 'Poppins', 'Montserrat', 'Roboto', 'Open+Sans', 'Lato', 'Playfair+Display', 'Raleway', 'Nunito', 'Oswald'];
+
         // Common emojis for buttons
         const EMOJIS = [
             '🔗', '📱', '💬', '📧', '📞', '🛒', '🛵', '🍕', '🍔', '🌮', '☕', '🍺',
@@ -1465,6 +1763,8 @@
         let githubConfig = { token: '', repo: 'AndresMiami/linkmia-templates', branch: 'main' };
         let currentButtons = [];
         let currentStyles = { fill: 'filled', shape: 'default' };
+        let currentAnimations = { entrance: 'none', hover: 'none' };
+        let currentBgType = 'color';
         let activeEmojiInput = null;
         let analyticsData = {};
         let currentQRSlug = null;
@@ -1486,6 +1786,8 @@
 
             renderThemes();
             renderEmojiPicker();
+            renderGradients();
+            loadGoogleFonts();
             initDragAndDrop();
 
             // Close emoji picker on outside click
@@ -1665,8 +1967,18 @@
             document.getElementById('input-active').checked = true;
             document.getElementById('input-layout').value = 'minimal';
             document.getElementById('input-shadow').checked = false;
+            document.getElementById('input-bio').value = '';
+            document.getElementById('input-font').value = 'system';
+            document.getElementById('input-gradient').value = '';
+            document.getElementById('input-bg-image').value = '';
+            document.getElementById('input-bg-overlay').value = '50';
             currentStyles = { fill: 'filled', shape: 'default' };
+            currentAnimations = { entrance: 'none', hover: 'none' };
+            currentBgType = 'color';
+            switchBgType('color');
             updateStyleSelection();
+            updateAnimationSelection();
+            updateFontPreview();
         }
 
         function loadPageToEditor(page) {
@@ -1674,16 +1986,32 @@
             document.getElementById('slug-preview').textContent = page.slug || 'your-slug';
             document.getElementById('input-name').value = page.name || '';
             document.getElementById('input-tagline').value = page.tagline || '';
+            document.getElementById('input-bio').value = page.bio || '';
             document.getElementById('input-location').value = page.location || '';
             document.getElementById('input-hours').value = page.hours || '';
             document.getElementById('input-logo').value = page.layout?.image?.url || '';
+            document.getElementById('input-font').value = page.layout?.font || 'system';
 
             const primary = page.layout?.colors?.primary || '#FF6B35';
-            const bg = page.layout?.background?.value || '#1a1a1a';
+            const bgType = page.layout?.background?.type || 'color';
+            const bgValue = page.layout?.background?.value || '#1a1a1a';
+
             document.getElementById('input-color-primary').value = primary;
             document.getElementById('input-color-primary-text').value = primary;
-            document.getElementById('input-color-bg').value = bg;
-            document.getElementById('input-color-bg-text').value = bg;
+
+            // Handle different background types
+            currentBgType = bgType;
+            switchBgType(bgType);
+
+            if (bgType === 'color') {
+                document.getElementById('input-color-bg').value = bgValue;
+                document.getElementById('input-color-bg-text').value = bgValue;
+            } else if (bgType === 'gradient') {
+                document.getElementById('input-gradient').value = bgValue;
+            } else if (bgType === 'image') {
+                document.getElementById('input-bg-image').value = bgValue;
+                document.getElementById('input-bg-overlay').value = page.layout?.background?.overlay || 50;
+            }
 
             document.getElementById('input-instagram').value = page.social?.instagram || '';
             document.getElementById('input-facebook').value = page.social?.facebook || '';
@@ -1697,7 +2025,13 @@
                 fill: page.layout?.buttonStyle || 'filled',
                 shape: page.layout?.buttonShape || 'default'
             };
+            currentAnimations = {
+                entrance: page.layout?.animation?.entrance || 'none',
+                hover: page.layout?.animation?.hover || 'none'
+            };
             updateStyleSelection();
+            updateAnimationSelection();
+            updateFontPreview();
 
             currentButtons = (page.buttons || []).map(b => ({
                 text: b.text || '',
@@ -1904,20 +2238,46 @@
         // ============================================
         function updatePreview() {
             const primary = document.getElementById('input-color-primary-text').value || '#FF6B35';
-            const bg = document.getElementById('input-color-bg-text').value || '#1a1a1a';
             const name = document.getElementById('input-name').value || 'Your Business';
             const tagline = document.getElementById('input-tagline').value || 'Your tagline here';
+            const bio = document.getElementById('input-bio').value || '';
             const location = document.getElementById('input-location').value || 'Miami, FL';
             const logo = document.getElementById('input-logo').value;
             const shadow = document.getElementById('input-shadow').checked;
+            const font = document.getElementById('input-font').value;
 
             const screen = document.getElementById('preview-screen');
             const content = document.getElementById('preview-content');
 
-            // Determine if light theme
-            const isLight = isLightColor(bg);
+            // Get background based on type
+            let bgStyle = '';
+            let isLight = false;
+            if (currentBgType === 'color') {
+                const bg = document.getElementById('input-color-bg-text').value || '#1a1a1a';
+                bgStyle = bg;
+                isLight = isLightColor(bg);
+            } else if (currentBgType === 'gradient') {
+                const gradient = document.getElementById('input-gradient').value || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                bgStyle = gradient;
+            } else if (currentBgType === 'image') {
+                const img = document.getElementById('input-bg-image').value;
+                const overlay = document.getElementById('input-bg-overlay').value || 50;
+                if (img) {
+                    bgStyle = `linear-gradient(rgba(0,0,0,${overlay/100}), rgba(0,0,0,${overlay/100})), url(${img}) center/cover no-repeat`;
+                } else {
+                    bgStyle = '#1a1a1a';
+                }
+            }
 
-            screen.style.background = bg;
+            screen.style.background = bgStyle;
+
+            // Apply font
+            if (font && font !== 'system') {
+                content.style.fontFamily = `'${font}', sans-serif`;
+            } else {
+                content.style.fontFamily = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+            }
+
             content.style.setProperty('--p-primary', primary);
             content.style.setProperty('--p-text', isLight ? '#1a1a1a' : '#ffffff');
             content.style.setProperty('--p-text-muted', isLight ? '#666' : '#888');
@@ -1934,21 +2294,29 @@
                 <div class="preview-social-link">${getSocialIcon(s)}</div>
             `).join('');
 
-            // Build buttons
+            // Build animation classes
+            const entranceClass = currentAnimations.entrance !== 'none' ? `anim-${currentAnimations.entrance}` : '';
+            const hoverClass = currentAnimations.hover !== 'none' ? `hover-${currentAnimations.hover}` : '';
+
+            // Build buttons with animation delays
             const buttonsHTML = currentButtons
                 .filter(b => b.text || b.url)
-                .map(b => `
-                    <div class="preview-btn style-${currentStyles.fill} shape-${currentStyles.shape} ${shadow ? 'shadow-on' : ''}">
+                .map((b, i) => `
+                    <div class="preview-btn style-${currentStyles.fill} shape-${currentStyles.shape} ${shadow ? 'shadow-on' : ''} ${entranceClass} ${hoverClass}" style="animation-delay: ${i * 0.1}s">
                         ${b.emoji ? `<span>${b.emoji}</span>` : ''}
                         ${b.text || 'Button'}
                     </div>
                 `).join('');
+
+            // Bio HTML
+            const bioHTML = bio ? `<div class="preview-bio">${bio.replace(/\n/g, '<br>')}</div>` : '';
 
             content.innerHTML = `
                 <div class="preview-hero">
                     <img class="preview-avatar" src="${logo || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%220.35em%22 font-size=%2240%22 fill=%22%23666%22>?</text></svg>'}" alt="Logo">
                     <div class="preview-name">${name}</div>
                     <div class="preview-tagline">${tagline}</div>
+                    ${bioHTML}
                     <div class="preview-location">
                         <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
                         ${location}
@@ -1960,6 +2328,9 @@
                 ${socialHTML ? `<div class="preview-social">${socialHTML}</div>` : ''}
                 <div class="preview-footer">Powered by LinkMia</div>
             `;
+
+            // Update font preview
+            updateFontPreview();
         }
 
         function isLightColor(hex) {
@@ -2005,23 +2376,37 @@
             const existingPage = editIndex !== -1 ? pagesData.pages[editIndex] : null;
             const shortCode = existingPage?.shortCode || generateShortCode();
 
+            // Get background value based on type
+            let bgValue = '';
+            let bgOverlay = 50;
+            if (currentBgType === 'color') {
+                bgValue = document.getElementById('input-color-bg-text').value;
+            } else if (currentBgType === 'gradient') {
+                bgValue = document.getElementById('input-gradient').value;
+            } else if (currentBgType === 'image') {
+                bgValue = document.getElementById('input-bg-image').value;
+                bgOverlay = parseInt(document.getElementById('input-bg-overlay').value) || 50;
+            }
+
             const page = {
                 slug,
                 shortCode,
                 name,
                 tagline: document.getElementById('input-tagline').value.trim(),
+                bio: document.getElementById('input-bio').value.trim(),
                 location: document.getElementById('input-location').value.trim(),
                 hours: document.getElementById('input-hours').value.trim(),
                 layout: {
                     style: document.getElementById('input-layout').value,
+                    font: document.getElementById('input-font').value,
                     image: {
                         url: document.getElementById('input-logo').value.trim(),
                         heroBackground: ''
                     },
                     background: {
-                        type: 'color',
-                        value: document.getElementById('input-color-bg-text').value,
-                        blur: 0
+                        type: currentBgType,
+                        value: bgValue,
+                        overlay: bgOverlay
                     },
                     colors: {
                         primary: document.getElementById('input-color-primary-text').value,
@@ -2033,7 +2418,11 @@
                     spacing: 'comfortable',
                     buttonStyle: currentStyles.fill,
                     buttonShape: currentStyles.shape,
-                    buttonShadow: document.getElementById('input-shadow').checked
+                    buttonShadow: document.getElementById('input-shadow').checked,
+                    animation: {
+                        entrance: currentAnimations.entrance,
+                        hover: currentAnimations.hover
+                    }
                 },
                 buttons: currentButtons.filter(b => b.text || b.url).map(b => ({
                     text: b.text,
@@ -2350,6 +2739,83 @@
             } catch (e) {
                 console.error('Failed to save analytics:', e);
             }
+        }
+
+        // ============================================
+        // GRADIENT PRESETS
+        // ============================================
+        function renderGradients() {
+            const container = document.getElementById('gradient-presets');
+            if (!container) return;
+
+            container.innerHTML = GRADIENTS.map((g, i) => `
+                <div class="gradient-preset" style="background: ${g.value};" data-value="${g.value}" onclick="selectGradient(${i})" title="${g.name}"></div>
+            `).join('');
+        }
+
+        function selectGradient(index) {
+            document.getElementById('input-gradient').value = GRADIENTS[index].value;
+            document.querySelectorAll('.gradient-preset').forEach((el, i) => {
+                el.classList.toggle('selected', i === index);
+            });
+            updatePreview();
+        }
+
+        // ============================================
+        // GOOGLE FONTS
+        // ============================================
+        function loadGoogleFonts() {
+            const link = document.createElement('link');
+            link.href = `https://fonts.googleapis.com/css2?family=${GOOGLE_FONTS.join('&family=')}&display=swap`;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+
+        function updateFontPreview() {
+            const font = document.getElementById('input-font').value;
+            const preview = document.getElementById('font-preview');
+            if (!preview) return;
+
+            if (font && font !== 'system') {
+                preview.style.fontFamily = `'${font}', sans-serif`;
+            } else {
+                preview.style.fontFamily = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+            }
+        }
+
+        // ============================================
+        // BACKGROUND TYPE SWITCH
+        // ============================================
+        function switchBgType(type) {
+            currentBgType = type;
+
+            document.querySelectorAll('.bg-type-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.type === type);
+            });
+
+            document.querySelectorAll('.bg-type-content').forEach(c => {
+                c.classList.toggle('active', c.id === `bg-${type}`);
+            });
+
+            updatePreview();
+        }
+
+        // ============================================
+        // ANIMATION SELECTION
+        // ============================================
+        function selectAnimation(type, value) {
+            currentAnimations[type] = value;
+            updateAnimationSelection();
+            updatePreview();
+        }
+
+        function updateAnimationSelection() {
+            document.querySelectorAll('#anim-entrance .animation-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.value === currentAnimations.entrance);
+            });
+            document.querySelectorAll('#anim-hover .animation-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.value === currentAnimations.hover);
+            });
         }
     </script>
 </body>

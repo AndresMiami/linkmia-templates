@@ -397,6 +397,76 @@
         .hidden {
             display: none !important;
         }
+
+        /* Bio Text */
+        .bio {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* Button Entrance Animations */
+        .btn.anim-fade {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .btn.anim-slide {
+            animation: slideUp 0.4s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .btn.anim-scale {
+            animation: scaleIn 0.3s ease forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .btn.anim-bounce {
+            animation: bounceIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Button Hover Animations */
+        .btn.hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn.hover-glow:hover {
+            box-shadow: 0 0 20px var(--primary-color), 0 0 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn.hover-pulse:hover {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
     </style>
 </head>
 <body>
@@ -417,6 +487,7 @@
             <img id="hero-image" class="hero-image" src="" alt="Logo">
             <h1 class="restaurant-name" id="restaurant-name"></h1>
             <p class="tagline" id="tagline"></p>
+            <p class="bio" id="bio"></p>
             <p class="location" id="location">
                 <svg fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
@@ -442,6 +513,7 @@
                 <img id="card-hero-image" class="hero-image" src="" alt="Logo">
                 <h1 class="restaurant-name" id="card-restaurant-name"></h1>
                 <p class="tagline" id="card-tagline"></p>
+                <p class="bio" id="card-bio"></p>
                 <p class="location">
                     <svg fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
@@ -528,10 +600,28 @@
         };
 
         // ============================================
+        // LOAD GOOGLE FONTS
+        // ============================================
+        function loadFont(fontName) {
+            if (!fontName || fontName === 'system') return;
+            const link = document.createElement('link');
+            link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(' ', '+')}&display=swap`;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+
+        // ============================================
         // RENDER PAGE
         // ============================================
         function renderPage(config) {
             const isCard = config.layout?.style === 'card';
+
+            // Load custom font
+            const font = config.layout?.font;
+            if (font && font !== 'system') {
+                loadFont(font);
+                document.body.style.fontFamily = `'${font}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+            }
 
             // Set CSS variables
             document.documentElement.style.setProperty('--primary-color', config.layout?.colors?.primary || '#FF6B35');
@@ -550,15 +640,18 @@
                 document.getElementById('og-image').content = config.layout.image.url;
             }
 
-            // Apply background
-            if (config.layout?.background?.type === 'image') {
-                document.body.style.backgroundImage = `url(${config.layout.background.value})`;
-                document.body.style.backgroundSize = 'cover';
-                document.body.style.backgroundPosition = 'center';
-                document.body.style.backgroundAttachment = 'fixed';
+            // Apply background based on type
+            const bgType = config.layout?.background?.type || 'color';
+            const bgValue = config.layout?.background?.value || '#1a1a1a';
+
+            if (bgType === 'gradient') {
+                document.body.style.background = bgValue;
+            } else if (bgType === 'image' && bgValue) {
+                const overlay = config.layout?.background?.overlay || 50;
+                document.body.style.background = `linear-gradient(rgba(0,0,0,${overlay/100}), rgba(0,0,0,${overlay/100})), url(${bgValue}) center/cover no-repeat fixed`;
                 document.body.classList.add('has-bg-image');
             } else {
-                document.body.style.backgroundColor = config.layout?.background?.value || '#1a1a1a';
+                document.body.style.backgroundColor = bgValue;
             }
 
             if (isCard) {
@@ -570,6 +663,7 @@
                 document.getElementById('card-hero-image').alt = `${config.name} Logo`;
                 document.getElementById('card-restaurant-name').textContent = config.name;
                 document.getElementById('card-tagline').textContent = config.tagline || '';
+                document.getElementById('card-bio').textContent = config.bio || '';
                 document.getElementById('card-location-text').textContent = config.location || '';
                 document.getElementById('card-hours').textContent = config.hours || '';
 
@@ -589,6 +683,7 @@
                 document.getElementById('hero-image').alt = `${config.name} Logo`;
                 document.getElementById('restaurant-name').textContent = config.name;
                 document.getElementById('tagline').textContent = config.tagline || '';
+                document.getElementById('bio').textContent = config.bio || '';
                 document.getElementById('location-text').textContent = config.location || '';
                 document.getElementById('hours').textContent = config.hours || '';
 
@@ -607,16 +702,25 @@
             const buttonStyle = config?.layout?.buttonStyle || 'filled';
             const buttonShape = config?.layout?.buttonShape || 'default';
             const buttonShadow = config?.layout?.buttonShadow || false;
+            const entranceAnim = config?.layout?.animation?.entrance || 'none';
+            const hoverAnim = config?.layout?.animation?.hover || 'none';
             const slug = config?.slug;
 
-            buttons.forEach(button => {
+            buttons.forEach((button, index) => {
                 const btn = document.createElement('a');
                 btn.href = button.url;
 
                 // Build class list
                 const classes = ['btn', `btn-${buttonStyle}`, `btn-shape-${buttonShape}`];
                 if (buttonShadow) classes.push('btn-shadow');
+                if (entranceAnim !== 'none') classes.push(`anim-${entranceAnim}`);
+                if (hoverAnim !== 'none') classes.push(`hover-${hoverAnim}`);
                 btn.className = classes.join(' ');
+
+                // Add animation delay for staggered entrance
+                if (entranceAnim !== 'none') {
+                    btn.style.animationDelay = `${index * 0.1}s`;
+                }
 
                 // Add emoji if present
                 if (button.emoji) {
