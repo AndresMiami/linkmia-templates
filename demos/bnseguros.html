@@ -471,6 +471,229 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.03); }
         }
+
+        /* ============================================
+           THEME: "app" - the LinkMia booking-flow look
+           (AirportMVP css/style.css design system) in the page's OWN colours.
+           Opt-in via layout.theme = "app"; everything is scoped to .theme-app.
+           ============================================ */
+        .theme-app {
+            --line: rgba(255, 255, 255, 0.12);             /* every outline and divider */
+            --surface-control: rgba(255, 255, 255, 0.04);  /* every tappable box */
+            --selected-bg: rgba(var(--primary-rgb), 0.12); /* brand tint */
+            --r-control: 12px;
+            --r-card: 16px;
+            --card-pad-x: 20px;
+            --page-pad: 24px;
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --glow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+            --ease: 0.2s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        @media (max-width: 480px) { .theme-app { --page-pad: 16px; } }
+
+        .theme-app .app-page {
+            max-width: 576px;
+            margin: 0 auto;
+            padding: var(--page-pad);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            gap: var(--page-pad);
+        }
+
+        .theme-app .app-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.10) 100%), var(--card-background);
+            border-radius: var(--r-card);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: appFadeIn 0.3s ease both;
+        }
+
+        /* header row: like the booking card's progress row */
+        .theme-app .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 12px var(--card-pad-x);
+            border-bottom: 1px solid var(--line);
+            min-height: 60px;
+        }
+
+        .theme-app .app-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            background: var(--surface-control);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .theme-app .app-pill svg { width: 14px; height: 14px; flex: none; }
+
+        .theme-app .app-social { display: flex; gap: 8px; }
+        .theme-app .app-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            background: var(--surface-control);
+            color: var(--text-color);
+            transition: all var(--ease);
+        }
+        .theme-app .app-social a:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .theme-app .app-social .social-icon { width: 18px; height: 18px; }
+
+        .theme-app .app-body { padding: 24px var(--card-pad-x); }
+
+        /* identity */
+        .theme-app .app-identity { text-align: center; margin-bottom: 24px; }
+        .theme-app .app-avatar {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.18);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            overflow: hidden;
+        }
+        .theme-app .app-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .theme-app .app-name {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-color);
+            margin-bottom: 4px;
+        }
+        .theme-app .app-tagline { font-size: 15px; color: var(--text-muted); }
+
+        /* section label: like "SELECT AIRPORT" */
+        .theme-app .app-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        /* primary actions: like "Start your journey" / "Continue" */
+        .theme-app .app-actions { display: flex; flex-direction: column; gap: 12px; }
+        .theme-app .app-cta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 56px;
+            padding: 10px 16px 10px 10px;
+            border-radius: var(--r-control);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.08) 100%), var(--primary-color);
+            box-shadow: var(--glow);
+            color: var(--on-primary-color, #fff);
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform var(--ease), box-shadow var(--ease);
+        }
+        .theme-app .app-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4); }
+        .theme-app .app-cta:active { transform: scale(0.98); }
+        .theme-app .app-cta-icon {
+            width: 36px;
+            height: 36px;
+            flex: none;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.10);
+            font-size: 20px;
+        }
+        .theme-app .app-cta-text { flex: 1; line-height: 1.25; }
+        .theme-app .app-chevron { width: 18px; height: 18px; flex: none; opacity: 0.8; }
+
+        /* secondary actions: like the mode / airport tappable boxes */
+        .theme-app .app-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .theme-app .app-option:last-child:nth-child(odd) { grid-column: 1 / -1; }
+        .theme-app .app-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 76px;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            line-height: 1.25;
+            transition: all var(--ease);
+        }
+        .theme-app .app-option-icon { font-size: 22px; }
+        .theme-app .app-option:hover {
+            border-color: rgba(var(--primary-rgb), 0.5);
+            background: rgba(var(--primary-rgb), 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.15);
+        }
+        .theme-app .app-option:active { transform: scale(0.98); }
+
+        .theme-app .app-cta:focus-visible,
+        .theme-app .app-option:focus-visible,
+        .theme-app .app-social a:focus-visible,
+        .theme-app .app-pill:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* hours: like the summary rows (muted label, white value) */
+        .theme-app .app-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+        }
+        .theme-app .app-rows { display: flex; flex-direction: column; gap: 6px; }
+        .theme-app .app-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+        .theme-app .app-row-label { color: var(--text-muted); }
+        .theme-app .app-row-value { color: var(--text-color); font-weight: 500; text-align: right; }
+
+        .theme-app .app-footer { display: flex; justify-content: center; margin-top: auto; }
+        .theme-app .app-footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+
+        @keyframes appFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .theme-app .app-card { animation: none; }
+            .theme-app .app-cta, .theme-app .app-option { transition: none; }
+            .theme-app .app-cta:hover, .theme-app .app-option:hover { transform: none; }
+        }
     </style>
 </head>
 <body>
@@ -507,6 +730,37 @@
                 <p id="hours"></p>
                 <p class="powered-by">Powered by <a href="https://linkmia.com" target="_blank">LinkMia</a></p>
             </div>
+        </div>
+    </div>
+
+    <!-- App theme (layout.theme = "app") -->
+    <div id="content-app" class="app-page hidden">
+        <div class="app-card">
+            <div class="app-header">
+                <span class="app-pill" id="app-location">
+                    <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span id="app-location-text"></span>
+                </span>
+                <div class="app-social" id="app-social"></div>
+            </div>
+            <div class="app-body">
+                <div class="app-identity">
+                    <div class="app-avatar" id="app-avatar" aria-hidden="true"></div>
+                    <h1 class="app-name" id="app-name"></h1>
+                    <p class="app-tagline" id="app-tagline"></p>
+                </div>
+                <div class="app-actions" id="app-actions"></div>
+                <div class="app-options" id="app-options"></div>
+                <div class="app-section" id="app-hours-section">
+                    <p class="app-label" id="app-hours-label"></p>
+                    <div class="app-rows" id="app-hours"></div>
+                </div>
+            </div>
+        </div>
+        <div class="app-footer">
+            <span class="app-pill">Powered by <a href="https://linkmia.com" target="_blank" rel="noopener">LinkMia</a></span>
         </div>
     </div>
 
@@ -635,6 +889,106 @@
             return lum !== null && lum >= 0.5 ? '#1b2150' : '#ffffff';
         }
 
+        // "#ffd200" -> "255, 210, 0" (for rgba() tints); null if unparseable.
+        function hexToRgbTriplet(hex) {
+            let h = String(hex || '').trim().replace(/^#/, '');
+            if (h.length === 3) h = h.split('').map(c => c + c).join('');
+            if (!/^[0-9a-f]{6}$/i.test(h)) return null;
+            return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)).join(', ');
+        }
+
+        // "Best National Insurance" -> "BN" (stand-in when there is no logo)
+        function initialsOf(name) {
+            return String(name || '').split(/\s+/).filter(Boolean).slice(0, 2)
+                .map(w => w[0].toUpperCase()).join('');
+        }
+
+        const chevronSVG = '<svg class="app-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg>';
+
+        function renderAppTheme(config) {
+            document.body.className = 'theme-app';
+            document.getElementById('content-app').classList.remove('hidden');
+            const rgb = hexToRgbTriplet(config.layout?.colors?.primary) || '255, 107, 53';
+            document.documentElement.style.setProperty('--primary-rgb', rgb);
+
+            // header row
+            const loc = config.location || '';
+            document.getElementById('app-location-text').textContent = loc;
+            if (!loc) document.getElementById('app-location').remove();
+            renderSocial(config.social || {}, 'app-social');
+
+            // identity: logo if there is one, otherwise initials
+            const avatar = document.getElementById('app-avatar');
+            const logo = config.layout?.image?.url;
+            if (logo) {
+                const img = document.createElement('img');
+                img.src = logo;
+                img.alt = '';
+                avatar.appendChild(img);
+            } else {
+                avatar.textContent = initialsOf(config.name);
+            }
+            document.getElementById('app-name').textContent = config.name;
+            document.getElementById('app-tagline').textContent = config.tagline || '';
+
+            // buttons: type "primary" -> gradient CTA, anything else -> tappable box
+            const slug = config.slug;
+            const actions = document.getElementById('app-actions');
+            const options = document.getElementById('app-options');
+            (config.buttons || []).forEach(button => {
+                const primary = button.type === 'primary';
+                const a = document.createElement('a');
+                a.href = button.url;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.className = primary ? 'app-cta' : 'app-option';
+                if (button.emoji) {
+                    const icon = document.createElement('span');
+                    icon.className = primary ? 'app-cta-icon' : 'app-option-icon';
+                    icon.setAttribute('aria-hidden', 'true');
+                    icon.textContent = button.emoji;
+                    a.appendChild(icon);
+                }
+                const text = document.createElement('span');
+                text.className = primary ? 'app-cta-text' : '';
+                text.textContent = button.text;
+                a.appendChild(text);
+                if (primary) a.insertAdjacentHTML('beforeend', chevronSVG);
+                a.addEventListener('click', () => { if (slug) trackClick(slug); });
+                (primary ? actions : options).appendChild(a);
+            });
+            if (!actions.children.length) actions.remove();
+            if (!options.children.length) options.remove();
+
+            // hours: "Lun–Vie 9am–6:30pm · Sáb 10am–2pm" -> label/value rows
+            const hours = (config.hours || '').split('·').map(s => s.trim()).filter(Boolean);
+            if (hours.length) {
+                document.getElementById('app-hours-label').textContent = config.labels?.hours || 'Horario';
+                const rows = document.getElementById('app-hours');
+                hours.forEach(part => {
+                    const cut = part.indexOf(' ');
+                    const row = document.createElement('div');
+                    row.className = 'app-row';
+                    const label = document.createElement('span');
+                    label.className = 'app-row-label';
+                    const value = document.createElement('span');
+                    value.className = 'app-row-value';
+                    if (cut > 0) {
+                        label.textContent = part.slice(0, cut);
+                        value.textContent = part.slice(cut + 1);
+                    } else {
+                        value.textContent = part;
+                    }
+                    row.append(label, value);
+                    rows.appendChild(row);
+                });
+            } else {
+                document.getElementById('app-hours-section').remove();
+            }
+
+            document.getElementById('loading').style.display = 'none';
+        }
+
         function setHeroImage(id, config) {
             const img = document.getElementById(id);
             const url = config.layout?.image?.url;
@@ -689,6 +1043,11 @@
                 document.body.classList.add('has-bg-image');
             } else {
                 document.body.style.backgroundColor = bgValue;
+            }
+
+            if (config.layout?.theme === 'app') {
+                renderAppTheme(config);
+                return;
             }
 
             if (isCard) {
@@ -819,6 +1178,7 @@
             "hours": "Lun–Vie 9am–6:30pm · Sáb 10am–2pm · Dom 10am–3pm",
             "layout": {
                 "style": "card",
+                "theme": "app",
                 "image": {
                     "url": "",
                     "heroBackground": ""
