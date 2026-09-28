@@ -688,7 +688,7 @@
         /* logo in the circle: contain so wide logos are not cropped */
         .theme-app .app-avatar img { object-fit: contain; padding: 8px; }
 
-        /* CTA as a form toggle: chevron turns down while its form is open */
+        /* a CTA that opens the quote flow */
         .theme-app button.app-cta {
             width: 100%;
             border: none;
@@ -696,47 +696,106 @@
             text-align: left;
             cursor: pointer;
         }
-        .theme-app .app-cta .app-chevron { transition: transform var(--ease); }
-        .theme-app .app-cta[aria-expanded="true"] .app-chevron { transform: rotate(90deg); }
 
-        /* inline lead form: a panel in the card, like the booking stages */
-        .theme-app .lead-panel {
-            margin-top: 12px;
-            padding: 20px 16px;
-            border: 1px solid var(--line);
-            border-radius: var(--r-control);
-            background: rgba(0, 0, 0, 0.14);
-            animation: appFadeIn 0.25s ease both;
-            scroll-margin-top: 16px;
-        }
-        .theme-app .lead-head {
+        /* ============================================
+           QUOTE FLOW - one question per screen, full-screen layer over the
+           page (State Farm pacing, LinkMia booking-flow look, page colours)
+           ============================================ */
+        html.q-locked, html.q-locked body { overflow: hidden; }
+
+        .q-flow {
+            position: fixed;
+            inset: 0;
+            z-index: 900;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 16px;
+            flex-direction: column;
+            background: var(--page-background, #1b2150);
+            color: var(--text-color);
+            color-scheme: dark;
+            animation: qFade 0.2s ease both;
         }
-        .theme-app .lead-title { font-size: 17px; font-weight: 600; color: var(--text-color); outline: none; }
-        .theme-app .lead-close {
-            flex: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+        .q-top, .q-view, .q-foot-inner { width: 100%; max-width: 576px; margin: 0 auto; }
+        .q-top { flex: none; position: relative; z-index: 1; padding: max(12px, env(safe-area-inset-top)) 16px 10px; transition: box-shadow var(--ease); }
+        .q-flow.is-scrolled .q-top { box-shadow: 0 1px 0 var(--line), 0 8px 16px rgba(0, 0, 0, 0.25); }
+        .q-bar { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 8px; min-height: 44px; }
+        .q-bar .is-hidden { visibility: hidden; }
+        .q-bar-text { min-width: 0; text-align: center; line-height: 1.3; }
+        .q-section {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .q-count { display: block; font-size: 13px; font-weight: 600; color: var(--text-color); }
+        .q-count:empty { display: none; }
+        .q-progress { height: 4px; margin: 12px 4px 0; border-radius: 4px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+        .q-progress[hidden] { display: block; visibility: hidden; }
+        .q-progress-fill { height: 100%; width: 0; border-radius: inherit; background: var(--primary-color); transition: width 0.35s ease; }
+
+        .q-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+        .q-view { padding: 24px 20px 32px; }
+        .q-view.q-in-fwd { animation: qInFwd 0.28s ease both; }
+        .q-view.q-in-back { animation: qInBack 0.28s ease both; }
+
+        .q-foot { flex: none; border-top: 1px solid var(--line); background: var(--page-background, #1b2150); }
+        .q-foot[hidden] { display: none; }
+        .q-foot-inner { display: flex; flex-direction: column; gap: 6px; padding: 12px 20px max(12px, env(safe-area-inset-bottom)); }
+
+        /* question header */
+        .q-title { margin: 0 0 8px; font-size: 26px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; outline: none; }
+        .q-sub { margin: 0 0 8px; font-size: 15px; color: var(--text-muted); }
+        .q-context {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 100%;
+            margin: 0 0 14px;
+            padding: 6px 12px;
             border: 1px solid var(--line);
+            border-radius: 9999px;
             background: var(--surface-control);
             color: var(--text-muted);
-            font-size: 18px;
-            line-height: 1;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .q-context svg { width: 16px; height: 16px; flex: none; color: var(--primary-color); }
+        .q-context span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .q-help {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 44px;
+            padding: 0;
+            border: none;
+            background: none;
+            color: var(--primary-color);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left;
             cursor: pointer;
         }
-        .theme-app .lead-form { display: flex; flex-direction: column; gap: 14px; }
-        .theme-app .lead-field { display: flex; flex-direction: column; gap: 6px; }
-        .theme-app .lead-label { font-size: 14px; font-weight: 600; color: var(--text-color); }
-        .theme-app .lead-label .opt { font-weight: 400; color: var(--text-muted); }
-        .theme-app .lead-label .req { color: var(--primary-color); margin-left: 2px; }
-        .theme-app .lead-input {
+        .q-help svg { width: 18px; height: 18px; flex: none; }
+        .q-help:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; border-radius: 4px; }
+
+        /* fields */
+        .q-fields { display: flex; flex-direction: column; gap: 22px; margin-top: 16px; }
+        .q-field { display: flex; flex-direction: column; gap: 8px; }
+        .q-field[hidden] { display: none; }
+        .q-label { font-size: 15px; font-weight: 600; color: var(--text-color); }
+        .q-label .opt { font-weight: 400; color: var(--text-muted); }
+        .q-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .q-label-row .q-help { min-height: 32px; font-size: 14px; }
+        .q-hint { margin: 0; font-size: 13px; color: var(--text-muted); }
+        .q-hint:empty { display: none; }
+        .q-error { margin: 0; font-size: 13px; color: #FF8A80; }
+        .q-error:empty { display: none; }
+
+        .q-input, .q-select {
             width: 100%;
-            min-height: 48px;
+            min-height: 52px;
             padding: 12px 14px;
             border: 1px solid var(--line);
             border-radius: var(--r-control);
@@ -749,72 +808,91 @@
             -webkit-appearance: none;
             appearance: none;
         }
-        .theme-app .lead-input::placeholder { color: rgba(255, 255, 255, 0.35); }
-        .theme-app .lead-input:focus { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.07); }
-        .theme-app .lead-input[aria-invalid="true"] { border-color: #FF453A; }
-        .theme-app .lead-error { font-size: 13px; color: #FF8A80; min-height: 0; }
-        .theme-app .lead-error:empty { display: none; }
+        .q-input::placeholder { color: rgba(255, 255, 255, 0.38); }
+        .q-input[list]::-webkit-calendar-picker-indicator { display: none !important; }   /* type-ahead only, no ▼ */
+        .q-input:focus, .q-select:focus { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.07); }
+        .q-input[aria-invalid="true"], .q-select[aria-invalid="true"] { border-color: #FF453A; }
+        .q-select {
+            padding-right: 36px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23b9bdd6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            cursor: pointer;
+        }
+        .q-select:invalid, .q-select.is-empty { color: rgba(255, 255, 255, 0.45); }
+        .q-select option { color: #111; }
+        input[type="date"].q-input { min-height: 52px; }
+        .q-dob { display: grid; grid-template-columns: 1fr 1.5fr 1.25fr; gap: 8px; }
 
-        /* sí / no: the booking flow's two-up mode buttons */
-        .theme-app .lead-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border: none; }
-        .theme-app .lead-choice legend { padding: 0; margin-bottom: 6px; }
-        .theme-app .lead-choice input { position: absolute; opacity: 0; pointer-events: none; }
-        .theme-app .lead-choice label {
+        /* option cards: radio (round mark) or checkbox (square mark) */
+        .q-options { display: flex; flex-direction: column; gap: 10px; }
+        .q-options[aria-invalid="true"] .q-opt label { border-color: rgba(255, 69, 58, 0.7); }
+        .q-opt { position: relative; }
+        .q-opt input { position: absolute; top: 0; left: 0; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }
+        .q-opt label {
             display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 48px;
+            gap: 14px;
+            min-height: 60px;
+            padding: 14px 16px;
             border: 1px solid var(--line);
             border-radius: var(--r-control);
             background: var(--surface-control);
-            color: var(--text-muted);
-            font-size: 15px;
-            font-weight: 600;
             cursor: pointer;
-            transition: all var(--ease);
+            transition: border-color var(--ease), background var(--ease), transform var(--ease);
+            -webkit-tap-highlight-color: transparent;
         }
-        .theme-app .lead-choice input:checked + label {
-            border-color: var(--primary-color);
-            background: var(--selected-bg);
-            color: var(--primary-color);
-        }
-        .theme-app .lead-choice input:focus-visible + label { outline: 2px solid var(--primary-color); outline-offset: 2px; }
-
-        .theme-app .lead-submit { justify-content: center; margin-top: 4px; }
-        .theme-app .lead-submit .app-cta-text { flex: none; }
-        .theme-app .lead-note { font-size: 12px; color: var(--text-muted); text-align: center; }
-
-        /* confirmation */
-        .theme-app .lead-done { text-align: center; padding: 8px 0; }
-        .theme-app .lead-check {
-            width: 56px;
-            height: 56px;
-            margin: 0 auto 12px;
-            border-radius: 50%;
+        .q-opt label:active { transform: scale(0.99); }
+        .q-mark {
+            width: 22px;
+            height: 22px;
+            flex: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(50, 215, 75, 0.15);
-            border: 1px solid #32D74B;
-            color: #32D74B;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+            transition: border-color var(--ease), background var(--ease);
         }
-        .theme-app .lead-check svg { width: 28px; height: 28px; }
-        .theme-app .lead-done-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; outline: none; }
-        .theme-app .lead-done-text { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
-        .theme-app .lead-link {
-            display: inline-block;
-            margin-top: 12px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-family: inherit;
-            font-size: 14px;
-            text-decoration: underline;
-            cursor: pointer;
+        .q-mark::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            transform: scale(0);
+            transition: transform 0.15s ease;
         }
+        .q-opt-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .q-opt-label { font-size: 16px; font-weight: 600; }
+        .q-opt-desc { font-size: 13px; color: var(--text-muted); }
+        .q-opt input:checked + label { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.08); }
+        .q-opt input:checked + label .q-mark { border-color: var(--primary-color); }
+        .q-opt input:checked + label .q-mark::after { transform: scale(1); }
+        .q-opt input:focus-visible + label { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .q-opt.is-check .q-mark { border-radius: 6px; }
+        .q-opt.is-check .q-mark::after { display: none; }
+        .q-opt.is-check .q-mark svg { width: 14px; height: 14px; color: var(--on-primary-color, #fff); opacity: 0; }
+        .q-opt.is-check input:checked + label .q-mark { background: var(--primary-color); }
+        .q-opt.is-check input:checked + label .q-mark svg { opacity: 1; }
+        /* Sí / No side by side */
+        .q-options.is-pair { display: grid; grid-template-columns: 1fr 1fr; }
+        .q-options.is-pair label { justify-content: center; min-height: 52px; padding: 12px; }
+        .q-options.is-pair .q-mark { display: none; }
+        .q-options.is-pair input:checked + label { color: var(--primary-color); }
+        /* date chips: Hoy / Mañana / Otra fecha */
+        .q-options.is-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .q-options.is-chips label { flex-direction: column; justify-content: center; gap: 2px; min-height: 68px; padding: 10px 6px; text-align: center; }
+        .q-options.is-chips .q-mark { display: none; }
+        .q-options.is-chips .q-opt-text { align-items: center; }
+        .q-options.is-chips .q-opt-label { font-size: 15px; }
+        .q-options.is-chips input:checked + label .q-opt-label { color: var(--primary-color); }
+        .q-date-line { margin: 0; font-size: 14px; color: var(--text-color); }
+        .q-date-line:empty { display: none; }
 
         /* picker row: like CARFAX "Makes & Models" / the booking summary rows */
-        .theme-app .lead-picker {
+        .q-picker {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -830,18 +908,195 @@
             cursor: pointer;
             transition: border-color var(--ease), background var(--ease);
         }
-        .theme-app .lead-picker:active { transform: scale(0.99); }
-        .theme-app .lead-picker:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
-        .theme-app .lead-picker[aria-invalid="true"] { border-color: #FF453A; }
-        .theme-app .lead-picker.is-set { border-color: rgba(var(--primary-rgb), 0.5); }
-        .theme-app .lead-picker-icon { flex: none; width: 28px; height: 28px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
-        .theme-app .lead-picker-icon svg { width: 24px; height: 24px; }
-        .theme-app .lead-picker.is-set .lead-picker-icon { color: var(--primary-color); }
-        .theme-app .lead-picker-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-        .theme-app .lead-picker-value { font-size: 16px; font-weight: 600; }
-        .theme-app .lead-picker:not(.is-set) .lead-picker-value { color: rgba(255, 255, 255, 0.45); font-weight: 500; }
-        .theme-app .lead-picker-sub { font-size: 13px; color: var(--text-muted); }
-        .theme-app .lead-picker .app-chevron { color: var(--text-muted); }
+        .q-picker:active { transform: scale(0.99); }
+        .q-picker:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .q-picker[aria-invalid="true"] { border-color: #FF453A; }
+        .q-picker.is-set { border-color: rgba(var(--primary-rgb), 0.5); }
+        .q-picker-icon { flex: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+        .q-picker-icon svg { width: 24px; height: 24px; }
+        .q-picker.is-set .q-picker-icon { color: var(--primary-color); }
+        .q-picker-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .q-picker-value { font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
+        .q-picker:not(.is-set) .q-picker-value { color: rgba(255, 255, 255, 0.45); font-weight: 500; }
+        .q-picker-sub { font-size: 13px; color: var(--text-muted); }
+        .q-picker-sub:empty { display: none; }
+        .q-picker .app-chevron { color: var(--text-muted); }
+
+        /* contextual note (e.g. "financed cars usually need full coverage") */
+        .q-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 16px;
+            padding: 12px 14px;
+            border: 1px solid rgba(var(--primary-rgb), 0.45);
+            border-radius: var(--r-control);
+            background: rgba(var(--primary-rgb), 0.06);
+            font-size: 14px;
+            line-height: 1.45;
+        }
+        .q-note:empty { display: none; }
+        .q-note::before {
+            content: '';
+            flex: none;
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+            background: var(--primary-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+        }
+        .q-privacy { display: flex; align-items: flex-start; gap: 8px; margin: 22px 0 0; font-size: 13px; color: var(--text-muted); }
+        .q-privacy svg { width: 16px; height: 16px; flex: none; margin-top: 2px; }
+
+        /* footer actions */
+        .q-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            min-height: 56px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--r-control);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.08) 100%), var(--primary-color);
+            box-shadow: var(--glow);
+            color: var(--on-primary-color, #fff);
+            font-family: inherit;
+            font-size: 17px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform var(--ease), box-shadow var(--ease), background var(--ease), color var(--ease);
+        }
+        .q-primary:active { transform: scale(0.98); }
+        .q-primary svg { width: 20px; height: 20px; flex: none; }
+        .q-primary.is-incomplete { background: rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.55); box-shadow: none; }
+        .q-primary:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; }
+        .q-secondary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 10px 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .q-secondary:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .q-alt {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            align-self: center;
+            min-height: 44px;
+            padding: 0 8px;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+        }
+        .q-alt svg { width: 16px; height: 16px; flex: none; }
+        .q-alt:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; border-radius: 4px; }
+        .q-foot-note { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); text-align: center; }
+
+        /* intro */
+        .q-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
+        .q-brand-mark {
+            width: 36px;
+            height: 36px;
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--primary-color);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.18);
+            color: var(--primary-color);
+            font-size: 13px;
+            font-weight: 800;
+            overflow: hidden;
+        }
+        .q-brand-mark img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+        .q-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 4px 0 16px; font-size: 14px; color: var(--text-muted); }
+        .q-meta span { display: inline-flex; align-items: center; gap: 6px; }
+        .q-meta svg { width: 18px; height: 18px; color: var(--primary-color); }
+        .q-lead { margin: 0 0 20px; font-size: 16px; }
+        .q-have { padding: 16px; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-control); }
+        .q-have-title { margin: 0 0 12px; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+        .q-have ul { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .q-have li { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; }
+        .q-have li svg { width: 20px; height: 20px; flex: none; color: #32D74B; }
+
+        /* review */
+        .q-card { margin-top: 16px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface-control); overflow: hidden; }
+        .q-card-title { margin: 0; padding: 14px 16px 4px; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+        .q-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-height: 56px;
+            padding: 10px 16px;
+            border: none;
+            border-top: 1px solid var(--line);
+            background: none;
+            color: var(--text-color);
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+        .q-card-title + .q-row { border-top: none; }
+        .q-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .q-row-label { font-size: 13px; color: var(--text-muted); }
+        .q-row-value { font-size: 16px; font-weight: 500; overflow-wrap: anywhere; }
+        .q-row.is-missing .q-row-value { color: #FF8A80; }
+        .q-row .app-chevron { color: var(--text-muted); }
+        .q-row:active { background: rgba(var(--primary-rgb), 0.06); }
+        .q-row:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
+        .q-bundle { margin-top: 20px; }
+
+        /* sent */
+        .q-done { padding-top: 32px; text-align: center; }
+        .q-done-check {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #32D74B;
+            border-radius: 50%;
+            background: rgba(50, 215, 75, 0.15);
+            color: #32D74B;
+        }
+        .q-done-check svg { width: 36px; height: 36px; }
+        .q-done-text { margin: 0 0 24px; font-size: 15px; color: var(--text-muted); }
+        .q-done .q-alt { margin-top: 12px; }
+        .q-recap { margin-top: 28px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-control); text-align: left; }
+        .q-recap-label { display: block; font-size: 13px; color: var(--text-muted); }
+        .q-recap-value { display: block; font-size: 15px; font-weight: 600; }
+
+        @keyframes qFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes qInFwd { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+        @keyframes qInBack { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) {
+            .q-flow, .q-view.q-in-fwd, .q-view.q-in-back { animation: none; }
+            .q-progress-fill, .q-mark::after { transition: none; }
+        }
 
         /* bottom sheet: LinkMia sheet convention (dim 0.7, 576px, 20px top radius, slideUp 0.3s) */
         .sheet-backdrop {
@@ -853,6 +1108,7 @@
             align-items: flex-end;
             justify-content: center;
             animation: sheetFade 0.2s ease both;
+            color-scheme: dark;
         }
         .sheet {
             width: 100%;
@@ -979,7 +1235,10 @@
         .make-tile:focus-visible, .sheet-row:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
         .sheet-empty { color: var(--text-muted); text-align: center; padding: 16px 0; font-size: 14px; }
         .sheet-other { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
-        .sheet-other .lead-input { width: 100%; }
+        .sheet-other .q-input { width: 100%; }
+        .sheet-text { margin-bottom: 20px; font-size: 15px; line-height: 1.55; }
+        .sheet-text p { margin: 0 0 12px; }
+        .sheet-text ul { display: flex; flex-direction: column; gap: 10px; margin: 0; padding-left: 20px; }
 
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
         @keyframes sheetFade { from { opacity: 0; } to { opacity: 1; } }
@@ -1206,82 +1465,367 @@
         const chevronSVG = '<svg class="app-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg>';
 
         // ============================================
-        // LEAD FORMS: CTA -> inline form -> WhatsApp with the answers
+        // QUOTE FLOW: one question per screen -> review -> WhatsApp
+        // (State Farm-style pacing in the LinkMia booking-flow look)
         // ============================================
         const THIS_YEAR = new Date().getFullYear();
-        const LEAD_FORMS = {
-            auto: {
-                title: 'Cotización de seguro de auto',
-                intro: 'Hola Best National, quiero una cotización de seguro de auto.',
-                fields: [
-                    { name: 'nombre', label: 'Nombre', required: true, autocomplete: 'name', placeholder: 'Tu nombre completo' },
-                    { name: 'telefono', label: 'Teléfono', required: true, type: 'tel', autocomplete: 'tel', inputmode: 'tel', placeholder: '(305) 555-1234', validate: 'phone' },
-                    { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'tu@email.com', validate: 'email' },
-                    { name: 'anio', label: 'Año del vehículo', required: true, kind: 'year', icon: 'calendar', placeholder: 'Selecciona el año', min: 1980, max: THIS_YEAR + 1 },
-                    { name: 'vehiculo', label: 'Marca y modelo', required: true, kind: 'makeModel', icon: 'car', placeholder: 'Selecciona marca y modelo' },
-                    { name: 'millaje', label: 'Millaje aproximado', inputmode: 'numeric', placeholder: 'Ej. 45,000', maxlength: 9, validate: 'miles' },
-                    { name: 'seguro', label: '¿Tienes seguro actualmente?', kind: 'choice', options: ['Sí', 'No'] }
-                ],
-                lines: v => [
-                    ['Nombre', v.nombre],
-                    ['Teléfono', v.telefono],
-                    ['Email', v.email],
-                    ['Vehículo', [v.anio, v.marca, v.modelo].filter(Boolean).join(' ')],
-                    ['Millaje', v.millaje ? `${Number(v.millaje.replace(/\D/g, '')).toLocaleString('en-US')} millas` : ''],
-                    ['Seguro actual', v.seguro]
-                ]
-            },
-            casa: {
-                title: 'Cotización de seguro de casa',
-                intro: 'Hola Best National, quiero una cotización de seguro de casa.',
-                fields: [
-                    { name: 'nombre', label: 'Nombre', required: true, autocomplete: 'name', placeholder: 'Tu nombre completo' },
-                    { name: 'telefono', label: 'Teléfono', required: true, type: 'tel', autocomplete: 'tel', inputmode: 'tel', placeholder: '(305) 555-1234', validate: 'phone' },
-                    { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'tu@email.com', validate: 'email' },
-                    { name: 'direccion', label: 'Dirección o ZIP', required: true, autocomplete: 'street-address', placeholder: 'Ej. 33125 o 123 SW 8th St' },
-                    { name: 'construccion', label: 'Año de construcción', inputmode: 'numeric', placeholder: 'Ej. 1998', maxlength: 4, validate: 'year', min: 1800, max: THIS_YEAR }
-                ],
-                lines: v => [
-                    ['Nombre', v.nombre],
-                    ['Teléfono', v.telefono],
-                    ['Email', v.email],
-                    ['Dirección o ZIP', v.direccion],
-                    ['Año de construcción', v.construccion]
-                ]
-            }
-        };
+        const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const WEEKDAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+        const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-        // Returns an error message, or '' when the value is fine.
-        function checkField(f, value) {
-            if (!value) return f.required ? 'Este campo es obligatorio.' : '';
-            if (f.validate === 'phone') {
-                const digits = value.replace(/\D/g, '');
-                if (digits.length < 10 || digits.length > 15) return 'Escribe un teléfono válido (10 dígitos).';
-            }
-            if (f.validate === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
-                return 'Escribe un email válido.';
-            }
-            if (f.validate === 'miles') {
-                const digits = value.replace(/[\s,.]/g, '');
-                if (!/^\d{1,7}$/.test(digits) || Number(digits) > 999999) return 'Escribe solo números (ej. 45000).';
-            }
-            if (f.validate === 'year') {
-                const y = Number(value);
-                if (!/^\d{4}$/.test(value) || y < f.min || y > f.max) return `Escribe un año entre ${f.min} y ${f.max}.`;
-            }
-            return '';
+        function el(tag, props, ...children) {
+            const n = document.createElement(tag);
+            Object.entries(props || {}).forEach(([k, v]) => {
+                if (v === undefined || v === null || v === false) return;
+                if (k === 'class') n.className = v;
+                else if (k === 'text') n.textContent = v;
+                else n.setAttribute(k, v === true ? '' : v);
+            });
+            children.forEach(c => c && n.appendChild(c));
+            return n;
         }
-
-        function composeLeadMessage(spec, values) {
-            const rows = spec.lines(values)
-                .filter(([, v]) => v && String(v).trim())
-                .map(([k, v]) => `• ${k}: ${String(v).trim()}`);
-            return [spec.intro, '', ...rows].join('\n');
-        }
+        const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+        const resolve = (x, a) => (typeof x === 'function' ? x(a) : x);
 
         function whatsappNumber(config) {
             return String(config.leadForms?.whatsapp || '').replace(/\D/g, '');
         }
+
+        // ---- dates: always the device's local calendar, never UTC ----
+        function today() { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+        function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+        function isoDate(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+        function parseIsoDate(s) {
+            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+            if (!m) return null;
+            const d = new Date(+m[1], +m[2] - 1, +m[3]);
+            return d.getMonth() === +m[2] - 1 && d.getDate() === +m[3] ? d : null;
+        }
+        const longDate = d => `${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+        const shortDate = d => `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`;
+        function startDateOf(a) {
+            if (a.inicio === 'hoy') return today();
+            if (a.inicio === 'manana') return addDays(today(), 1);
+            if (a.inicio === 'fecha') return parseIsoDate(a.inicioFecha);
+            return null;
+        }
+        function dobOf(a) {
+            if (!a.dobD || !a.dobM || !a.dobY) return null;
+            const d = new Date(+a.dobY, +a.dobM - 1, +a.dobD);
+            return d.getMonth() === +a.dobM - 1 ? d : 'invalid';
+        }
+        function ageOn(dob, ref) {
+            let age = ref.getFullYear() - dob.getFullYear();
+            if (ref.getMonth() < dob.getMonth() || (ref.getMonth() === dob.getMonth() && ref.getDate() < dob.getDate())) age--;
+            return age;
+        }
+
+        const check = {
+            vin: v => (/^[A-HJ-NPR-Z0-9]{17}$/.test(v) ? '' : 'El VIN tiene 17 caracteres: letras y números, sin I, O ni Q.'),
+            zip: v => (/^\d{5}$/.test(v) ? '' : 'Escribe un ZIP de 5 dígitos.'),
+            email: v => (EMAIL_RE.test(v) ? '' : 'Escribe un email válido.'),
+            phone: v => {
+                const d = v.replace(/\D/g, '');
+                return d.length === 10 || (d.length === 11 && d[0] === '1') ? '' : 'Escribe un teléfono de 10 dígitos.';
+            },
+            name: v => (v.replace(/\s+/g, ' ').length >= 2 ? '' : 'Escribe tu nombre.'),
+            address: v => (/^\d+$/.test(v) ? check.zip(v) : v.length >= 5 ? '' : 'Escribe la dirección completa o un ZIP de 5 dígitos.')
+        };
+
+        const YES_NO = [{ value: 'si', label: 'Sí' }, { value: 'no', label: 'No' }];
+        const currentInsurance = a => (a.seguroActual === 'si'
+            ? ((a.aseguradora || '').trim() ? `Sí, con ${a.aseguradora.trim()}` : 'Sí')
+            : a.seguroActual === 'no' ? 'No' : '');
+
+        // Last screen of both flows. The WhatsApp message itself carries the
+        // customer's number, so phone is only for a different number.
+        const CONTACT_STEP = {
+            id: 'contacto',
+            section: 'yo',
+            title: 'Último paso: tus datos',
+            sub: 'Te respondemos por WhatsApp, al número desde donde nos escribas.',
+            privacy: 'Tus datos se envían solo a Best National Insurance, por WhatsApp, para preparar tu cotización.',
+            fields: [
+                { name: 'nombre', kind: 'text', label: 'Nombre completo', required: true, reqMsg: 'Escribe tu nombre.', validate: check.name, autocomplete: 'name', autocapitalize: 'words', placeholder: 'Tu nombre y apellido', sum: 'Nombre', rank: 1 },
+                { name: 'email', kind: 'text', type: 'email', label: 'Email', validate: check.email, inputmode: 'email', autocomplete: 'email', autocapitalize: 'off', spellcheck: 'false', placeholder: 'tu@email.com', sum: 'Email', rank: 8 },
+                { name: 'telefono', kind: 'text', type: 'tel', label: 'Otro teléfono', hint: 'Solo si es distinto al número de tu WhatsApp.', validate: check.phone, inputmode: 'tel', autocomplete: 'tel', placeholder: '(305) 555-1234', sum: 'Otro teléfono', rank: 9 }
+            ]
+        };
+
+        const QUOTE_FLOWS = {
+            auto: {
+                product: () => 'seguro de auto',
+                intro: {
+                    eyebrow: 'Seguro de auto',
+                    title: 'Cotiza tu seguro de auto',
+                    have: ['Año, marca y modelo del auto', 'Tu fecha de nacimiento y tu ZIP', 'El VIN, si lo tienes (opcional)']
+                },
+                sections: [
+                    { id: 'veh', title: 'Vehículo', msg: 'Vehículo' },
+                    { id: 'cob', title: 'Cobertura', msg: 'Cobertura' },
+                    { id: 'yo', title: 'Tus datos', msg: 'Mis datos' }
+                ],
+                context: a => (a.marca && a.modelo ? { icon: 'car', text: [a.anio, a.marca, a.modelo].filter(Boolean).join(' ') } : null),
+                bundle: {
+                    label: 'También quiero cotizar el seguro de mi casa',
+                    desc: 'Agrupar casa y auto suele salir más barato.',
+                    msg: 'También me interesa cotizar el seguro de mi casa.'
+                },
+                defaults: () => ({}),
+                steps: [
+                    {
+                        id: 'vehiculo', section: 'veh',
+                        title: '¿Qué auto quieres asegurar?',
+                        fields: [
+                            { name: 'anio', kind: 'year', vehicle: true, label: 'Año', required: true, reqMsg: 'Elige el año.', icon: 'calendar', placeholder: 'Elige el año', sumHidden: true },
+                            { name: 'vehiculo', kind: 'makeModel', label: 'Marca y modelo', required: true, icon: 'car', placeholder: 'Elige marca y modelo', sum: 'Auto', display: a => (a.marca && a.modelo ? [a.anio, a.marca, a.modelo].filter(Boolean).join(' ') : '') },
+                            {
+                                name: 'vin', kind: 'text', label: 'VIN', hint: 'Acelera tu cotización. Tiene 17 letras y números.',
+                                validate: check.vin, transform: v => v.toUpperCase().replace(/[^A-Z0-9]/g, ''),
+                                maxlength: 17, autocapitalize: 'characters', autocomplete: 'off', spellcheck: 'false', placeholder: 'Ej. 1HGCM82633A004352', sum: 'VIN',
+                                help: {
+                                    label: '¿Dónde lo encuentro?', title: '¿Dónde está el VIN?',
+                                    paras: ['El VIN es el número de identificación del vehículo: 17 letras y números. Lo encuentras en:'],
+                                    items: [['', 'Tu registro o el título del auto.'], ['', 'Tu tarjeta de seguro actual.'], ['', 'El tablero, del lado del conductor (se ve a través del parabrisas).'], ['', 'El marco de la puerta del conductor.']]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        id: 'uso', section: 'veh', context: true,
+                        title: '¿Cómo usas el auto?',
+                        help: {
+                            label: '¿Cuál debo elegir?', title: '¿Cuál debo elegir?',
+                            items: [
+                                ['Personal:', 'para ir al trabajo o a la escuela, hacer mandados y el uso diario.'],
+                                ['Apps de trabajo:', 'si manejas para Uber o Lyft, o haces entregas (DoorDash, Instacart, Amazon Flex). Normalmente necesitas una cobertura especial para esto.'],
+                                ['Negocio:', 'si el auto es de tu empresa o lo usas para trabajar (visitar clientes, llevar herramientas o mercancía).']
+                            ]
+                        },
+                        fields: [
+                            {
+                                name: 'uso', kind: 'choice', hideLabel: true, label: 'Uso', required: true, sum: 'Uso',
+                                options: [
+                                    { value: 'personal', label: 'Personal', desc: 'Trabajo, escuela y uso diario' },
+                                    { value: 'apps', label: 'Apps de trabajo', desc: 'Uber, Lyft, DoorDash o entregas', msg: 'Apps de trabajo (Uber, Lyft, entregas)' },
+                                    { value: 'negocio', label: 'Negocio', desc: 'Auto de empresa o para tu trabajo' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'propiedad', section: 'veh', context: true,
+                        title: '¿El auto es tuyo, financiado o en leasing?',
+                        help: {
+                            label: '¿Por qué preguntamos esto?', title: '¿Por qué preguntamos esto?',
+                            paras: ['Si tu auto está financiado o en leasing, el banco o la compañía de leasing normalmente exige cobertura completa y que aparezca en tu póliza.']
+                        },
+                        fields: [
+                            {
+                                name: 'propiedad', kind: 'choice', hideLabel: true, label: 'Propiedad', required: true, sum: 'Propiedad',
+                                options: [
+                                    { value: 'pagado', label: 'Es mío, está pagado', msg: 'Pagado' },
+                                    { value: 'financiado', label: 'Lo estoy financiando', desc: 'Tengo un préstamo con un banco o concesionario', msg: 'Financiado' },
+                                    { value: 'leasing', label: 'Es leasing', desc: 'Lo alquilo a largo plazo', msg: 'Leasing' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'inicio', section: 'cob',
+                        title: '¿Cuándo quieres que empiece tu seguro?',
+                        sub: 'Si no estás seguro, elige hoy. Lo puedes ajustar con tu agente.',
+                        fields: [{ name: 'inicio', kind: 'startDate', hideLabel: true, label: 'Inicio', required: true, maxDays: 90, sum: 'Inicio' }]
+                    },
+                    {
+                        id: 'cobertura', section: 'cob', context: true,
+                        title: '¿Qué cobertura buscas?',
+                        help: {
+                            label: '¿Qué incluye cada una?', title: '¿Qué incluye cada una?',
+                            items: [
+                                ['Lo básico:', 'lo que exige Florida: tu protección personal (PIP) y los daños que causes a la propiedad de otros.'],
+                                ['Cobertura completa:', 'además protege tu propio auto, por choques (collision) y por robo, inundación, vandalismo y otros daños (comprehensive).'],
+                                ['No sé:', 'un agente te explica las opciones y te recomienda la mejor para ti.']
+                            ]
+                        },
+                        note: a => (a.cobertura === 'basica' && (a.propiedad === 'financiado' || a.propiedad === 'leasing')
+                            ? `Como tu auto está ${a.propiedad === 'leasing' ? 'en leasing' : 'financiado'}, el banco normalmente exige cobertura completa. Tu agente te lo confirma.`
+                            : ''),
+                        fields: [
+                            {
+                                name: 'cobertura', kind: 'choice', hideLabel: true, label: 'Cobertura', required: true, sum: 'Tipo',
+                                options: [
+                                    { value: 'basica', label: 'Lo básico', desc: 'Lo mínimo que exige la ley en Florida', msg: 'Lo básico (mínimo de Florida)' },
+                                    { value: 'completa', label: 'Cobertura completa', desc: 'También protege tu auto: choques, robo, inundación' },
+                                    { value: 'asesoria', label: 'No sé, aconséjenme', desc: 'Un agente te explica las opciones', msg: 'No sé, quiero que me aconsejen' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'seguroActual', section: 'cob',
+                        title: '¿Tienes seguro de auto ahora?',
+                        sub: 'Tener seguro sin interrupciones puede ayudarte a conseguir un mejor precio.',
+                        fields: [
+                            { name: 'seguroActual', kind: 'choice', layout: 'pair', hideLabel: true, label: 'Seguro actual', required: true, options: YES_NO, sum: 'Seguro actual', display: currentInsurance },
+                            { name: 'aseguradora', kind: 'text', label: '¿Con qué compañía?', showIf: a => a.seguroActual === 'si', list: 'q-carriers-auto', autocomplete: 'off', autocapitalize: 'words', placeholder: 'Ej. GEICO, Progressive', sumHidden: true }
+                        ]
+                    },
+                    {
+                        id: 'conductor', section: 'yo',
+                        title: 'Cuéntanos sobre ti',
+                        sub: 'Esto nos ayuda a calcular un precio más exacto.',
+                        fields: [
+                            { name: 'dob', kind: 'dob', label: 'Fecha de nacimiento', required: true, sum: 'Fecha de nacimiento', rank: 2 },
+                            { name: 'zip', kind: 'text', label: 'ZIP donde se guarda el auto', hint: 'Donde el auto pasa la noche.', required: true, reqMsg: 'Escribe un ZIP de 5 dígitos.', validate: check.zip, transform: v => v.replace(/\D/g, ''), inputmode: 'numeric', pattern: '[0-9]*', maxlength: 5, autocomplete: 'postal-code', placeholder: 'Ej. 33125', sum: 'ZIP', rank: 3 },
+                            { name: 'accidentes', kind: 'choice', layout: 'pair', label: '¿Accidentes o multas en los últimos 3 años?', required: true, options: YES_NO, sum: 'Accidentes o multas (3 años)', rank: 4 }
+                        ]
+                    },
+                    CONTACT_STEP
+                ]
+            },
+
+            casa: {
+                product: a => (a.ocupacion === 'inquilino' ? 'seguro de inquilino (renters)'
+                    : a.ocupacion === 'alquilo' ? 'seguro para una propiedad que alquilo'
+                    : 'seguro de casa'),
+                intro: {
+                    eyebrow: 'Seguro de casa',
+                    title: 'Cotiza tu seguro de casa',
+                    have: ['La dirección o el ZIP de la propiedad', 'El año de construcción y la edad del techo (aproximados)', 'Tu póliza actual, si tienes una']
+                },
+                sections: [
+                    { id: 'prop', title: 'Propiedad', msg: 'Propiedad' },
+                    { id: 'seg', title: 'Seguro', msg: 'Seguro' },
+                    { id: 'yo', title: 'Tus datos', msg: 'Mis datos' }
+                ],
+                context: a => ((a.direccion || '').trim() ? { icon: 'home', text: a.direccion.trim() } : null),
+                bundle: {
+                    label: 'También quiero cotizar el seguro de mi auto',
+                    desc: 'Agrupar casa y auto suele salir más barato.',
+                    msg: 'También me interesa cotizar el seguro de mi auto.'
+                },
+                defaults: () => ({}),
+                steps: [
+                    {
+                        id: 'direccion', section: 'prop',
+                        title: '¿Dónde está la propiedad?',
+                        sub: 'Con el ZIP basta para empezar.',
+                        fields: [{ name: 'direccion', kind: 'text', label: 'Dirección o ZIP', required: true, reqMsg: 'Escribe la dirección o el ZIP.', validate: check.address, autocomplete: 'street-address', placeholder: 'Ej. 123 SW 8th St, Miami, FL 33130', sum: 'Dirección' }]
+                    },
+                    {
+                        id: 'tipo', section: 'prop', context: true,
+                        title: '¿Qué tipo de propiedad es?',
+                        fields: [
+                            {
+                                name: 'tipo', kind: 'choice', hideLabel: true, label: 'Tipo', required: true, sum: 'Tipo',
+                                options: [
+                                    { value: 'casa', label: 'Casa', desc: 'Casa independiente' },
+                                    { value: 'townhouse', label: 'Townhouse', desc: 'Casa adosada' },
+                                    { value: 'condo', label: 'Condo o apartamento', desc: 'Unidad en un edificio o condominio', msg: 'Condo / apartamento' },
+                                    { value: 'movil', label: 'Casa móvil', desc: 'Mobile home o prefabricada' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'ocupacion', section: 'prop', context: true,
+                        title: '¿Vives ahí o la alquilas?',
+                        help: {
+                            label: '¿Cuál debo elegir?', title: '¿Cuál debo elegir?',
+                            items: [
+                                ['Vivo ahí:', 'es tu casa principal.'],
+                                ['Segunda casa:', 'la usas por temporadas o de vacaciones.'],
+                                ['La alquilo a otros:', 'es una propiedad de inversión que rentas a inquilinos.'],
+                                ['Soy inquilino:', 'alquilas donde vives. Lo que necesitas es un seguro de inquilino (renters), que protege tus pertenencias y tu responsabilidad, no el edificio.']
+                            ]
+                        },
+                        fields: [
+                            {
+                                name: 'ocupacion', kind: 'choice', hideLabel: true, label: 'Uso de la propiedad', required: true, sum: 'Uso de la propiedad',
+                                options: [
+                                    { value: 'vivo', label: 'Vivo ahí', desc: 'Es mi casa principal' },
+                                    { value: 'segunda', label: 'Es mi segunda casa', desc: 'Casa de vacaciones o de temporada', msg: 'Segunda casa' },
+                                    { value: 'alquilo', label: 'La alquilo a otros', desc: 'Es una propiedad de inversión' },
+                                    { value: 'inquilino', label: 'Soy inquilino', desc: 'Alquilo el lugar donde vivo', msg: 'Soy inquilino (renters)' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'construccion', section: 'prop', context: true,
+                        when: a => a.ocupacion !== 'inquilino',
+                        title: '¿En qué año se construyó?',
+                        sub: 'Un aproximado está bien.',
+                        help: {
+                            label: '¿Dónde lo encuentro?', title: '¿Dónde encuentro el año de construcción?',
+                            paras: ['Aparece en el registro de la propiedad del condado. En Miami-Dade, búscalo con tu dirección en el sitio del Property Appraiser.']
+                        },
+                        fields: [{ name: 'construccion', kind: 'year', hideLabel: true, label: 'Año de construcción', required: true, reqMsg: 'Elige el año o «No estoy seguro».', icon: 'calendar', placeholder: 'Elige el año', min: 1900, max: THIS_YEAR, unknown: 'No estoy seguro', sheetTitle: 'Año de construcción', sum: 'Año de construcción' }]
+                    },
+                    {
+                        id: 'techo', section: 'prop', context: true,
+                        when: a => a.ocupacion !== 'inquilino' && a.tipo !== 'condo',
+                        title: '¿Qué edad tiene el techo?',
+                        help: {
+                            label: '¿Por qué importa?', title: '¿Por qué importa la edad del techo?',
+                            paras: ['En Florida, la edad del techo es uno de los factores que más influyen en el precio y en la aprobación del seguro de casa.', 'Si lo cambiaste, ten a mano el año o el permiso de construcción.']
+                        },
+                        fields: [
+                            {
+                                name: 'techo', kind: 'choice', hideLabel: true, label: 'Edad del techo', required: true, sum: 'Edad del techo',
+                                options: [
+                                    { value: 'lt5', label: 'Menos de 5 años' },
+                                    { value: '5-10', label: 'Entre 5 y 10 años', msg: '5 a 10 años' },
+                                    { value: '11-15', label: 'Entre 11 y 15 años', msg: '11 a 15 años' },
+                                    { value: 'gt15', label: 'Más de 15 años' },
+                                    { value: 'nose', label: 'No estoy seguro' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'huracan', section: 'prop', context: true,
+                        when: a => a.ocupacion !== 'inquilino',
+                        title: '¿Tiene protección contra huracanes?',
+                        sub: 'Puedes elegir más de una.',
+                        help: {
+                            label: '¿Por qué preguntamos esto?', title: 'Protección contra huracanes',
+                            paras: ['Las ventanas y puertas de impacto y los shutters pueden darte descuentos en Florida.', 'Normalmente se comprueban con una inspección de mitigación de viento (wind mitigation).']
+                        },
+                        fields: [
+                            {
+                                name: 'huracan', kind: 'multi', hideLabel: true, label: 'Protección contra huracanes', required: true, sum: 'Protección contra huracanes',
+                                options: [
+                                    { value: 'impacto', label: 'Ventanas y puertas de impacto' },
+                                    { value: 'shutters', label: 'Shutters (contraventanas)' },
+                                    { value: 'ninguna', label: 'No tiene', exclusive: true },
+                                    { value: 'nose', label: 'No estoy seguro', exclusive: true }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'seguroActual', section: 'seg',
+                        title: a => (a.ocupacion === 'inquilino' ? '¿Tienes seguro de inquilino ahora?' : '¿Tienes seguro para esta propiedad ahora?'),
+                        fields: [
+                            { name: 'seguroActual', kind: 'choice', layout: 'pair', hideLabel: true, label: 'Seguro actual', required: true, options: YES_NO, sum: 'Seguro actual', display: currentInsurance },
+                            { name: 'aseguradora', kind: 'text', label: '¿Con qué compañía?', showIf: a => a.seguroActual === 'si', list: 'q-carriers-home', autocomplete: 'off', autocapitalize: 'words', placeholder: 'Ej. Citizens, Universal', sumHidden: true },
+                            {
+                                name: 'renovacion', kind: 'select', label: '¿En qué mes se renueva?', showIf: a => a.seguroActual === 'si', placeholder: 'Elige el mes', sum: 'Renovación',
+                                options: MONTHS.map((m, i) => ({ value: String(i + 1), label: cap(m) })).concat({ value: 'nose', label: 'No sé' })
+                            }
+                        ]
+                    },
+                    CONTACT_STEP
+                ]
+            }
+        };
+
+        const CARRIERS = {
+            'q-carriers-auto': ['GEICO', 'Progressive', 'State Farm', 'Allstate', 'Direct Auto', 'Infinity', 'USAA', 'Liberty Mutual', 'Travelers', 'Mercury'],
+            'q-carriers-home': ['Citizens', 'Universal', 'Heritage', 'Security First', 'American Integrity', 'Florida Peninsula', 'Slide', 'Tower Hill', 'State Farm', 'Allstate']
+        };
 
         // Vehicle catalog for the pickers (common US makes/models; "Otro" covers the rest).
         const POPULAR_MAKES = ['Toyota', 'Honda', 'Nissan', 'Hyundai', 'Kia', 'Ford', 'Chevrolet', 'Jeep', 'Tesla', 'BMW', 'Mercedes-Benz', 'Lexus'];
@@ -1329,11 +1873,834 @@
             search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
             calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
             car: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3.5 16h17v2.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V18h-9v.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/><path d="M5 11h14"/><circle cx="8" cy="14" r=".6" fill="currentColor"/><circle cx="16" cy="14" r=".6" fill="currentColor"/></svg>',
+            home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>',
+            clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+            shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+            info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>',
+            lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+            checkCircle: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.2-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4-7 7z"/></svg>',
+            tick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>',
             check: '<svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>'
         };
+        function icon(name, props) {
+            const s = el('span', Object.assign({ 'aria-hidden': 'true' }, props || {}));
+            s.innerHTML = name === 'whatsapp' ? socialIcons.whatsapp : ICON[name] || '';
+            return s;
+        }
 
-        // One bottom sheet at a time. render(api) fills it; api.setView swaps content in place.
-        function openSheet({ title, onClose }) {
+        // ---- layers: the flow and its sheets make everything under them inert ----
+        const modals = [];
+        function pushModal(node, onEscape) {
+            const under = modals.length ? modals[modals.length - 1].node : document.getElementById('content-app');
+            if (under) { under.inert = true; under.setAttribute('aria-hidden', 'true'); }
+            modals.push({ node, onEscape });
+            document.documentElement.classList.add('q-locked');
+        }
+        function popModal(node) {
+            const i = modals.findIndex(m => m.node === node);
+            if (i < 0) return;
+            modals.splice(i, 1);
+            const under = modals.length ? modals[modals.length - 1].node : document.getElementById('content-app');
+            if (under) { under.inert = false; under.removeAttribute('aria-hidden'); }
+            if (!modals.length) document.documentElement.classList.remove('q-locked');
+        }
+        document.addEventListener('keydown', e => {
+            const top = modals[modals.length - 1];
+            if (!top) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                if (top.onEscape) top.onEscape();
+            } else if (e.key === 'Tab') {   // keep focus inside the top layer
+                const f = [...top.node.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex="0"]')]
+                    .filter(n => n.offsetParent !== null && !n.closest('[hidden]'));
+                if (!f.length) return;
+                if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+                else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+            }
+        });
+
+        // ---- history: every screen is a history entry, so the phone's Back
+        //      button goes back one question (and closes an open picker first) ----
+        const H = { ok: false };
+        try { history.replaceState(history.state, ''); H.ok = true; } catch (_) { /* sandboxed: in-page stack only */ }
+        if (H.ok && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+        let PAGE = null;          // the page config (WhatsApp number, logo)
+        let QF = null;            // the open flow
+        let activeSheet = null;   // the open bottom sheet, if any
+
+        // ---- drafts: answers survive a reload or a trip to another app (this tab only) ----
+        const draftKey = kind => `bn-quote-${kind}-v1`;
+        function loadDraft(kind) {
+            try { return JSON.parse(sessionStorage.getItem(draftKey(kind)) || 'null'); } catch (_) { return null; }
+        }
+        function saveDraft() {
+            if (!QF) return;
+            try { sessionStorage.setItem(draftKey(QF.kind), JSON.stringify({ a: QF.a, sent: QF.sent, sentUrl: QF.sentUrl })); } catch (_) { /* private mode */ }
+        }
+        function clearDraft(kind) {
+            try { sessionStorage.removeItem(draftKey(kind)); } catch (_) { /* private mode */ }
+        }
+        function hasProgress(a, spec) {
+            const d = spec.defaults();
+            return Object.keys(a).some(k => {
+                const v = a[k];
+                if (k in d && d[k] === v) return false;
+                return !(v === '' || v == null || v === false || (Array.isArray(v) && !v.length));
+            });
+        }
+
+        // ---- answers, validation, display ----
+        function visibleSteps() { return QF.spec.steps.filter(s => !s.when || s.when(QF.a)); }
+        function fieldShown(f, a) { return !f.showIf || f.showIf(a); }
+        function optionOf(f, v) { return (f.options || []).find(o => o.value === v); }
+
+        function fieldError(f, a) {
+            if (!fieldShown(f, a)) return '';
+            const v = a[f.name];
+            switch (f.kind) {
+                case 'choice':
+                case 'select':
+                    return f.required && !v ? 'Elige una opción.' : '';
+                case 'multi':
+                    return f.required && !(v && v.length) ? 'Elige al menos una opción.' : '';
+                case 'year':
+                    return f.required && !v ? f.reqMsg || 'Elige el año.' : '';
+                case 'makeModel':
+                    return f.required && !(a.marca && a.modelo) ? 'Elige la marca y el modelo.' : '';
+                case 'startDate': {
+                    if (!v) return 'Elige cuándo quieres que empiece.';
+                    const d = startDateOf(a);
+                    if (!d) return 'Elige la fecha.';
+                    if (d < today() || d > addDays(today(), f.maxDays)) return `Elige una fecha entre hoy y los próximos ${f.maxDays} días.`;
+                    return '';
+                }
+                case 'dob': {
+                    const d = dobOf(a);
+                    if (!d) return f.required ? 'Elige día, mes y año.' : '';
+                    if (d === 'invalid') return 'Esa fecha no existe. Revisa el día.';
+                    const age = ageOn(d, today());
+                    if (age < 16) return 'Debes tener al menos 16 años.';
+                    if (age > 100) return 'Revisa el año de nacimiento.';
+                    return '';
+                }
+                default: {
+                    const s = (v || '').trim();
+                    if (!s) return f.required ? f.reqMsg || 'Este campo es obligatorio.' : '';
+                    return f.validate ? f.validate(s) : '';
+                }
+            }
+        }
+        function stepErrors(step) {
+            return step.fields.map(f => ({ f, msg: fieldError(f, QF.a) })).filter(x => x.msg);
+        }
+        const stepDone = step => !stepErrors(step).length;
+        const firstIncomplete = () => visibleSteps().find(s => !stepDone(s)) || null;
+
+        function displayValue(f, a) {
+            if (f.display) return f.display(a);
+            const v = a[f.name];
+            switch (f.kind) {
+                case 'choice':
+                case 'select': { const o = optionOf(f, v); return o ? o.msg || o.label : ''; }
+                case 'multi': return (v || []).map(x => optionOf(f, x)).filter(Boolean).map(o => o.msg || o.label).join(', ');
+                case 'year': return v === 'unknown' ? f.unknown || 'No sé' : v || '';
+                case 'startDate': {
+                    if (fieldError(f, a)) return '';
+                    const d = startDateOf(a);
+                    return (a.inicio === 'hoy' ? 'Hoy, ' : a.inicio === 'manana' ? 'Mañana, ' : '') + longDate(d);
+                }
+                case 'dob': return fieldError(f, a) ? '' : longDate(dobOf(a));
+                default: return fieldError(f, a) ? '' : (v || '').trim().replace(/\s+/g, ' ');
+            }
+        }
+        function sectionRows(secId) {
+            const rows = [];
+            visibleSteps().filter(s => s.section === secId).forEach(step => step.fields.forEach(f => {
+                if (f.sumHidden || !fieldShown(f, QF.a)) return;
+                const value = displayValue(f, QF.a);
+                if (value) rows.push({ key: f.name, label: f.sum || f.label, value, step: step.id, rank: f.rank || 50 });
+            }));
+            return rows.sort((x, y) => x.rank - y.rank);
+        }
+
+        function composeMessage(mode) {        // mode: 'full' | 'partial' | 'intro'
+            const { spec, a } = QF;
+            const name = mode === 'intro' ? '' : displayValue(CONTACT_STEP.fields[0], a);
+            const lines = [`Hola Best National${name ? `, soy ${name}` : ''}. Quiero una cotización de *${spec.product(a)}*.`];
+            if (mode !== 'intro') {
+                spec.sections.forEach(sec => {
+                    const rows = sectionRows(sec.id).filter(r => r.key !== 'nombre');
+                    if (rows.length) lines.push('', `*${sec.msg}*`, ...rows.map(r => `• ${r.label}: ${r.value}`));
+                });
+                if (a.bundle) lines.push('', spec.bundle.msg);
+            }
+            if (mode === 'partial') lines.push('', 'No terminé el formulario; prefiero continuar por aquí.');
+            if (mode === 'intro') lines.push('', 'Prefiero hacer la cotización por aquí.');
+            return lines.join('\n');
+        }
+
+        // ---- navigation ----
+        function newState(view, extra) {
+            return Object.assign({ bnq: QF.kind, view, i: (QF.st ? QF.st.i : 0) + 1, edit: 0 }, extra || {});
+        }
+        function pushState(st) {
+            if (H.ok) {
+                try { history.pushState(st, ''); } catch (_) { H.ok = false; }
+            }
+            if (!H.ok) QF.stack.push(QF.st);
+            QF.st = st;
+        }
+        function go(view, extra) {
+            if (QF.pendingPop) { QF.afterPop = () => go(view, extra); return; }
+            pushState(newState(view, extra));
+            render('fwd');
+        }
+        function goBack(n) {
+            if (QF.pendingPop) { QF.afterPop = () => goBack(n); return; }
+            if (H.ok) { history.go(-n); return; }
+            let st;
+            for (let k = 0; k < n; k++) { st = QF.stack.pop(); if (!st) break; }
+            if (!st) { closeFlowUI(); return; }
+            QF.st = st;
+            render('back');
+        }
+        function waitForPop() {
+            QF.pendingPop = true;
+            const q = QF;
+            setTimeout(() => {           // popstate normally lands in a few ms
+                if (q.pendingPop) { q.pendingPop = false; const fn = q.afterPop; q.afterPop = null; if (fn) fn(); }
+            }, 600);
+        }
+
+        window.addEventListener('popstate', e => {
+            const st = e.state;
+            if (activeSheet && !(st && st.sheet)) activeSheet.close({ fromHistory: true });
+            if (!st || !st.bnq || !QUOTE_FLOWS[st.bnq]) {
+                if (QF && QF.open) closeFlowUI();
+                return;
+            }
+            if (!QF || !QF.open || QF.kind !== st.bnq) {       // e.g. browser Forward back into a flow
+                if (QF && QF.open) closeFlowUI();
+                openFlowUI(st.bnq, null);
+                QF.st = st;
+                render('fwd');
+                return;
+            }
+            const same = st.view === QF.st.view && (st.edit || 0) === (QF.st.edit || 0);
+            const dir = st.i < QF.st.i ? 'back' : 'fwd';
+            QF.st = st;
+            if (!same) render(dir);
+            if (QF.pendingPop) {
+                QF.pendingPop = false;
+                const fn = QF.afterPop;
+                QF.afterPop = null;
+                if (fn) fn();
+            }
+        });
+
+        // ---- open / close ----
+        function openFlowUI(kind, opener) {
+            const spec = QUOTE_FLOWS[kind];
+            const draft = loadDraft(kind);
+            const a = Object.assign(spec.defaults(), draft && draft.a ? draft.a : {});
+
+            const back = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Atrás' });
+            back.innerHTML = ICON.back;
+            const close = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Cerrar' });
+            close.innerHTML = ICON.close;
+            const section = el('span', { class: 'q-section' });
+            const count = el('span', { class: 'q-count' });
+            const fill = el('div', { class: 'q-progress-fill' });
+            const progress = el('div', { class: 'q-progress', role: 'progressbar', 'aria-label': 'Progreso', 'aria-valuemin': '0' }, fill);
+            const scroll = el('div', { class: 'q-scroll' });
+            const footInner = el('div', { class: 'q-foot-inner' });
+            const foot = el('div', { class: 'q-foot' }, footInner);
+            const root = el('div', { class: 'q-flow', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'q-title' },
+                el('div', { class: 'q-top' },
+                    el('div', { class: 'q-bar' }, back, el('div', { class: 'q-bar-text' }, section, count), close),
+                    progress),
+                scroll, foot);
+            Object.entries(CARRIERS).forEach(([id, names]) => {
+                root.appendChild(el('datalist', { id }, ...names.map(n => el('option', { value: n }))));
+            });
+
+            QF = {
+                kind, spec, a, st: null, stack: [], tried: new Set(), ctl: null,
+                opener: opener || document.querySelector(`.app-cta[data-form="${kind}"]`),
+                open: true, sent: !!(draft && draft.sent), sentUrl: draft ? draft.sentUrl || null : null,
+                pendingPop: false, afterPop: null,
+                els: { root, back, close, section, count, progress, fill, scroll, foot, footInner }
+            };
+            back.addEventListener('click', () => goBack(1));
+            close.addEventListener('click', closeFlow);
+            scroll.addEventListener('scroll', () => root.classList.toggle('is-scrolled', scroll.scrollTop > 4), { passive: true });
+            document.body.appendChild(root);
+            pushModal(root, closeFlow);
+        }
+
+        function openQuoteFlow(kind, opener) {
+            if (QF && QF.open) return;
+            const draft = loadDraft(kind);
+            if (draft && draft.sent) clearDraft(kind);   // a sent quote starts fresh next time
+            openFlowUI(kind, opener);
+            go('intro');
+        }
+
+        // Back to the page: unwind this flow's history entries (popstate closes the layer).
+        function closeFlow() {
+            if (!QF || !QF.open) return;
+            if (activeSheet) activeSheet.close({ fromHistory: true, noFocus: true });
+            if (QF.sent) clearDraft(QF.kind);
+            if (H.ok && QF.st) {
+                const q = QF;
+                history.go(-QF.st.i);
+                setTimeout(() => { if (q.open) closeFlowUI(); }, 700);   // if the browser ignores go()
+            } else {
+                closeFlowUI();
+            }
+        }
+
+        function closeFlowUI() {
+            if (!QF || !QF.open) return;
+            if (activeSheet) activeSheet.close({ fromHistory: true, noFocus: true });
+            QF.open = false;
+            QF.ctl = null;
+            popModal(QF.els.root);
+            QF.els.root.remove();
+            if (QF.opener && QF.opener.isConnected) QF.opener.focus({ preventScroll: true });
+        }
+
+        function restoreFlowFromHistory() {       // reload mid-quote: reopen where it was
+            if (!H.ok) return;
+            const st = history.state;
+            if (!st || !st.bnq || !QUOTE_FLOWS[st.bnq]) return;
+            openFlowUI(st.bnq, null);
+            QF.st = st;
+            render('fwd');
+            if (st.sheet) { waitForPop(); history.back(); }   // the picker that was open is gone
+        }
+
+        // ---- rendering ----
+        function render(dir) {
+            const { view } = QF.st;
+            const step = QF.spec.steps.find(s => s.id === view) || null;
+            QF.ctl = null;
+            const out = view === 'summary' ? viewSummary()
+                : view === 'done' ? viewDone()
+                : step ? viewStep(step)
+                : viewIntro();
+
+            updateHeader();
+            const { els } = QF;
+
+            out.node.classList.add(dir === 'back' ? 'q-in-back' : 'q-in-fwd');
+            els.scroll.replaceChildren(out.node);
+            els.scroll.scrollTop = 0;
+            els.root.classList.remove('is-scrolled');
+            els.footInner.replaceChildren(...out.foot);
+            els.foot.hidden = !out.foot.length;
+            if (QF.ctl) { refreshStep(); QF.ctl.ready = true; }
+            saveDraft();
+            requestAnimationFrame(() => {
+                const t = document.getElementById('q-title');
+                if (t) t.focus({ preventScroll: true });
+            });
+        }
+
+        // Section name, "Paso X de N" and the bar. The count can change while a
+        // question is open (e.g. Condo drops the roof question), so it's live.
+        function updateHeader() {
+            const { view } = QF.st;
+            const steps = visibleSteps();
+            const step = QF.spec.steps.find(s => s.id === view) || null;
+            const total = steps.length + 1;
+            const idx = view === 'summary' ? total : step ? steps.indexOf(step) + 1 : 0;
+            const sec = step ? QF.spec.sections.find(s => s.id === step.section) : null;
+            const { els } = QF;
+            els.section.textContent = view === 'summary' ? 'Revisión' : view === 'done' ? 'Enviado' : sec ? sec.title : QF.spec.intro.eyebrow;
+            els.count.textContent = idx ? `Paso ${idx} de ${total}` : '';
+            els.progress.hidden = !idx;
+            els.fill.style.width = idx ? `${(idx / total) * 100}%` : '0';
+            els.progress.setAttribute('aria-valuemax', String(total));
+            els.progress.setAttribute('aria-valuenow', String(idx));
+            els.progress.setAttribute('aria-valuetext', idx ? `Paso ${idx} de ${total}` : '');
+            els.back.classList.toggle('is-hidden', view === 'intro');
+        }
+
+        function titleEl(text) { return el('h2', { id: 'q-title', class: 'q-title', tabindex: '-1', text }); }
+        function primaryButton(content, props) {
+            const b = el('button', Object.assign({ type: 'button', class: 'q-primary' }, props || {}));
+            (Array.isArray(content) ? content : [el('span', { text: content })]).forEach(c => b.appendChild(c));
+            return b;
+        }
+        function altLink(text, onClick, withIcon) {
+            const b = el('button', { type: 'button', class: 'q-alt' }, withIcon ? icon('whatsapp') : null, el('span', { text }));
+            b.addEventListener('click', onClick);
+            return b;
+        }
+        function helpButton(help) {
+            const b = el('button', { type: 'button', class: 'q-help', 'aria-haspopup': 'dialog' }, icon('info'), el('span', { text: help.label }));
+            b.addEventListener('click', () => openHelp(help));
+            return b;
+        }
+        function contextChip(c) {
+            return el('p', { class: 'q-context' }, icon(c.icon), el('span', { text: c.text }));
+        }
+        function brandMark() {
+            const mark = el('span', { class: 'q-brand-mark', 'aria-hidden': 'true' });
+            const logo = document.querySelector('#app-avatar img');
+            if (logo) mark.appendChild(logo.cloneNode());
+            else mark.textContent = initialsOf(PAGE ? PAGE.name : '');
+            return mark;
+        }
+
+        function viewIntro() {
+            const { spec } = QF;
+            const resumable = !QF.sent && hasProgress(QF.a, spec);
+            const v = el('div', { class: 'q-view' });
+            v.append(
+                el('div', { class: 'q-brand' }, brandMark(), el('span', { text: PAGE ? PAGE.name : '' })),
+                titleEl(spec.intro.title),
+                el('p', { class: 'q-meta' },
+                    el('span', {}, icon('clock'), el('span', { text: 'Unos 2 minutos' })),
+                    el('span', {}, icon('shield'), el('span', { text: 'Gratis y sin compromiso' }))),
+                el('p', { class: 'q-lead', text: 'Responde unas preguntas rápidas y te enviamos tu cotización por WhatsApp.' }),
+                el('div', { class: 'q-have' },
+                    el('p', { class: 'q-have-title', text: 'Ten esto a mano' }),
+                    el('ul', {}, ...spec.intro.have.map(t => el('li', {}, icon('checkCircle'), el('span', { text: t }))))));
+            if (resumable) v.appendChild(el('p', { class: 'q-note', text: 'Tienes una cotización sin terminar. Puedes seguir donde la dejaste.' }));
+
+            const start = primaryButton(resumable ? 'Continuar donde lo dejaste' : 'Empezar');
+            start.addEventListener('click', () => startQuote(resumable));
+            const foot = [start];
+            if (resumable) {
+                const again = el('button', { type: 'button', class: 'q-secondary', text: 'Empezar de nuevo' });
+                again.addEventListener('click', () => startQuote(false, true));
+                foot.push(again);
+            }
+            foot.push(altLink('Prefiero escribir por WhatsApp', () => sendQuote('intro'), true));
+            return { node: v, foot };
+        }
+
+        function startQuote(resume, reset) {
+            if (reset) {
+                QF.a = QF.spec.defaults();
+                QF.tried.clear();
+                QF.sent = false;
+                QF.sentUrl = null;
+                clearDraft(QF.kind);
+            }
+            const steps = visibleSteps();
+            if (!resume) { go(steps[0].id); return; }
+            // Pick up at the first unanswered screen; the answered ones become
+            // history entries so Back walks through them.
+            const target = firstIncomplete();
+            for (const s of steps) {
+                if (target && s.id === target.id) break;
+                pushState(newState(s.id));
+            }
+            go(target ? target.id : 'summary');
+        }
+
+        function viewStep(step) {
+            const a = QF.a;
+            const v = el('div', { class: 'q-view' });
+            const form = el('form', { id: 'q-form', novalidate: true, 'aria-labelledby': 'q-title' });
+            if (step.context) {
+                const c = QF.spec.context(a);
+                if (c) form.appendChild(contextChip(c));
+            }
+            form.appendChild(titleEl(resolve(step.title, a)));
+            if (step.sub) form.appendChild(el('p', { class: 'q-sub', text: resolve(step.sub, a) }));
+            if (step.help) form.appendChild(helpButton(step.help));
+
+            const ctl = { step, form, fields: [] };
+            QF.ctl = ctl;
+            const fields = el('div', { class: 'q-fields' });
+            step.fields.forEach(f => {
+                const r = renderField(f, step);
+                ctl.fields.push(r);
+                fields.appendChild(r.wrap);
+            });
+            form.appendChild(fields);
+            ctl.note = el('p', { class: 'q-note', role: 'status' });
+            form.appendChild(ctl.note);
+            if (step.privacy) form.appendChild(el('p', { class: 'q-privacy' }, icon('lock'), el('span', { text: step.privacy })));
+            form.addEventListener('submit', e => { e.preventDefault(); continueFrom(step); });
+            v.appendChild(form);
+
+            ctl.primary = primaryButton(QF.st.edit ? 'Guardar y volver' : 'Continuar', { type: 'submit', form: 'q-form' });
+            return { node: v, foot: [ctl.primary, altLink('Prefiero terminar por WhatsApp', () => sendQuote('partial'), true)] };
+        }
+
+        function refreshStep() {
+            const ctl = QF.ctl;
+            if (!ctl) return;
+            const tried = QF.tried.has(ctl.step.id);
+            ctl.fields.forEach(r => {
+                r.wrap.hidden = !fieldShown(r.f, QF.a);
+                if (r.sync) r.sync();
+                const msg = fieldError(r.f, QF.a);
+                if (tried) r.setError(msg);                 // after a Continue attempt, errors stay live
+                else if (r.errorShown && !msg) r.setError('');
+            });
+            const note = ctl.step.note ? ctl.step.note(QF.a) : '';
+            const appeared = note && !ctl.note.textContent;
+            ctl.note.textContent = note;
+            if (appeared && ctl.ready) {
+                ctl.note.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+            }
+            ctl.primary.classList.toggle('is-incomplete', !stepDone(ctl.step));
+        }
+
+        function onAnswer() {
+            saveDraft();
+            refreshStep();
+            updateHeader();
+        }
+
+        function continueFrom(step) {
+            if (QF.pendingPop) { QF.afterPop = () => continueFrom(step); return; }
+            QF.tried.add(step.id);
+            refreshStep();
+            const errs = stepErrors(step);
+            if (errs.length) {
+                const r = QF.ctl.fields.find(x => x.f === errs[0].f);
+                if (r) r.focus();
+                return;
+            }
+            if (QF.st.edit) {                // came from the review: return to it
+                const next = firstIncomplete();
+                if (next && next.id !== step.id) go(next.id, { edit: QF.st.edit + 1 });
+                else goBack(QF.st.edit);
+                return;
+            }
+            const steps = visibleSteps();
+            const i = steps.indexOf(step);
+            const next = i < 0 ? firstIncomplete() : steps[i + 1];
+            go(next ? next.id : 'summary');
+        }
+
+        // One control per field kind. Each returns { f, wrap, setError, focus, sync? }.
+        function renderField(f, step) {
+            const a = QF.a;
+            const id = `q-${f.name}`;
+            const errId = `${id}-err`;
+            const hintId = `${id}-hint`;
+            const labelId = `${id}-label`;
+            const wrap = el('div', { class: 'q-field' });
+            const err = el('p', { id: errId, class: 'q-error', 'aria-live': 'polite' });
+            const r = { f, wrap, controls: [], errorShown: false, focusTarget: null };
+            r.setError = msg => {
+                err.textContent = msg || '';
+                r.errorShown = !!msg;
+                r.controls.forEach(c => (msg ? c.setAttribute('aria-invalid', 'true') : c.removeAttribute('aria-invalid')));
+            };
+            r.focus = () => {
+                const c = r.focusTarget ? r.focusTarget() : r.controls[0];
+                if (c) c.focus();
+            };
+
+            if (!f.hideLabel) {
+                const kids = [document.createTextNode(f.label)];
+                if (!f.required) kids.push(el('span', { class: 'opt', text: ' (opcional)' }));
+                const isFor = f.kind === 'text' || f.kind === 'select';
+                const label = el(isFor ? 'label' : 'span', { id: labelId, class: 'q-label', for: isFor ? id : null }, ...kids);
+                wrap.appendChild(f.help ? el('div', { class: 'q-label-row' }, label, helpButton(f.help)) : label);
+            }
+            const labelledBy = f.hideLabel ? 'q-title' : labelId;
+            const describedBy = [f.hint ? hintId : null, errId].filter(Boolean).join(' ');
+
+            switch (f.kind) {
+                case 'text': {
+                    const input = el('input', {
+                        id, name: f.name, class: 'q-input', type: f.type || 'text',
+                        inputmode: f.inputmode, autocomplete: f.autocomplete || 'off', autocapitalize: f.autocapitalize,
+                        spellcheck: f.spellcheck, placeholder: f.placeholder, maxlength: f.maxlength, pattern: f.pattern,
+                        list: f.list, enterkeyhint: 'next', 'aria-describedby': describedBy,
+                        'aria-required': f.required ? 'true' : null
+                    });
+                    input.value = a[f.name] || '';
+                    input.addEventListener('input', () => {
+                        if (f.transform) {
+                            const t = f.transform(input.value);
+                            if (t !== input.value) input.value = t;
+                        }
+                        a[f.name] = input.value;
+                        onAnswer();
+                    });
+                    input.addEventListener('blur', () => {   // point out a typo once they move on
+                        if (input.value.trim() && !QF.tried.has(step.id)) r.setError(fieldError(f, a));
+                    });
+                    input.addEventListener('keydown', e => {  // keyboard "Siguiente": next box, then Continue
+                        if (e.key !== 'Enter') return;
+                        e.preventDefault();
+                        const boxes = [...input.form.querySelectorAll('.q-input')].filter(n => !n.closest('[hidden]'));
+                        const k = boxes.indexOf(input);
+                        if (k >= 0 && k < boxes.length - 1) boxes[k + 1].focus();
+                        else continueFrom(step);
+                    });
+                    wrap.appendChild(input);
+                    r.controls.push(input);
+                    break;
+                }
+
+                case 'choice': {
+                    const group = el('div', {
+                        class: 'q-options' + (f.layout === 'pair' ? ' is-pair' : ''), role: 'radiogroup',
+                        'aria-labelledby': labelledBy, 'aria-describedby': describedBy, 'aria-required': f.required ? 'true' : null
+                    });
+                    f.options.forEach((o, k) => {
+                        const oid = `${id}-${k}`;
+                        const input = el('input', { type: 'radio', id: oid, name: id, value: o.value });
+                        input.checked = a[f.name] === o.value;
+                        input.addEventListener('change', () => { a[f.name] = o.value; onAnswer(); });
+                        const text = el('span', { class: 'q-opt-text' }, el('span', { class: 'q-opt-label', text: o.label }), o.desc ? el('span', { class: 'q-opt-desc', text: o.desc }) : null);
+                        group.appendChild(el('div', { class: 'q-opt' }, input, el('label', { for: oid }, el('span', { class: 'q-mark', 'aria-hidden': 'true' }), text)));
+                    });
+                    wrap.appendChild(group);
+                    r.controls.push(group);
+                    r.focusTarget = () => group.querySelector('input:checked') || group.querySelector('input');
+                    break;
+                }
+
+                case 'multi': {
+                    const group = el('div', { class: 'q-options', role: 'group', 'aria-labelledby': labelledBy, 'aria-describedby': describedBy });
+                    f.options.forEach((o, k) => {
+                        const oid = `${id}-${k}`;
+                        const input = el('input', { type: 'checkbox', id: oid, value: o.value });
+                        input.checked = (a[f.name] || []).includes(o.value);
+                        input.addEventListener('change', () => {
+                            let sel = (a[f.name] || []).filter(x => x !== o.value);
+                            // "No tiene" / "No estoy seguro" exclude the real answers, and vice versa
+                            if (input.checked) sel = o.exclusive ? [o.value] : sel.filter(x => !(optionOf(f, x) || {}).exclusive).concat(o.value);
+                            a[f.name] = f.options.map(x => x.value).filter(x => sel.includes(x));
+                            group.querySelectorAll('input').forEach(n => { n.checked = a[f.name].includes(n.value); });
+                            onAnswer();
+                        });
+                        const mark = el('span', { class: 'q-mark', 'aria-hidden': 'true' });
+                        mark.innerHTML = ICON.tick;
+                        const label = el('label', { for: oid }, mark, el('span', { class: 'q-opt-text' }, el('span', { class: 'q-opt-label', text: o.label })));
+                        group.appendChild(el('div', { class: 'q-opt is-check' }, input, label));
+                    });
+                    wrap.appendChild(group);
+                    r.controls.push(group);
+                    r.focusTarget = () => group.querySelector('input');
+                    break;
+                }
+
+                case 'year':
+                case 'makeModel': {
+                    const valueId = `${id}-value`;
+                    const value = el('span', { id: valueId, class: 'q-picker-value' });
+                    const sub = el('span', { class: 'q-picker-sub' });
+                    const row = el('button', {
+                        type: 'button', id, class: 'q-picker', 'aria-haspopup': 'dialog',
+                        'aria-labelledby': `${labelledBy} ${valueId}`, 'aria-describedby': describedBy
+                    }, icon(f.icon, { class: 'q-picker-icon' }), el('span', { class: 'q-picker-text' }, value, sub));
+                    row.insertAdjacentHTML('beforeend', chevronSVG);
+                    r.sync = () => {
+                        let main = '';
+                        let under = '';
+                        if (f.kind === 'makeModel') {
+                            if (a.marca && a.modelo) { main = a.modelo; under = a.marca; }
+                        } else if (a[f.name]) {
+                            main = a[f.name] === 'unknown' ? f.unknown : a[f.name];
+                        }
+                        row.classList.toggle('is-set', !!main);
+                        value.textContent = main || f.placeholder;
+                        sub.textContent = under;
+                    };
+                    row.addEventListener('click', () => {
+                        if (f.kind === 'makeModel') openVehicleSheet('make', onAnswer);
+                        else if (f.vehicle) openVehicleSheet('year', onAnswer);
+                        else openYearSheet({ title: f.sheetTitle || f.label, min: f.min, max: f.max, unknown: f.unknown, current: a[f.name] }, y => { a[f.name] = y; onAnswer(); });
+                    });
+                    wrap.appendChild(row);
+                    r.controls.push(row);
+                    break;
+                }
+
+                case 'startDate': {
+                    if (!a[f.name]) a[f.name] = 'hoy';     // State Farm-style default: today
+                    const t = today();
+                    const opts = [
+                        { value: 'hoy', label: 'Hoy', desc: shortDate(t) },
+                        { value: 'manana', label: 'Mañana', desc: shortDate(addDays(t, 1)) },
+                        { value: 'fecha', label: 'Otra fecha', desc: 'Elegir' }
+                    ];
+                    const group = el('div', { class: 'q-options is-chips', role: 'radiogroup', 'aria-labelledby': labelledBy, 'aria-describedby': describedBy });
+                    const dateInput = el('input', {
+                        type: 'date', id: `${id}-date`, class: 'q-input',
+                        min: isoDate(t), max: isoDate(addDays(t, f.maxDays)), 'aria-describedby': errId
+                    });
+                    dateInput.value = a.inicioFecha || '';
+                    const dateField = el('div', { class: 'q-field' }, el('label', { class: 'q-label', for: dateInput.id, text: 'Elige la fecha' }), dateInput);
+                    opts.forEach((o, k) => {
+                        const oid = `${id}-${k}`;
+                        const input = el('input', { type: 'radio', id: oid, name: id, value: o.value });
+                        input.checked = a[f.name] === o.value;
+                        input.addEventListener('change', () => {
+                            a[f.name] = o.value;
+                            onAnswer();
+                            if (o.value === 'fecha') {
+                                dateInput.focus();
+                                try { dateInput.showPicker(); } catch (_) { /* older browsers: the field is right there */ }
+                            }
+                        });
+                        group.appendChild(el('div', { class: 'q-opt' }, input,
+                            el('label', { for: oid }, el('span', { class: 'q-mark', 'aria-hidden': 'true' }),
+                                el('span', { class: 'q-opt-text' }, el('span', { class: 'q-opt-label', text: o.label }), el('span', { class: 'q-opt-desc', text: o.desc })))));
+                    });
+                    ['input', 'change'].forEach(ev => dateInput.addEventListener(ev, () => {
+                        if (a.inicioFecha === dateInput.value) return;
+                        a.inicioFecha = dateInput.value;
+                        onAnswer();
+                    }));
+                    const line = el('p', { class: 'q-date-line', 'aria-live': 'polite' });
+                    r.sync = () => {
+                        dateField.hidden = a[f.name] !== 'fecha';
+                        const d = startDateOf(a);
+                        line.textContent = d && !fieldError(f, a) ? `Tu seguro empezaría el ${WEEKDAYS[d.getDay()]} ${longDate(d)}.` : '';
+                    };
+                    wrap.append(group, dateField, line);
+                    r.controls.push(group, dateInput);
+                    r.focusTarget = () => (a[f.name] === 'fecha' ? dateInput : group.querySelector('input:checked') || group.querySelector('input'));
+                    break;
+                }
+
+                case 'dob': {
+                    const group = el('div', { class: 'q-dob', role: 'group', 'aria-labelledby': labelledBy, 'aria-describedby': describedBy });
+                    const years = [];
+                    for (let y = THIS_YEAR - 16; y >= THIS_YEAR - 100; y--) years.push([String(y), String(y)]);
+                    const parts = [
+                        ['dobD', 'Día', Array.from({ length: 31 }, (_, k) => [String(k + 1), String(k + 1)]), 'bday-day'],
+                        ['dobM', 'Mes', MONTHS.map((m, k) => [String(k + 1), cap(m.slice(0, 3))]), 'bday-month'],
+                        ['dobY', 'Año', years, 'bday-year']
+                    ];
+                    const selects = parts.map(([key, label, options, autocomplete]) => {
+                        const s = el('select', { id: `${id}-${key}`, class: 'q-select', 'aria-label': label, autocomplete });
+                        s.appendChild(el('option', { value: '', text: label }));
+                        options.forEach(([val, txt]) => s.appendChild(el('option', { value: val, text: txt })));
+                        s.value = a[key] || '';
+                        s.classList.toggle('is-empty', !s.value);
+                        s.addEventListener('change', () => {
+                            a[key] = s.value;
+                            s.classList.toggle('is-empty', !s.value);
+                            onAnswer();
+                            if (selects.every(x => x.value) && !QF.tried.has(step.id)) r.setError(fieldError(f, a));
+                        });
+                        group.appendChild(s);
+                        return s;
+                    });
+                    wrap.appendChild(group);
+                    r.controls.push(...selects);
+                    r.focusTarget = () => selects.find(s => !s.value) || selects[0];
+                    break;
+                }
+
+                case 'select': {
+                    const s = el('select', { id, class: 'q-select', 'aria-describedby': describedBy });
+                    s.appendChild(el('option', { value: '', text: f.placeholder || 'Elige' }));
+                    f.options.forEach(o => s.appendChild(el('option', { value: o.value, text: o.label })));
+                    s.value = a[f.name] || '';
+                    s.classList.toggle('is-empty', !s.value);
+                    s.addEventListener('change', () => { a[f.name] = s.value; s.classList.toggle('is-empty', !s.value); onAnswer(); });
+                    wrap.appendChild(s);
+                    r.controls.push(s);
+                    break;
+                }
+            }
+            if (f.hint) wrap.appendChild(el('p', { id: hintId, class: 'q-hint', text: f.hint }));
+            wrap.appendChild(err);
+            return r;
+        }
+
+        function viewSummary() {
+            const { spec, a } = QF;
+            const v = el('div', { class: 'q-view' });
+            v.append(titleEl('Revisa tu información'), el('p', { class: 'q-sub', text: 'Toca cualquier dato si quieres cambiarlo.' }));
+            spec.sections.forEach(sec => {
+                const rows = sectionRows(sec.id);
+                const missing = visibleSteps().filter(s => s.section === sec.id && !stepDone(s) && !rows.some(r => r.step === s.id));
+                if (!rows.length && !missing.length) return;
+                const card = el('section', { class: 'q-card', 'aria-labelledby': `q-sec-${sec.id}` }, el('h3', { id: `q-sec-${sec.id}`, class: 'q-card-title', text: sec.title }));
+                rows.forEach(r => card.appendChild(summaryRow(r.label, r.value, r.step, false)));
+                missing.forEach(s => card.appendChild(summaryRow(resolve(s.title, a), 'Falta completar', s.id, true)));
+                v.appendChild(card);
+            });
+
+            const bundle = el('input', { type: 'checkbox', id: 'q-bundle' });
+            bundle.checked = !!a.bundle;
+            bundle.addEventListener('change', () => { a.bundle = bundle.checked; saveDraft(); });
+            const mark = el('span', { class: 'q-mark', 'aria-hidden': 'true' });
+            mark.innerHTML = ICON.tick;
+            v.appendChild(el('div', { class: 'q-opt is-check q-bundle' }, bundle,
+                el('label', { for: 'q-bundle' }, mark, el('span', { class: 'q-opt-text' },
+                    el('span', { class: 'q-opt-label', text: spec.bundle.label }), el('span', { class: 'q-opt-desc', text: spec.bundle.desc })))));
+
+            const send = primaryButton([icon('whatsapp'), el('span', { text: 'Enviar por WhatsApp' })]);
+            send.addEventListener('click', () => {
+                const next = firstIncomplete();
+                if (next) { QF.tried.add(next.id); go(next.id, { edit: 1 }); return; }
+                sendQuote('full');
+            });
+            return { node: v, foot: [send, el('p', { class: 'q-foot-note', text: 'Se abrirá WhatsApp con tu información lista. Solo toca Enviar.' })] };
+        }
+
+        function summaryRow(label, value, stepId, missing) {
+            const b = el('button', { type: 'button', class: 'q-row' + (missing ? ' is-missing' : ''), 'aria-label': `${label}: ${value}. Editar` },
+                el('span', { class: 'q-row-text' }, el('span', { class: 'q-row-label', text: label }), el('span', { class: 'q-row-value', text: value })));
+            b.insertAdjacentHTML('beforeend', chevronSVG);
+            b.addEventListener('click', () => go(stepId, { edit: 1 }));
+            return b;
+        }
+
+        function sendQuote(mode) {
+            if (QF.pendingPop) { QF.afterPop = () => sendQuote(mode); return; }
+            const url = `https://wa.me/${whatsappNumber(PAGE)}?text=${encodeURIComponent(composeMessage(mode))}`;
+            QF.sent = true;
+            QF.sentUrl = url;
+            go('done');
+            // Opening inside the tap keeps it a user gesture; if the browser
+            // (e.g. an in-app browser) refuses the new tab, go there directly.
+            // (No 'noopener' feature: with it window.open always returns null.)
+            const win = window.open(url, '_blank');
+            if (win) { try { win.opener = null; } catch (_) { /* cross-origin already */ } }
+            else window.location.href = url;
+        }
+
+        function viewDone() {
+            const { spec, a } = QF;
+            const url = QF.sentUrl || `https://wa.me/${whatsappNumber(PAGE)}?text=${encodeURIComponent(composeMessage('full'))}`;
+            const check = el('div', { class: 'q-done-check', 'aria-hidden': 'true' });
+            check.innerHTML = ICON.tick;
+            const open = el('a', { class: 'q-primary', href: url, target: '_blank', rel: 'noopener' }, icon('whatsapp'), el('span', { text: 'Abrir WhatsApp' }));
+            const home = altLink('Volver al inicio', () => {
+                clearDraft(QF.kind);
+                QF.sent = false;
+                closeFlow();
+            });
+            const ctx = spec.context(a);
+            const v = el('div', { class: 'q-view q-done' },
+                check,
+                titleEl('¡Listo! Te estamos conectando por WhatsApp…'),
+                el('p', { class: 'q-done-text', text: 'Solo toca Enviar en WhatsApp. Si no se abrió, usa este botón:' }),
+                open, home,
+                el('div', { class: 'q-recap' },
+                    el('span', { class: 'q-recap-label', text: 'Cotización' }),
+                    el('span', { class: 'q-recap-value', text: cap(spec.product(a)) + (ctx ? ` · ${ctx.text}` : '') })));
+            return { node: v, foot: [] };
+        }
+
+        // ---- bottom sheets (pickers and help) ----
+        function openSheet({ onClose } = {}) {
+            let pushed = false;
+            if (activeSheet) {                 // swap sheets: reuse the open one's history entry
+                pushed = activeSheet.isPushed();
+                activeSheet.close({ noFocus: true, fromHistory: true });
+            }
             const opener = document.activeElement;
             const backdrop = el('div', { class: 'sheet-backdrop' });
             const sheet = el('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'sheet-title' });
@@ -1341,30 +2708,18 @@
             const body = el('div', { class: 'sheet-body' });
             sheet.append(head, body);
             backdrop.appendChild(sheet);
-            const prevOverflow = document.body.style.overflow;
-            document.body.style.overflow = 'hidden';
-            document.getElementById('content-app').setAttribute('aria-hidden', 'true');
+            const api = {};
 
-            function close() {
+            function close(opts = {}) {
+                if (!backdrop.isConnected) return;
                 backdrop.remove();
-                document.body.style.overflow = prevOverflow;
-                document.getElementById('content-app').removeAttribute('aria-hidden');
-                document.removeEventListener('keydown', onKey, true);
+                popModal(backdrop);
+                if (activeSheet === api) activeSheet = null;
                 if (onClose) onClose();
-                if (opener && opener.focus) opener.focus();
+                // the picker had its own history entry; drop it
+                if (pushed && !opts.fromHistory && QF && QF.open) { waitForPop(); history.back(); }
+                if (!opts.noFocus && opener && opener.isConnected) opener.focus({ preventScroll: true });
             }
-            function onKey(e) {
-                if (e.key === 'Escape') { e.preventDefault(); close(); return; }
-                if (e.key === 'Tab') {   // keep focus inside the sheet
-                    const f = [...sheet.querySelectorAll('button, input, [tabindex="0"]')].filter(n => !n.disabled && n.offsetParent);
-                    if (!f.length) return;
-                    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
-                    else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
-                }
-            }
-            document.addEventListener('keydown', onKey, true);
-            backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
-
             function setView(viewTitle, { back } = {}) {
                 head.replaceChildren();
                 head.classList.toggle('has-back', !!back);
@@ -1379,14 +2734,22 @@
                 head.appendChild(el('h2', { id: 'sheet-title', class: 'sheet-title', tabindex: '-1', text: viewTitle }));
                 const x = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Cerrar' });
                 x.innerHTML = ICON.close;
-                x.addEventListener('click', close);
+                x.addEventListener('click', () => close());
                 head.appendChild(x);
                 body.replaceChildren();
                 body.scrollTop = 0;
                 return body;
             }
+            backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
             document.body.appendChild(backdrop);
-            return { setView, close, focusTitle: () => document.getElementById('sheet-title').focus({ preventScroll: true }) };
+            pushModal(backdrop, () => close());
+            if (!pushed && QF && QF.open && H.ok && QF.st) {       // phone Back closes the picker, not the question
+                const st = Object.assign({}, QF.st, { i: QF.st.i + 1, sheet: true });
+                try { history.pushState(st, ''); QF.st = st; pushed = true; } catch (_) { /* in-page only */ }
+            }
+            Object.assign(api, { setView, close, isPushed: () => pushed, focusTitle: () => { const t = sheet.querySelector('#sheet-title'); if (t) t.focus({ preventScroll: true }); } });
+            activeSheet = api;
+            return api;
         }
 
         function sheetRow(text, { selected, muted, onPick }) {
@@ -1397,19 +2760,33 @@
             return el('li', {}, b);
         }
 
+        function openHelp(help) {
+            const api = openSheet();
+            const body = api.setView(help.title || help.label);
+            const box = el('div', { class: 'sheet-text' });
+            (help.paras || []).forEach(p => box.appendChild(el('p', { text: p })));
+            if (help.items) {
+                box.appendChild(el('ul', {}, ...help.items.map(([lead, text]) =>
+                    el('li', {}, lead ? el('strong', { text: `${lead} ` }) : null, document.createTextNode(text)))));
+            }
+            const ok = primaryButton('Entendido');
+            ok.addEventListener('click', () => api.close());
+            body.append(box, ok);
+            api.focusTitle();
+        }
+
         // "Otro": typed fallback inside the sheet
         function otherView(api, title, fields, back, done) {
             const body = api.setView(title, { back });
             const wrap = el('form', { class: 'sheet-other', novalidate: true });
             const inputs = fields.map(f => {
                 const id = 'sheet-other-' + f.name;
-                const input = el('input', { id, class: 'lead-input', value: f.value || '', placeholder: f.placeholder, autocomplete: 'off', enterkeyhint: 'done' });
-                wrap.append(el('label', { class: 'lead-label', for: id, text: f.label }), input);
+                const input = el('input', { id, class: 'q-input', value: f.value || '', placeholder: f.placeholder, autocomplete: 'off', autocapitalize: 'words', enterkeyhint: 'done' });
+                wrap.append(el('label', { class: 'q-label', for: id, text: f.label }), input);
                 return input;
             });
-            const err = el('p', { class: 'lead-error', 'aria-live': 'polite' });
-            const ok = el('button', { type: 'submit', class: 'app-cta lead-submit' }, el('span', { class: 'app-cta-text', text: 'Listo' }));
-            wrap.append(err, ok);
+            const err = el('p', { class: 'q-error', 'aria-live': 'polite' });
+            wrap.append(err, primaryButton('Listo', { type: 'submit' }));
             wrap.addEventListener('submit', e => {
                 e.preventDefault();
                 const vals = inputs.map(i => i.value.trim());
@@ -1420,13 +2797,15 @@
             inputs[0].focus();
         }
 
-        function openYearSheet(f, current, onPick) {
-            const api = openSheet({ title: f.label });
-            const body = api.setView('Año del vehículo');
+        function openYearSheet({ title, min, max, unknown, current }, onPick) {
+            const api = openSheet();
+            const body = api.setView(title);
             const list = el('ul', { class: 'sheet-list' });
-            for (let y = f.max; y >= f.min; y--) {
+            const pick = y => { onPick(y); api.close(); };
+            if (unknown) list.appendChild(sheetRow(unknown, { selected: current === 'unknown', muted: true, onPick: () => pick('unknown') }));
+            for (let y = max; y >= min; y--) {
                 const year = String(y);
-                list.appendChild(sheetRow(year, { selected: year === current, onPick: () => { onPick(year); api.close(); } }));
+                list.appendChild(sheetRow(year, { selected: year === current, onPick: () => pick(year) }));
             }
             body.appendChild(list);
             const sel = list.querySelector('.is-selected');
@@ -1434,12 +2813,36 @@
             api.focusTitle();
         }
 
-        function openMakeModelSheet(current, onPick) {
-            const api = openSheet({});
-            const finish = (make, model) => { onPick(make, model); api.close(); };
+        // Year -> make -> model in one sheet, like the CARFAX / State Farm pickers.
+        function openVehicleSheet(start, onChange) {
+            const a = QF.a;
+            const api = openSheet();
+            const finish = (make, model) => { a.marca = make; a.modelo = model; onChange(); api.close(); };
+
+            function yearView() {
+                const body = api.setView('Año del vehículo');
+                const list = el('ul', { class: 'sheet-list' });
+                for (let y = THIS_YEAR + 1; y >= 1980; y--) {
+                    const year = String(y);
+                    list.appendChild(sheetRow(year, {
+                        selected: a.anio === year,
+                        onPick: () => {
+                            a.anio = year;
+                            onChange();
+                            if (a.marca && a.modelo) api.close();
+                            else if (a.marca && VEHICLES[a.marca]) modelsView(a.marca);
+                            else makesView();
+                        }
+                    }));
+                }
+                body.appendChild(list);
+                const sel = list.querySelector('.is-selected');
+                if (sel) sel.scrollIntoView({ block: 'center' });
+                api.focusTitle();
+            }
 
             function makesView() {
-                const body = api.setView('Marcas');
+                const body = api.setView('Marca', { back: start === 'year' ? yearView : null });
                 const search = el('div', { class: 'sheet-search' });
                 search.innerHTML = ICON.search;
                 const input = el('input', { type: 'search', placeholder: 'Buscar marca', 'aria-label': 'Buscar marca', autocomplete: 'off', enterkeyhint: 'search' });
@@ -1459,12 +2862,11 @@
                     list.replaceChildren();
                     const needle = q.toLowerCase();
                     const makes = Object.keys(VEHICLES).filter(m => m.toLowerCase().includes(needle));
-                    makes.forEach(make => list.appendChild(sheetRow(make, { selected: current.make === make, onPick: () => modelsView(make) })));
+                    makes.forEach(make => list.appendChild(sheetRow(make, { selected: a.marca === make, onPick: () => modelsView(make) })));
                     list.appendChild(sheetRow('Otra marca', { muted: true, onPick: () => otherMake(q) }));
                     empty.style.display = makes.length ? 'none' : '';
-                    const searching = !!needle;
-                    popularLabel.style.display = grid.style.display = searching ? 'none' : '';
-                    allLabel.textContent = searching ? 'Resultados' : 'Todas las marcas';
+                    popularLabel.style.display = grid.style.display = needle ? 'none' : '';
+                    allLabel.textContent = needle ? 'Resultados' : 'Todas las marcas';
                 }
                 input.addEventListener('input', () => renderList(input.value.trim()));
                 body.append(search, popularLabel, grid, allLabel, empty, list);
@@ -1476,12 +2878,14 @@
                 const body = api.setView(`Modelos ${make}`, { back: makesView });
                 const list = el('ul', { class: 'sheet-list' });
                 VEHICLES[make].forEach(model => list.appendChild(sheetRow(model, {
-                    selected: current.make === make && current.model === model,
+                    selected: a.marca === make && a.modelo === model,
                     onPick: () => finish(make, model)
                 })));
-                list.appendChild(sheetRow('Otro modelo', { muted: true, onPick: () =>
-                    otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
-                        () => modelsView(make), ([model]) => finish(make, model)) }));
+                list.appendChild(sheetRow('Otro modelo', {
+                    muted: true,
+                    onPick: () => otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
+                        () => modelsView(make), ([model]) => finish(make, model))
+                }));
                 body.appendChild(list);
                 api.focusTitle();
             }
@@ -1493,215 +2897,9 @@
                 ], makesView, ([make, model]) => finish(make, model));
             }
 
-            if (current.make && VEHICLES[current.make]) modelsView(current.make); else makesView();
-        }
-
-        // A form row that opens a picker sheet. Returns { f, row, err, get(), check() }.
-        function buildPickerRow(key, f, labelKids) {
-            const id = `lead-${key}-${f.name}`;
-            const state = {};
-            const err = el('p', { id: `${id}-err`, class: 'lead-error', 'aria-live': 'polite' });
-            const value = el('span', { class: 'lead-picker-value', text: f.placeholder });
-            const sub = el('span', { class: 'lead-picker-sub' });
-            const row = el('button', { type: 'button', id, class: 'lead-picker', 'aria-labelledby': `${id}-label ${id}`, 'aria-describedby': `${id}-err`, 'aria-haspopup': 'dialog' },
-                (() => { const i = el('span', { class: 'lead-picker-icon', 'aria-hidden': 'true' }); i.innerHTML = ICON[f.icon] || ''; return i; })(),
-                el('span', { class: 'lead-picker-text' }, value, sub));
-            row.insertAdjacentHTML('beforeend', chevronSVG);
-            const label = el('span', { id: `${id}-label`, class: 'lead-label' }, ...labelKids);
-
-            function show() {
-                const set = f.kind === 'year' ? !!state.year : !!(state.make && state.model);
-                row.classList.toggle('is-set', set);
-                if (f.kind === 'year') {
-                    value.textContent = state.year || f.placeholder;
-                } else {
-                    value.textContent = set ? state.model : f.placeholder;
-                    sub.textContent = set ? state.make : '';
-                }
-                if (set) { row.removeAttribute('aria-invalid'); err.textContent = ''; }
-            }
-            row.addEventListener('click', () => {
-                if (f.kind === 'year') openYearSheet(f, state.year, y => { state.year = y; show(); });
-                else openMakeModelSheet({ make: state.make, model: state.model }, (make, model) => { state.make = make; state.model = model; show(); });
-            });
-            const api = {
-                f, row, err,
-                get: () => (f.kind === 'year' ? { [f.name]: state.year || '' } : { marca: state.make || '', modelo: state.model || '' }),
-                check() {
-                    const ok = f.kind === 'year' ? !!state.year : !!(state.make && state.model);
-                    const msg = ok || !f.required ? '' : (f.kind === 'year' ? 'Selecciona el año.' : 'Selecciona la marca y el modelo.');
-                    err.textContent = msg;
-                    msg ? row.setAttribute('aria-invalid', 'true') : row.removeAttribute('aria-invalid');
-                    return msg;
-                }
-            };
-            api.node = el('div', { class: 'lead-field' }, label, row, err);
-            return api;
-        }
-
-        let openLead = null;   // { key, button }
-
-        function closeLeadForm() {
-            const panel = document.getElementById('lead-panel');
-            if (panel) panel.remove();
-            if (openLead) openLead.button.setAttribute('aria-expanded', 'false');
-            openLead = null;
-        }
-
-        function toggleLeadForm(key, button, config) {
-            const wasOpen = openLead && openLead.key === key;
-            closeLeadForm();
-            if (wasOpen) { button.focus(); return; }
-            openLead = { key, button };
-            button.setAttribute('aria-expanded', 'true');
-            const panel = buildLeadPanel(key, config);
-            document.getElementById('lead-slot').appendChild(panel);
-            const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-            panel.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-            panel.querySelector('.lead-title').focus({ preventScroll: true });
-            if (config.slug) trackClick(config.slug);
-        }
-
-        function el(tag, props, ...children) {
-            const n = document.createElement(tag);
-            Object.entries(props || {}).forEach(([k, v]) => {
-                if (v === undefined || v === null || v === false) return;
-                if (k === 'class') n.className = v;
-                else if (k === 'text') n.textContent = v;
-                else n.setAttribute(k, v === true ? '' : v);
-            });
-            children.forEach(c => c && n.appendChild(c));
-            return n;
-        }
-
-        function buildLeadPanel(key, config) {
-            const spec = LEAD_FORMS[key];
-            const panel = el('section', { id: 'lead-panel', class: 'lead-panel', 'aria-labelledby': 'lead-title' });
-            const close = el('button', { type: 'button', class: 'lead-close', 'aria-label': 'Cerrar formulario', text: '✕' });
-            close.addEventListener('click', () => { const b = openLead && openLead.button; closeLeadForm(); if (b) b.focus(); });
-            panel.appendChild(el('div', { class: 'lead-head' },
-                el('h2', { id: 'lead-title', class: 'lead-title', tabindex: '-1', text: spec.title }), close));
-
-            const form = el('form', { class: 'lead-form', novalidate: true });
-            const inputs = {};
-            const pickers = [];
-            spec.fields.forEach(f => {
-                const id = `lead-${key}-${f.name}`;
-                const labelKids = [document.createTextNode(f.label)];
-                labelKids.push(f.required
-                    ? el('span', { class: 'req', 'aria-hidden': 'true', text: '*' })
-                    : el('span', { class: 'opt', text: ' (opcional)' }));
-                if (f.kind === 'year' || f.kind === 'makeModel') {
-                    const picker = buildPickerRow(key, f, labelKids);
-                    pickers.push(picker);
-                    form.appendChild(picker.node);
-                    return;
-                }
-                if (f.kind === 'choice') {
-                    const fs = el('fieldset', { class: 'lead-field lead-choice' });
-                    const legend = el('legend', { class: 'lead-label' }, ...labelKids);
-                    fs.appendChild(legend);
-                    f.options.forEach((opt, i) => {
-                        const oid = `${id}-${i}`;
-                        fs.appendChild(el('input', { type: 'radio', id: oid, name: f.name, value: opt }));
-                        fs.appendChild(el('label', { for: oid, text: opt }));
-                    });
-                    form.appendChild(fs);
-                    return;
-                }
-                const err = el('p', { id: `${id}-err`, class: 'lead-error', 'aria-live': 'polite' });
-                const input = el('input', {
-                    id, name: f.name, class: 'lead-input',
-                    type: f.type || 'text',
-                    inputmode: f.inputmode, autocomplete: f.autocomplete,
-                    placeholder: f.placeholder, maxlength: f.maxlength,
-                    required: f.required, 'aria-required': f.required ? 'true' : null,
-                    'aria-describedby': `${id}-err`,
-                    enterkeyhint: 'next'
-                });
-                inputs[f.name] = { f, input, err };
-                // after a failed submit, errors clear as soon as the value becomes valid
-                input.addEventListener('input', () => {
-                    if (input.getAttribute('aria-invalid') === 'true' && !checkField(f, input.value.trim())) {
-                        input.removeAttribute('aria-invalid');
-                        err.textContent = '';
-                    }
-                });
-                input.addEventListener('blur', () => {
-                    if (form.dataset.tried) {
-                        const msg = checkField(f, input.value.trim());
-                        err.textContent = msg;
-                        msg ? input.setAttribute('aria-invalid', 'true') : input.removeAttribute('aria-invalid');
-                    }
-                });
-                form.appendChild(el('div', { class: 'lead-field' },
-                    el('label', { class: 'lead-label', for: id }, ...labelKids), input, err));
-            });
-            const last = Object.values(inputs).pop();
-            if (last) last.input.setAttribute('enterkeyhint', 'send');
-
-            const submit = el('button', { type: 'submit', class: 'app-cta lead-submit' },
-                el('span', { class: 'app-cta-text', text: 'Enviar por WhatsApp' }));
-            form.appendChild(submit);
-            form.appendChild(el('p', { class: 'lead-note', text: 'Se abrirá WhatsApp con tus datos listos para enviar.' }));
-
-            form.addEventListener('submit', e => {
-                e.preventDefault();
-                form.dataset.tried = '1';
-                const values = {};
-                let firstBad = null;
-                Object.values(inputs).forEach(({ f, input, err }) => {
-                    const v = input.value.trim();
-                    values[f.name] = v;
-                    const msg = checkField(f, v);
-                    err.textContent = msg;
-                    if (msg) {
-                        input.setAttribute('aria-invalid', 'true');
-                        if (!firstBad) firstBad = input;
-                    } else {
-                        input.removeAttribute('aria-invalid');
-                    }
-                });
-                pickers.forEach(pk => {
-                    Object.assign(values, pk.get());
-                    if (pk.check() && (!firstBad || (pk.row.compareDocumentPosition(firstBad) & Node.DOCUMENT_POSITION_FOLLOWING))) {
-                        firstBad = pk.row;
-                    }
-                });
-                spec.fields.filter(f => f.kind === 'choice').forEach(f => {
-                    const picked = form.querySelector(`input[name="${f.name}"]:checked`);
-                    values[f.name] = picked ? picked.value : '';
-                });
-                if (firstBad) { firstBad.focus(); return; }
-
-                const url = `https://wa.me/${whatsappNumber(config)}?text=${encodeURIComponent(composeLeadMessage(spec, values))}`;
-                showLeadDone(panel, url);
-                // Opening inside the submit tap keeps it a user gesture; if the
-                // browser (e.g. an in-app browser) refuses the new tab, go there directly.
-                // (No 'noopener' feature: with it window.open always returns null.)
-                const win = window.open(url, '_blank');
-                if (win) { try { win.opener = null; } catch (_) {} }
-                else window.location.href = url;
-            });
-
-            panel.appendChild(form);
-            return panel;
-        }
-
-        function showLeadDone(panel, url) {
-            panel.replaceChildren();
-            const check = el('div', { class: 'lead-check', 'aria-hidden': 'true' });
-            check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
-            const again = el('a', { class: 'app-cta lead-submit', href: url, target: '_blank', rel: 'noopener' },
-                el('span', { class: 'app-cta-text', text: 'Abrir WhatsApp' }));
-            const back = el('button', { type: 'button', class: 'lead-link', text: 'Volver' });
-            back.addEventListener('click', () => { const b = openLead && openLead.button; closeLeadForm(); if (b) b.focus(); });
-            const title = el('h2', { class: 'lead-done-title', tabindex: '-1', role: 'status', text: '¡Listo! Te estamos conectando por WhatsApp…' });
-            panel.append(el('div', { class: 'lead-done' },
-                check, title,
-                el('p', { class: 'lead-done-text', text: 'Solo toca Enviar en WhatsApp. Si no se abrió, usa este botón:' }),
-                again, el('br'), back));
-            title.focus({ preventScroll: true });
+            if (start === 'year') yearView();
+            else if (a.marca && VEHICLES[a.marca]) modelsView(a.marca);
+            else makesView();
         }
 
         function renderAppTheme(config) {
@@ -1709,6 +2907,8 @@
             document.getElementById('content-app').classList.remove('hidden');
             const rgb = hexToRgbTriplet(config.layout?.colors?.primary) || '255, 107, 53';
             document.documentElement.style.setProperty('--primary-rgb', rgb);
+            document.documentElement.style.setProperty('--page-background', config.layout?.background?.value || '#1a1a1a');
+            PAGE = config;
 
             // header row
             const loc = config.location || '';
@@ -1736,14 +2936,13 @@
             const options = document.getElementById('app-options');
             (config.buttons || []).forEach(button => {
                 const primary = button.type === 'primary';
-                const form = button.form && LEAD_FORMS[button.form] ? button.form : null;
-                const a = document.createElement(form ? 'button' : 'a');
-                if (form) {
+                const flow = button.form && QUOTE_FLOWS[button.form] ? button.form : null;
+                const a = document.createElement(flow ? 'button' : 'a');
+                if (flow) {
                     a.type = 'button';
-                    a.dataset.form = form;
-                    a.setAttribute('aria-expanded', 'false');
-                    a.setAttribute('aria-controls', 'lead-panel');
-                    a.addEventListener('click', () => toggleLeadForm(form, a, config));
+                    a.dataset.form = flow;
+                    a.setAttribute('aria-haspopup', 'dialog');
+                    a.addEventListener('click', () => openQuoteFlow(flow, a));
                 } else {
                     a.href = button.url;
                     a.target = '_blank';
@@ -1765,9 +2964,6 @@
                 a.addEventListener('click', () => { if (slug) trackClick(slug); });
                 (primary ? actions : options).appendChild(a);
             });
-            const slot = document.createElement('div');
-            slot.id = 'lead-slot';
-            actions.after(slot);
             if (!actions.children.length) actions.remove();
             if (!options.children.length) options.remove();
 
@@ -1798,6 +2994,7 @@
             }
 
             document.getElementById('loading').style.display = 'none';
+            restoreFlowFromHistory();
         }
 
         function setHeroImage(id, config) {
