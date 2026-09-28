@@ -685,6 +685,134 @@
         .theme-app .app-footer { display: flex; justify-content: center; margin-top: auto; }
         .theme-app .app-footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
 
+        /* logo in the circle: contain so wide logos are not cropped */
+        .theme-app .app-avatar img { object-fit: contain; padding: 8px; }
+
+        /* CTA as a form toggle: chevron turns down while its form is open */
+        .theme-app button.app-cta {
+            width: 100%;
+            border: none;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+        .theme-app .app-cta .app-chevron { transition: transform var(--ease); }
+        .theme-app .app-cta[aria-expanded="true"] .app-chevron { transform: rotate(90deg); }
+
+        /* inline lead form: a panel in the card, like the booking stages */
+        .theme-app .lead-panel {
+            margin-top: 12px;
+            padding: 20px 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: rgba(0, 0, 0, 0.14);
+            animation: appFadeIn 0.25s ease both;
+            scroll-margin-top: 16px;
+        }
+        .theme-app .lead-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .theme-app .lead-title { font-size: 17px; font-weight: 600; color: var(--text-color); outline: none; }
+        .theme-app .lead-close {
+            flex: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--line);
+            background: var(--surface-control);
+            color: var(--text-muted);
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .theme-app .lead-form { display: flex; flex-direction: column; gap: 14px; }
+        .theme-app .lead-field { display: flex; flex-direction: column; gap: 6px; }
+        .theme-app .lead-label { font-size: 14px; font-weight: 600; color: var(--text-color); }
+        .theme-app .lead-label .opt { font-weight: 400; color: var(--text-muted); }
+        .theme-app .lead-label .req { color: var(--primary-color); margin-left: 2px; }
+        .theme-app .lead-input {
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 16px;          /* 16px+ keeps iOS from zooming on focus */
+            outline: none;
+            transition: border-color var(--ease), background var(--ease);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .theme-app .lead-input::placeholder { color: rgba(255, 255, 255, 0.35); }
+        .theme-app .lead-input:focus { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.07); }
+        .theme-app .lead-input[aria-invalid="true"] { border-color: #FF453A; }
+        .theme-app .lead-error { font-size: 13px; color: #FF8A80; min-height: 0; }
+        .theme-app .lead-error:empty { display: none; }
+
+        /* sí / no: the booking flow's two-up mode buttons */
+        .theme-app .lead-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border: none; }
+        .theme-app .lead-choice legend { padding: 0; margin-bottom: 6px; }
+        .theme-app .lead-choice input { position: absolute; opacity: 0; pointer-events: none; }
+        .theme-app .lead-choice label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--ease);
+        }
+        .theme-app .lead-choice input:checked + label {
+            border-color: var(--primary-color);
+            background: var(--selected-bg);
+            color: var(--primary-color);
+        }
+        .theme-app .lead-choice input:focus-visible + label { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+
+        .theme-app .lead-submit { justify-content: center; margin-top: 4px; }
+        .theme-app .lead-submit .app-cta-text { flex: none; }
+        .theme-app .lead-note { font-size: 12px; color: var(--text-muted); text-align: center; }
+
+        /* confirmation */
+        .theme-app .lead-done { text-align: center; padding: 8px 0; }
+        .theme-app .lead-check {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(50, 215, 75, 0.15);
+            border: 1px solid #32D74B;
+            color: #32D74B;
+        }
+        .theme-app .lead-check svg { width: 28px; height: 28px; }
+        .theme-app .lead-done-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; outline: none; }
+        .theme-app .lead-done-text { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+        .theme-app .lead-link {
+            display: inline-block;
+            margin-top: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 14px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
         @keyframes appFadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: none; }
@@ -905,6 +1033,231 @@
 
         const chevronSVG = '<svg class="app-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg>';
 
+        // ============================================
+        // LEAD FORMS: CTA -> inline form -> WhatsApp with the answers
+        // ============================================
+        const THIS_YEAR = new Date().getFullYear();
+        const LEAD_FORMS = {
+            auto: {
+                title: 'Cotización de seguro de auto',
+                intro: 'Hola Best National, quiero una cotización de seguro de auto.',
+                fields: [
+                    { name: 'nombre', label: 'Nombre', required: true, autocomplete: 'name', placeholder: 'Tu nombre completo' },
+                    { name: 'telefono', label: 'Teléfono', required: true, type: 'tel', autocomplete: 'tel', inputmode: 'tel', placeholder: '(305) 555-1234', validate: 'phone' },
+                    { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'tu@email.com', validate: 'email' },
+                    { name: 'anio', label: 'Año del vehículo', required: true, inputmode: 'numeric', placeholder: 'Ej. 2020', maxlength: 4, validate: 'year', min: 1980, max: THIS_YEAR + 1 },
+                    { name: 'marca', label: 'Marca', required: true, autocomplete: 'off', placeholder: 'Ej. Toyota' },
+                    { name: 'modelo', label: 'Modelo', required: true, autocomplete: 'off', placeholder: 'Ej. Corolla' },
+                    { name: 'seguro', label: '¿Tienes seguro actualmente?', kind: 'choice', options: ['Sí', 'No'] }
+                ],
+                lines: v => [
+                    ['Nombre', v.nombre],
+                    ['Teléfono', v.telefono],
+                    ['Email', v.email],
+                    ['Vehículo', [v.anio, v.marca, v.modelo].join(' ')],
+                    ['Seguro actual', v.seguro]
+                ]
+            },
+            casa: {
+                title: 'Cotización de seguro de casa',
+                intro: 'Hola Best National, quiero una cotización de seguro de casa.',
+                fields: [
+                    { name: 'nombre', label: 'Nombre', required: true, autocomplete: 'name', placeholder: 'Tu nombre completo' },
+                    { name: 'telefono', label: 'Teléfono', required: true, type: 'tel', autocomplete: 'tel', inputmode: 'tel', placeholder: '(305) 555-1234', validate: 'phone' },
+                    { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'tu@email.com', validate: 'email' },
+                    { name: 'direccion', label: 'Dirección o ZIP', required: true, autocomplete: 'street-address', placeholder: 'Ej. 33125 o 123 SW 8th St' },
+                    { name: 'construccion', label: 'Año de construcción', inputmode: 'numeric', placeholder: 'Ej. 1998', maxlength: 4, validate: 'year', min: 1800, max: THIS_YEAR }
+                ],
+                lines: v => [
+                    ['Nombre', v.nombre],
+                    ['Teléfono', v.telefono],
+                    ['Email', v.email],
+                    ['Dirección o ZIP', v.direccion],
+                    ['Año de construcción', v.construccion]
+                ]
+            }
+        };
+
+        // Returns an error message, or '' when the value is fine.
+        function checkField(f, value) {
+            if (!value) return f.required ? 'Este campo es obligatorio.' : '';
+            if (f.validate === 'phone') {
+                const digits = value.replace(/\D/g, '');
+                if (digits.length < 10 || digits.length > 15) return 'Escribe un teléfono válido (10 dígitos).';
+            }
+            if (f.validate === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+                return 'Escribe un email válido.';
+            }
+            if (f.validate === 'year') {
+                const y = Number(value);
+                if (!/^\d{4}$/.test(value) || y < f.min || y > f.max) return `Escribe un año entre ${f.min} y ${f.max}.`;
+            }
+            return '';
+        }
+
+        function composeLeadMessage(spec, values) {
+            const rows = spec.lines(values)
+                .filter(([, v]) => v && String(v).trim())
+                .map(([k, v]) => `• ${k}: ${String(v).trim()}`);
+            return [spec.intro, '', ...rows].join('\n');
+        }
+
+        function whatsappNumber(config) {
+            return String(config.leadForms?.whatsapp || '').replace(/\D/g, '');
+        }
+
+        let openLead = null;   // { key, button }
+
+        function closeLeadForm() {
+            const panel = document.getElementById('lead-panel');
+            if (panel) panel.remove();
+            if (openLead) openLead.button.setAttribute('aria-expanded', 'false');
+            openLead = null;
+        }
+
+        function toggleLeadForm(key, button, config) {
+            const wasOpen = openLead && openLead.key === key;
+            closeLeadForm();
+            if (wasOpen) { button.focus(); return; }
+            openLead = { key, button };
+            button.setAttribute('aria-expanded', 'true');
+            const panel = buildLeadPanel(key, config);
+            document.getElementById('lead-slot').appendChild(panel);
+            const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            panel.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+            panel.querySelector('.lead-title').focus({ preventScroll: true });
+            if (config.slug) trackClick(config.slug);
+        }
+
+        function el(tag, props, ...children) {
+            const n = document.createElement(tag);
+            Object.entries(props || {}).forEach(([k, v]) => {
+                if (v === undefined || v === null || v === false) return;
+                if (k === 'class') n.className = v;
+                else if (k === 'text') n.textContent = v;
+                else n.setAttribute(k, v === true ? '' : v);
+            });
+            children.forEach(c => c && n.appendChild(c));
+            return n;
+        }
+
+        function buildLeadPanel(key, config) {
+            const spec = LEAD_FORMS[key];
+            const panel = el('section', { id: 'lead-panel', class: 'lead-panel', 'aria-labelledby': 'lead-title' });
+            const close = el('button', { type: 'button', class: 'lead-close', 'aria-label': 'Cerrar formulario', text: '✕' });
+            close.addEventListener('click', () => { const b = openLead && openLead.button; closeLeadForm(); if (b) b.focus(); });
+            panel.appendChild(el('div', { class: 'lead-head' },
+                el('h2', { id: 'lead-title', class: 'lead-title', tabindex: '-1', text: spec.title }), close));
+
+            const form = el('form', { class: 'lead-form', novalidate: true });
+            const inputs = {};
+            spec.fields.forEach(f => {
+                const id = `lead-${key}-${f.name}`;
+                const labelKids = [document.createTextNode(f.label)];
+                labelKids.push(f.required
+                    ? el('span', { class: 'req', 'aria-hidden': 'true', text: '*' })
+                    : el('span', { class: 'opt', text: ' (opcional)' }));
+                if (f.kind === 'choice') {
+                    const fs = el('fieldset', { class: 'lead-field lead-choice' });
+                    const legend = el('legend', { class: 'lead-label' }, ...labelKids);
+                    fs.appendChild(legend);
+                    f.options.forEach((opt, i) => {
+                        const oid = `${id}-${i}`;
+                        fs.appendChild(el('input', { type: 'radio', id: oid, name: f.name, value: opt }));
+                        fs.appendChild(el('label', { for: oid, text: opt }));
+                    });
+                    form.appendChild(fs);
+                    return;
+                }
+                const err = el('p', { id: `${id}-err`, class: 'lead-error', 'aria-live': 'polite' });
+                const input = el('input', {
+                    id, name: f.name, class: 'lead-input',
+                    type: f.type || 'text',
+                    inputmode: f.inputmode, autocomplete: f.autocomplete,
+                    placeholder: f.placeholder, maxlength: f.maxlength,
+                    required: f.required, 'aria-required': f.required ? 'true' : null,
+                    'aria-describedby': `${id}-err`,
+                    enterkeyhint: 'next'
+                });
+                inputs[f.name] = { f, input, err };
+                // after a failed submit, errors clear as soon as the value becomes valid
+                input.addEventListener('input', () => {
+                    if (input.getAttribute('aria-invalid') === 'true' && !checkField(f, input.value.trim())) {
+                        input.removeAttribute('aria-invalid');
+                        err.textContent = '';
+                    }
+                });
+                input.addEventListener('blur', () => {
+                    if (form.dataset.tried) {
+                        const msg = checkField(f, input.value.trim());
+                        err.textContent = msg;
+                        msg ? input.setAttribute('aria-invalid', 'true') : input.removeAttribute('aria-invalid');
+                    }
+                });
+                form.appendChild(el('div', { class: 'lead-field' },
+                    el('label', { class: 'lead-label', for: id }, ...labelKids), input, err));
+            });
+            const last = Object.values(inputs).pop();
+            if (last) last.input.setAttribute('enterkeyhint', 'send');
+
+            const submit = el('button', { type: 'submit', class: 'app-cta lead-submit' },
+                el('span', { class: 'app-cta-text', text: 'Enviar por WhatsApp' }));
+            form.appendChild(submit);
+            form.appendChild(el('p', { class: 'lead-note', text: 'Se abrirá WhatsApp con tus datos listos para enviar.' }));
+
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                form.dataset.tried = '1';
+                const values = {};
+                let firstBad = null;
+                Object.values(inputs).forEach(({ f, input, err }) => {
+                    const v = input.value.trim();
+                    values[f.name] = v;
+                    const msg = checkField(f, v);
+                    err.textContent = msg;
+                    if (msg) {
+                        input.setAttribute('aria-invalid', 'true');
+                        if (!firstBad) firstBad = input;
+                    } else {
+                        input.removeAttribute('aria-invalid');
+                    }
+                });
+                spec.fields.filter(f => f.kind === 'choice').forEach(f => {
+                    const picked = form.querySelector(`input[name="${f.name}"]:checked`);
+                    values[f.name] = picked ? picked.value : '';
+                });
+                if (firstBad) { firstBad.focus(); return; }
+
+                const url = `https://wa.me/${whatsappNumber(config)}?text=${encodeURIComponent(composeLeadMessage(spec, values))}`;
+                showLeadDone(panel, url);
+                // Opening inside the submit tap keeps it a user gesture; if the
+                // browser (e.g. an in-app browser) refuses the new tab, go there directly.
+                // (No 'noopener' feature: with it window.open always returns null.)
+                const win = window.open(url, '_blank');
+                if (win) { try { win.opener = null; } catch (_) {} }
+                else window.location.href = url;
+            });
+
+            panel.appendChild(form);
+            return panel;
+        }
+
+        function showLeadDone(panel, url) {
+            panel.replaceChildren();
+            const check = el('div', { class: 'lead-check', 'aria-hidden': 'true' });
+            check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
+            const again = el('a', { class: 'app-cta lead-submit', href: url, target: '_blank', rel: 'noopener' },
+                el('span', { class: 'app-cta-text', text: 'Abrir WhatsApp' }));
+            const back = el('button', { type: 'button', class: 'lead-link', text: 'Volver' });
+            back.addEventListener('click', () => { const b = openLead && openLead.button; closeLeadForm(); if (b) b.focus(); });
+            const title = el('h2', { class: 'lead-done-title', tabindex: '-1', role: 'status', text: '¡Listo! Te estamos conectando por WhatsApp…' });
+            panel.append(el('div', { class: 'lead-done' },
+                check, title,
+                el('p', { class: 'lead-done-text', text: 'Solo toca Enviar en WhatsApp. Si no se abrió, usa este botón:' }),
+                again, el('br'), back));
+            title.focus({ preventScroll: true });
+        }
+
         function renderAppTheme(config) {
             document.body.className = 'theme-app';
             document.getElementById('content-app').classList.remove('hidden');
@@ -920,13 +1273,13 @@
             // identity: logo if there is one, otherwise initials
             const avatar = document.getElementById('app-avatar');
             const logo = config.layout?.image?.url;
+            avatar.textContent = initialsOf(config.name);
             if (logo) {
-                const img = document.createElement('img');
-                img.src = logo;
+                // Show initials until the logo loads; keep them if it never does.
+                const img = new Image();
                 img.alt = '';
-                avatar.appendChild(img);
-            } else {
-                avatar.textContent = initialsOf(config.name);
+                img.onload = () => { avatar.textContent = ''; avatar.appendChild(img); };
+                img.src = logo;
             }
             document.getElementById('app-name').textContent = config.name;
             document.getElementById('app-tagline').textContent = config.tagline || '';
@@ -937,10 +1290,19 @@
             const options = document.getElementById('app-options');
             (config.buttons || []).forEach(button => {
                 const primary = button.type === 'primary';
-                const a = document.createElement('a');
-                a.href = button.url;
-                a.target = '_blank';
-                a.rel = 'noopener';
+                const form = button.form && LEAD_FORMS[button.form] ? button.form : null;
+                const a = document.createElement(form ? 'button' : 'a');
+                if (form) {
+                    a.type = 'button';
+                    a.dataset.form = form;
+                    a.setAttribute('aria-expanded', 'false');
+                    a.setAttribute('aria-controls', 'lead-panel');
+                    a.addEventListener('click', () => toggleLeadForm(form, a, config));
+                } else {
+                    a.href = button.url;
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                }
                 a.className = primary ? 'app-cta' : 'app-option';
                 if (button.emoji) {
                     const icon = document.createElement('span');
@@ -957,6 +1319,9 @@
                 a.addEventListener('click', () => { if (slug) trackClick(slug); });
                 (primary ? actions : options).appendChild(a);
             });
+            const slot = document.createElement('div');
+            slot.id = 'lead-slot';
+            actions.after(slot);
             if (!actions.children.length) actions.remove();
             if (!options.children.length) options.remove();
 
@@ -1180,7 +1545,7 @@
                 "style": "card",
                 "theme": "app",
                 "image": {
-                    "url": "",
+                    "url": "bnseguros-logo.png",
                     "heroBackground": ""
                 },
                 "background": {
@@ -1200,18 +1565,21 @@
                 "buttonShape": "rounded",
                 "buttonShadow": true
             },
+            "leadForms": { "whatsapp": "13054070139" },
             "buttons": [
                 {
                     "text": "Cotiza tu Seguro de Auto",
                     "emoji": "🚙",
                     "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20auto",
-                    "type": "primary"
+                    "type": "primary",
+                    "form": "auto"
                 },
                 {
                     "text": "Cotiza tu Seguro de Casa",
                     "emoji": "🏠",
                     "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20casa",
-                    "type": "primary"
+                    "type": "primary",
+                    "form": "casa"
                 },
                 {
                     "text": "Llámanos",
