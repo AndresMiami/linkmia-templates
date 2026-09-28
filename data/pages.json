@@ -118,6 +118,69 @@
       "isActive": true,
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "slug": "bnseguros",
+      "name": "Best National Insurance",
+      "tagline": "Asegurando un futuro brillante",
+      "location": "Miami, FL",
+      "hours": "Lun–Vie 9am–6:30pm · Sáb 10am–2pm · Dom 10am–3pm",
+      "layout": {
+        "style": "card",
+        "image": {
+          "url": "",
+          "heroBackground": ""
+        },
+        "background": {
+          "type": "color",
+          "value": "#1b2150",
+          "blur": 0
+        },
+        "colors": {
+          "primary": "#ffd200",
+          "secondary": "#ffffff",
+          "text": "#ffffff",
+          "textMuted": "#b9bdd6",
+          "cardBackground": "#262c66"
+        },
+        "spacing": "comfortable",
+        "buttonStyle": "filled",
+        "buttonShape": "rounded",
+        "buttonShadow": true
+      },
+      "buttons": [
+        {
+          "text": "Cotiza tu Seguro de Auto",
+          "emoji": "🚙",
+          "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20auto",
+          "type": "primary"
+        },
+        {
+          "text": "Cotiza tu Seguro de Casa",
+          "emoji": "🏠",
+          "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20casa",
+          "type": "primary"
+        },
+        {
+          "text": "Llámanos",
+          "emoji": "📞",
+          "url": "tel:+13054047151",
+          "type": "secondary"
+        },
+        {
+          "text": "Visita nuestra web",
+          "emoji": "🌐",
+          "url": "https://bestnationalins.com",
+          "type": "secondary"
+        }
+      ],
+      "social": {
+        "instagram": "https://www.instagram.com/bn_insurance",
+        "facebook": ""
+      },
+      "isActive": true,
+      "createdAt": "2026-09-28T00:00:00.000Z",
+      "updatedAt": "2026-09-28T00:00:00.000Z"
     }
   ]
 }
