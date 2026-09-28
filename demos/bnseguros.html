@@ -813,6 +813,178 @@
             cursor: pointer;
         }
 
+        /* picker row: like CARFAX "Makes & Models" / the booking summary rows */
+        .theme-app .lead-picker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-height: 60px;
+            padding: 10px 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color var(--ease), background var(--ease);
+        }
+        .theme-app .lead-picker:active { transform: scale(0.99); }
+        .theme-app .lead-picker:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .theme-app .lead-picker[aria-invalid="true"] { border-color: #FF453A; }
+        .theme-app .lead-picker.is-set { border-color: rgba(var(--primary-rgb), 0.5); }
+        .theme-app .lead-picker-icon { flex: none; width: 28px; height: 28px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
+        .theme-app .lead-picker-icon svg { width: 24px; height: 24px; }
+        .theme-app .lead-picker.is-set .lead-picker-icon { color: var(--primary-color); }
+        .theme-app .lead-picker-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .theme-app .lead-picker-value { font-size: 16px; font-weight: 600; }
+        .theme-app .lead-picker:not(.is-set) .lead-picker-value { color: rgba(255, 255, 255, 0.45); font-weight: 500; }
+        .theme-app .lead-picker-sub { font-size: 13px; color: var(--text-muted); }
+        .theme-app .lead-picker .app-chevron { color: var(--text-muted); }
+
+        /* bottom sheet: LinkMia sheet convention (dim 0.7, 576px, 20px top radius, slideUp 0.3s) */
+        .sheet-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            animation: sheetFade 0.2s ease both;
+        }
+        .sheet {
+            width: 100%;
+            max-width: 576px;
+            max-height: 90vh;
+            max-height: 90dvh;
+            display: flex;
+            flex-direction: column;
+            background: var(--card-background);
+            color: var(--text-color);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease both;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .sheet-head {
+            flex: none;
+            display: grid;
+            grid-template-columns: 44px 1fr 44px;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 16px 12px;
+        }
+        .sheet-title { font-size: 18px; font-weight: 700; text-align: center; outline: none; }
+        .sheet-head.has-back .sheet-title { text-align: left; }
+        .sheet-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .sheet-btn svg { width: 20px; height: 20px; }
+        .sheet-btn:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .sheet-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 0 16px 24px; }
+        .sheet-search {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .sheet-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--text-muted); }
+        .sheet-search input {
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 14px 12px 42px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 16px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .sheet-search input:focus { border-color: var(--primary-color); }
+        .sheet-search input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        .sheet-section {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 8px 4px 10px;
+        }
+        .make-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+        .make-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 88px;
+            padding: 10px 6px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .make-mono {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(var(--primary-rgb), 0.6);
+            color: var(--primary-color);
+            font-size: 15px;
+            font-weight: 800;
+        }
+        .make-tile:active, .sheet-row:active { background: rgba(var(--primary-rgb), 0.10); }
+        .sheet-list { list-style: none; margin: 0; padding: 0; }
+        .sheet-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            min-height: 52px;
+            padding: 12px 4px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            background: none;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 17px;
+            text-align: left;
+            cursor: pointer;
+        }
+        .sheet-row.is-selected { color: var(--primary-color); font-weight: 600; }
+        .sheet-row .check { width: 20px; height: 20px; flex: none; }
+        .sheet-row.muted { color: var(--text-muted); }
+        .make-tile:focus-visible, .sheet-row:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
+        .sheet-empty { color: var(--text-muted); text-align: center; padding: 16px 0; font-size: 14px; }
+        .sheet-other { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
+        .sheet-other .lead-input { width: 100%; }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+        @keyframes sheetFade { from { opacity: 0; } to { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { .sheet, .sheet-backdrop { animation: none; } }
+
         @keyframes appFadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: none; }
@@ -1045,16 +1217,17 @@
                     { name: 'nombre', label: 'Nombre', required: true, autocomplete: 'name', placeholder: 'Tu nombre completo' },
                     { name: 'telefono', label: 'Teléfono', required: true, type: 'tel', autocomplete: 'tel', inputmode: 'tel', placeholder: '(305) 555-1234', validate: 'phone' },
                     { name: 'email', label: 'Email', type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'tu@email.com', validate: 'email' },
-                    { name: 'anio', label: 'Año del vehículo', required: true, inputmode: 'numeric', placeholder: 'Ej. 2020', maxlength: 4, validate: 'year', min: 1980, max: THIS_YEAR + 1 },
-                    { name: 'marca', label: 'Marca', required: true, autocomplete: 'off', placeholder: 'Ej. Toyota' },
-                    { name: 'modelo', label: 'Modelo', required: true, autocomplete: 'off', placeholder: 'Ej. Corolla' },
+                    { name: 'anio', label: 'Año del vehículo', required: true, kind: 'year', icon: 'calendar', placeholder: 'Selecciona el año', min: 1980, max: THIS_YEAR + 1 },
+                    { name: 'vehiculo', label: 'Marca y modelo', required: true, kind: 'makeModel', icon: 'car', placeholder: 'Selecciona marca y modelo' },
+                    { name: 'millaje', label: 'Millaje aproximado', inputmode: 'numeric', placeholder: 'Ej. 45,000', maxlength: 9, validate: 'miles' },
                     { name: 'seguro', label: '¿Tienes seguro actualmente?', kind: 'choice', options: ['Sí', 'No'] }
                 ],
                 lines: v => [
                     ['Nombre', v.nombre],
                     ['Teléfono', v.telefono],
                     ['Email', v.email],
-                    ['Vehículo', [v.anio, v.marca, v.modelo].join(' ')],
+                    ['Vehículo', [v.anio, v.marca, v.modelo].filter(Boolean).join(' ')],
+                    ['Millaje', v.millaje ? `${Number(v.millaje.replace(/\D/g, '')).toLocaleString('en-US')} millas` : ''],
                     ['Seguro actual', v.seguro]
                 ]
             },
@@ -1088,6 +1261,10 @@
             if (f.validate === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
                 return 'Escribe un email válido.';
             }
+            if (f.validate === 'miles') {
+                const digits = value.replace(/[\s,.]/g, '');
+                if (!/^\d{1,7}$/.test(digits) || Number(digits) > 999999) return 'Escribe solo números (ej. 45000).';
+            }
             if (f.validate === 'year') {
                 const y = Number(value);
                 if (!/^\d{4}$/.test(value) || y < f.min || y > f.max) return `Escribe un año entre ${f.min} y ${f.max}.`;
@@ -1104,6 +1281,262 @@
 
         function whatsappNumber(config) {
             return String(config.leadForms?.whatsapp || '').replace(/\D/g, '');
+        }
+
+        // Vehicle catalog for the pickers (common US makes/models; "Otro" covers the rest).
+        const POPULAR_MAKES = ['Toyota', 'Honda', 'Nissan', 'Hyundai', 'Kia', 'Ford', 'Chevrolet', 'Jeep', 'Tesla', 'BMW', 'Mercedes-Benz', 'Lexus'];
+        const VEHICLES = {
+            'Acura': ['ILX', 'Integra', 'MDX', 'RDX', 'TLX', 'TSX', 'ZDX'],
+            'Alfa Romeo': ['Giulia', 'Stelvio', 'Tonale'],
+            'Audi': ['A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'e-tron', 'Q3', 'Q4 e-tron', 'Q5', 'Q7', 'Q8'],
+            'BMW': ['2 Series', '3 Series', '4 Series', '5 Series', '7 Series', 'i4', 'iX', 'X1', 'X3', 'X5', 'X7'],
+            'Buick': ['Enclave', 'Encore', 'Encore GX', 'Envision', 'LaCrosse'],
+            'Cadillac': ['CT4', 'CT5', 'Escalade', 'Lyriq', 'XT4', 'XT5', 'XT6'],
+            'Chevrolet': ['Blazer', 'Camaro', 'Colorado', 'Corvette', 'Cruze', 'Equinox', 'Malibu', 'Silverado 1500', 'Spark', 'Suburban', 'Tahoe', 'Trailblazer', 'Traverse', 'Trax'],
+            'Chrysler': ['300', 'Pacifica', 'Voyager'],
+            'Dodge': ['Challenger', 'Charger', 'Durango', 'Grand Caravan', 'Hornet', 'Journey'],
+            'Fiat': ['500', '500X'],
+            'Ford': ['Bronco', 'Bronco Sport', 'Edge', 'Escape', 'Expedition', 'Explorer', 'F-150', 'Fusion', 'Maverick', 'Mustang', 'Mustang Mach-E', 'Ranger', 'Transit'],
+            'Genesis': ['G70', 'G80', 'G90', 'GV70', 'GV80'],
+            'GMC': ['Acadia', 'Canyon', 'Sierra 1500', 'Terrain', 'Yukon'],
+            'Honda': ['Accord', 'Civic', 'CR-V', 'Fit', 'HR-V', 'Odyssey', 'Passport', 'Pilot', 'Ridgeline'],
+            'Hyundai': ['Accent', 'Elantra', 'Ioniq 5', 'Kona', 'Palisade', 'Santa Cruz', 'Santa Fe', 'Sonata', 'Tucson', 'Venue'],
+            'Infiniti': ['Q50', 'Q60', 'QX50', 'QX55', 'QX60', 'QX80'],
+            'Jaguar': ['E-Pace', 'F-Pace', 'F-Type', 'I-Pace', 'XF'],
+            'Jeep': ['Cherokee', 'Compass', 'Gladiator', 'Grand Cherokee', 'Renegade', 'Wagoneer', 'Wrangler'],
+            'Kia': ['Carnival', 'EV6', 'Forte', 'K5', 'Niro', 'Optima', 'Rio', 'Seltos', 'Sorento', 'Soul', 'Sportage', 'Telluride'],
+            'Land Rover': ['Defender', 'Discovery', 'Discovery Sport', 'Range Rover', 'Range Rover Evoque', 'Range Rover Sport', 'Range Rover Velar'],
+            'Lexus': ['ES', 'GX', 'IS', 'LX', 'NX', 'RX', 'RZ', 'TX', 'UX'],
+            'Lincoln': ['Aviator', 'Corsair', 'MKZ', 'Nautilus', 'Navigator'],
+            'Maserati': ['Ghibli', 'Grecale', 'Levante', 'Quattroporte'],
+            'Mazda': ['CX-30', 'CX-5', 'CX-50', 'CX-9', 'CX-90', 'Mazda3', 'Mazda6', 'MX-5 Miata'],
+            'Mercedes-Benz': ['A-Class', 'C-Class', 'CLA', 'E-Class', 'EQS', 'G-Class', 'GLA', 'GLB', 'GLC', 'GLE', 'GLS', 'S-Class', 'Sprinter'],
+            'MINI': ['Clubman', 'Countryman', 'Hardtop'],
+            'Mitsubishi': ['Eclipse Cross', 'Mirage', 'Outlander', 'Outlander Sport'],
+            'Nissan': ['Altima', 'Armada', 'Frontier', 'Kicks', 'Leaf', 'Maxima', 'Murano', 'Pathfinder', 'Rogue', 'Sentra', 'Titan', 'Versa'],
+            'Porsche': ['911', 'Cayenne', 'Macan', 'Panamera', 'Taycan'],
+            'Ram': ['1500', '2500', 'ProMaster'],
+            'Subaru': ['Ascent', 'Crosstrek', 'Forester', 'Impreza', 'Legacy', 'Outback', 'WRX'],
+            'Tesla': ['Cybertruck', 'Model 3', 'Model S', 'Model X', 'Model Y'],
+            'Toyota': ['4Runner', 'C-HR', 'Camry', 'Corolla', 'Corolla Cross', 'Highlander', 'Prius', 'RAV4', 'Sequoia', 'Sienna', 'Tacoma', 'Tundra', 'Venza', 'Yaris'],
+            'Volkswagen': ['Atlas', 'Atlas Cross Sport', 'Golf', 'GTI', 'ID.4', 'Jetta', 'Passat', 'Taos', 'Tiguan'],
+            'Volvo': ['S60', 'S90', 'XC40', 'XC60', 'XC90']
+        };
+
+        const ICON = {
+            close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+            back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+            search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+            calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+            car: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3.5 16h17v2.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V18h-9v.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/><path d="M5 11h14"/><circle cx="8" cy="14" r=".6" fill="currentColor"/><circle cx="16" cy="14" r=".6" fill="currentColor"/></svg>',
+            check: '<svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>'
+        };
+
+        // One bottom sheet at a time. render(api) fills it; api.setView swaps content in place.
+        function openSheet({ title, onClose }) {
+            const opener = document.activeElement;
+            const backdrop = el('div', { class: 'sheet-backdrop' });
+            const sheet = el('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'sheet-title' });
+            const head = el('div', { class: 'sheet-head' });
+            const body = el('div', { class: 'sheet-body' });
+            sheet.append(head, body);
+            backdrop.appendChild(sheet);
+            const prevOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            document.getElementById('content-app').setAttribute('aria-hidden', 'true');
+
+            function close() {
+                backdrop.remove();
+                document.body.style.overflow = prevOverflow;
+                document.getElementById('content-app').removeAttribute('aria-hidden');
+                document.removeEventListener('keydown', onKey, true);
+                if (onClose) onClose();
+                if (opener && opener.focus) opener.focus();
+            }
+            function onKey(e) {
+                if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+                if (e.key === 'Tab') {   // keep focus inside the sheet
+                    const f = [...sheet.querySelectorAll('button, input, [tabindex="0"]')].filter(n => !n.disabled && n.offsetParent);
+                    if (!f.length) return;
+                    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+                    else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+                }
+            }
+            document.addEventListener('keydown', onKey, true);
+            backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+
+            function setView(viewTitle, { back } = {}) {
+                head.replaceChildren();
+                head.classList.toggle('has-back', !!back);
+                if (back) {
+                    const b = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Atrás' });
+                    b.innerHTML = ICON.back;
+                    b.addEventListener('click', back);
+                    head.appendChild(b);
+                } else {
+                    head.appendChild(el('span'));
+                }
+                head.appendChild(el('h2', { id: 'sheet-title', class: 'sheet-title', tabindex: '-1', text: viewTitle }));
+                const x = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Cerrar' });
+                x.innerHTML = ICON.close;
+                x.addEventListener('click', close);
+                head.appendChild(x);
+                body.replaceChildren();
+                body.scrollTop = 0;
+                return body;
+            }
+            document.body.appendChild(backdrop);
+            return { setView, close, focusTitle: () => document.getElementById('sheet-title').focus({ preventScroll: true }) };
+        }
+
+        function sheetRow(text, { selected, muted, onPick }) {
+            const b = el('button', { type: 'button', class: 'sheet-row' + (selected ? ' is-selected' : '') + (muted ? ' muted' : '') },
+                el('span', { text }));
+            if (selected) { b.setAttribute('aria-current', 'true'); b.insertAdjacentHTML('beforeend', ICON.check); }
+            b.addEventListener('click', onPick);
+            return el('li', {}, b);
+        }
+
+        // "Otro": typed fallback inside the sheet
+        function otherView(api, title, fields, back, done) {
+            const body = api.setView(title, { back });
+            const wrap = el('form', { class: 'sheet-other', novalidate: true });
+            const inputs = fields.map(f => {
+                const id = 'sheet-other-' + f.name;
+                const input = el('input', { id, class: 'lead-input', value: f.value || '', placeholder: f.placeholder, autocomplete: 'off', enterkeyhint: 'done' });
+                wrap.append(el('label', { class: 'lead-label', for: id, text: f.label }), input);
+                return input;
+            });
+            const err = el('p', { class: 'lead-error', 'aria-live': 'polite' });
+            const ok = el('button', { type: 'submit', class: 'app-cta lead-submit' }, el('span', { class: 'app-cta-text', text: 'Listo' }));
+            wrap.append(err, ok);
+            wrap.addEventListener('submit', e => {
+                e.preventDefault();
+                const vals = inputs.map(i => i.value.trim());
+                if (vals.some(v => !v)) { err.textContent = 'Completa los campos.'; inputs[vals.findIndex(v => !v)].focus(); return; }
+                done(vals);
+            });
+            body.appendChild(wrap);
+            inputs[0].focus();
+        }
+
+        function openYearSheet(f, current, onPick) {
+            const api = openSheet({ title: f.label });
+            const body = api.setView('Año del vehículo');
+            const list = el('ul', { class: 'sheet-list' });
+            for (let y = f.max; y >= f.min; y--) {
+                const year = String(y);
+                list.appendChild(sheetRow(year, { selected: year === current, onPick: () => { onPick(year); api.close(); } }));
+            }
+            body.appendChild(list);
+            const sel = list.querySelector('.is-selected');
+            if (sel) sel.scrollIntoView({ block: 'center' });
+            api.focusTitle();
+        }
+
+        function openMakeModelSheet(current, onPick) {
+            const api = openSheet({});
+            const finish = (make, model) => { onPick(make, model); api.close(); };
+
+            function makesView() {
+                const body = api.setView('Marcas');
+                const search = el('div', { class: 'sheet-search' });
+                search.innerHTML = ICON.search;
+                const input = el('input', { type: 'search', placeholder: 'Buscar marca', 'aria-label': 'Buscar marca', autocomplete: 'off', enterkeyhint: 'search' });
+                search.appendChild(input);
+                const popularLabel = el('p', { class: 'sheet-section', text: 'Marcas populares' });
+                const grid = el('div', { class: 'make-grid' });
+                POPULAR_MAKES.forEach(make => {
+                    const t = el('button', { type: 'button', class: 'make-tile' },
+                        el('span', { class: 'make-mono', 'aria-hidden': 'true', text: make[0] }), el('span', { text: make }));
+                    t.addEventListener('click', () => modelsView(make));
+                    grid.appendChild(t);
+                });
+                const allLabel = el('p', { class: 'sheet-section', text: 'Todas las marcas' });
+                const list = el('ul', { class: 'sheet-list' });
+                const empty = el('p', { class: 'sheet-empty', text: 'No encontramos esa marca.' });
+                function renderList(q) {
+                    list.replaceChildren();
+                    const needle = q.toLowerCase();
+                    const makes = Object.keys(VEHICLES).filter(m => m.toLowerCase().includes(needle));
+                    makes.forEach(make => list.appendChild(sheetRow(make, { selected: current.make === make, onPick: () => modelsView(make) })));
+                    list.appendChild(sheetRow('Otra marca', { muted: true, onPick: () => otherMake(q) }));
+                    empty.style.display = makes.length ? 'none' : '';
+                    const searching = !!needle;
+                    popularLabel.style.display = grid.style.display = searching ? 'none' : '';
+                    allLabel.textContent = searching ? 'Resultados' : 'Todas las marcas';
+                }
+                input.addEventListener('input', () => renderList(input.value.trim()));
+                body.append(search, popularLabel, grid, allLabel, empty, list);
+                renderList('');
+                api.focusTitle();
+            }
+
+            function modelsView(make) {
+                const body = api.setView(`Modelos ${make}`, { back: makesView });
+                const list = el('ul', { class: 'sheet-list' });
+                VEHICLES[make].forEach(model => list.appendChild(sheetRow(model, {
+                    selected: current.make === make && current.model === model,
+                    onPick: () => finish(make, model)
+                })));
+                list.appendChild(sheetRow('Otro modelo', { muted: true, onPick: () =>
+                    otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
+                        () => modelsView(make), ([model]) => finish(make, model)) }));
+                body.appendChild(list);
+                api.focusTitle();
+            }
+
+            function otherMake(prefill) {
+                otherView(api, 'Otra marca', [
+                    { name: 'marca', label: 'Marca', placeholder: 'Escribe la marca', value: prefill },
+                    { name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }
+                ], makesView, ([make, model]) => finish(make, model));
+            }
+
+            if (current.make && VEHICLES[current.make]) modelsView(current.make); else makesView();
+        }
+
+        // A form row that opens a picker sheet. Returns { f, row, err, get(), check() }.
+        function buildPickerRow(key, f, labelKids) {
+            const id = `lead-${key}-${f.name}`;
+            const state = {};
+            const err = el('p', { id: `${id}-err`, class: 'lead-error', 'aria-live': 'polite' });
+            const value = el('span', { class: 'lead-picker-value', text: f.placeholder });
+            const sub = el('span', { class: 'lead-picker-sub' });
+            const row = el('button', { type: 'button', id, class: 'lead-picker', 'aria-labelledby': `${id}-label ${id}`, 'aria-describedby': `${id}-err`, 'aria-haspopup': 'dialog' },
+                (() => { const i = el('span', { class: 'lead-picker-icon', 'aria-hidden': 'true' }); i.innerHTML = ICON[f.icon] || ''; return i; })(),
+                el('span', { class: 'lead-picker-text' }, value, sub));
+            row.insertAdjacentHTML('beforeend', chevronSVG);
+            const label = el('span', { id: `${id}-label`, class: 'lead-label' }, ...labelKids);
+
+            function show() {
+                const set = f.kind === 'year' ? !!state.year : !!(state.make && state.model);
+                row.classList.toggle('is-set', set);
+                if (f.kind === 'year') {
+                    value.textContent = state.year || f.placeholder;
+                } else {
+                    value.textContent = set ? state.model : f.placeholder;
+                    sub.textContent = set ? state.make : '';
+                }
+                if (set) { row.removeAttribute('aria-invalid'); err.textContent = ''; }
+            }
+            row.addEventListener('click', () => {
+                if (f.kind === 'year') openYearSheet(f, state.year, y => { state.year = y; show(); });
+                else openMakeModelSheet({ make: state.make, model: state.model }, (make, model) => { state.make = make; state.model = model; show(); });
+            });
+            const api = {
+                f, row, err,
+                get: () => (f.kind === 'year' ? { [f.name]: state.year || '' } : { marca: state.make || '', modelo: state.model || '' }),
+                check() {
+                    const ok = f.kind === 'year' ? !!state.year : !!(state.make && state.model);
+                    const msg = ok || !f.required ? '' : (f.kind === 'year' ? 'Selecciona el año.' : 'Selecciona la marca y el modelo.');
+                    err.textContent = msg;
+                    msg ? row.setAttribute('aria-invalid', 'true') : row.removeAttribute('aria-invalid');
+                    return msg;
+                }
+            };
+            api.node = el('div', { class: 'lead-field' }, label, row, err);
+            return api;
         }
 
         let openLead = null;   // { key, button }
@@ -1151,12 +1584,19 @@
 
             const form = el('form', { class: 'lead-form', novalidate: true });
             const inputs = {};
+            const pickers = [];
             spec.fields.forEach(f => {
                 const id = `lead-${key}-${f.name}`;
                 const labelKids = [document.createTextNode(f.label)];
                 labelKids.push(f.required
                     ? el('span', { class: 'req', 'aria-hidden': 'true', text: '*' })
                     : el('span', { class: 'opt', text: ' (opcional)' }));
+                if (f.kind === 'year' || f.kind === 'makeModel') {
+                    const picker = buildPickerRow(key, f, labelKids);
+                    pickers.push(picker);
+                    form.appendChild(picker.node);
+                    return;
+                }
                 if (f.kind === 'choice') {
                     const fs = el('fieldset', { class: 'lead-field lead-choice' });
                     const legend = el('legend', { class: 'lead-label' }, ...labelKids);
@@ -1220,6 +1660,12 @@
                         if (!firstBad) firstBad = input;
                     } else {
                         input.removeAttribute('aria-invalid');
+                    }
+                });
+                pickers.forEach(pk => {
+                    Object.assign(values, pk.get());
+                    if (pk.check() && (!firstBad || (pk.row.compareDocumentPosition(firstBad) & Node.DOCUMENT_POSITION_FOLLOWING))) {
+                        firstBad = pk.row;
                     }
                 });
                 spec.fields.filter(f => f.kind === 'choice').forEach(f => {
