@@ -1529,6 +1529,10 @@
                 return d.length === 10 || (d.length === 11 && d[0] === '1') ? '' : 'Escribe un teléfono de 10 dígitos.';
             },
             name: v => (v.replace(/\s+/g, ' ').length >= 2 ? '' : 'Escribe tu nombre.'),
+            miles: v => {
+                const d = v.replace(/[\s,.]/g, '');
+                return /^\d{1,7}$/.test(d) && Number(d) <= 999999 ? '' : 'Escribe solo números (ej. 45000).';
+            },
             address: v => (/^\d+$/.test(v) ? check.zip(v) : v.length >= 5 ? '' : 'Escribe la dirección completa o un ZIP de 5 dígitos.')
         };
 
@@ -1587,6 +1591,15 @@
                                     label: '¿Dónde lo encuentro?', title: '¿Dónde está el VIN?',
                                     paras: ['El VIN es el número de identificación del vehículo: 17 letras y números. Lo encuentras en:'],
                                     items: [['', 'Tu registro o el título del auto.'], ['', 'Tu tarjeta de seguro actual.'], ['', 'El tablero, del lado del conductor (se ve a través del parabrisas).'], ['', 'El marco de la puerta del conductor.']]
+                                }
+                            },
+                            {
+                                name: 'millaje', kind: 'text', label: 'Millaje aproximado', hint: 'Lo que marca el odómetro.',
+                                validate: check.miles, transform: v => v.replace(/[^\d,.]/g, ''),
+                                inputmode: 'numeric', pattern: '[0-9,.]*', maxlength: 9, autocomplete: 'off', placeholder: 'Ej. 45,000', sum: 'Millaje',
+                                display: a => {
+                                    const v = (a.millaje || '').trim();
+                                    return v && !check.miles(v) ? `${Number(v.replace(/\D/g, '')).toLocaleString('en-US')} millas` : '';
                                 }
                             }
                         ]
