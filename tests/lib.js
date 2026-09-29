@@ -24,7 +24,7 @@ async function newPhone(b, opts = {}) {
   const p = await ctx.newPage();
   const errs = [];
   p.on('pageerror', e => errs.push('pageerror: ' + e.message));
-  // bnseguros-logo.png is referenced but not committed yet (known gap), so its 404 is ignored.
+  // Ignore stray asset 404s so a missing image never masks a real script error.
   p.on('console', m => { if (m.type() === 'error' && !/bnseguros-logo|404|ERR_/.test(m.text())) errs.push(m.text()); });
   await p.goto(DEMO_URL, { waitUntil: 'networkidle' });
   return { ctx, p, wa, errs };

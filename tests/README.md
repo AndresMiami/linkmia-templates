@@ -44,5 +44,3 @@ installing: `PLAYWRIGHT_PATH=/path/to/playwright node tests/run.js`.
   for a person to look at; nothing compares them automatically yet.
 - **Wait-based timing.** Suites use short fixed waits (`settle`, 350 ms) and
   may be slow or flaky on a loaded machine.
-- **The logo 404 is ignored on purpose:** `bnseguros-logo.png` is referenced
-  by the demo but has not been committed.
