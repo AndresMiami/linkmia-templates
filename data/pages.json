@@ -118,6 +118,61 @@
       "isActive": true,
       "createdAt": "2024-01-01T00:00:00.000Z",
       "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "slug": "andres",
+      "name": "Andres Corcoba",
+      "tagline": "Ayudo a negocios en Miami a convertir clics en clientes 📲",
+      "bio": "Founder de LinkMIA | En camino a MLO 🏠",
+      "location": "Miami, FL",
+      "layout": {
+        "style": "minimal",
+        "image": {
+          "url": "/media/andres/andres-miami.webp",
+          "profileSize": "large"
+        },
+        "background": {
+          "type": "color",
+          "value": "#101014",
+          "blur": 0
+        },
+        "colors": {
+          "primary": "#00C2FF",
+          "secondary": "#7C3AED",
+          "text": "#ffffff",
+          "textMuted": "#a1a1aa",
+          "cardBackground": "#1b1b22"
+        },
+        "spacing": "comfortable"
+      },
+      "featuredMedia": {
+        "video": "/media/andres/andres-miami.mp4",
+        "poster": "/media/andres/andres-miami.webp",
+        "label": "Construyendo LinkMIA en Miami 🌴"
+      },
+      "buttons": [
+        {
+          "text": "💬 Escríbeme por WhatsApp",
+          "url": "https://wa.me/17865093955",
+          "type": "primary"
+        },
+        {
+          "text": "🎬 Ver demo del funnel",
+          "url": "https://link.linkmia.com/demos/bnseguros.html",
+          "type": "secondary"
+        },
+        {
+          "text": "📸 Instagram",
+          "url": "https://instagram.com/andrescorcoba",
+          "type": "secondary"
+        }
+      ],
+      "social": {
+        "instagram": "https://instagram.com/andrescorcoba"
+      },
+      "isActive": true,
+      "createdAt": "2026-09-29T00:00:00.000Z",
+      "updatedAt": "2026-09-29T00:00:00.000Z"
     }
   ]
 }
