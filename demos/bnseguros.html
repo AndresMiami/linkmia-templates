@@ -2050,7 +2050,31 @@
             }
             if (mode === 'partial') lines.push('', 'No terminé el formulario; prefiero continuar por aquí.');
             if (mode === 'intro') lines.push('', 'Prefiero hacer la cotización por aquí.');
+            const via = sourceLine();
+            if (via) lines.push('', via);
             return lines.join('\n');
+        }
+
+        // ---- where the visitor came from (?utm_source=instagram&utm_medium=story&utm_campaign=tip-auto)
+        //      rides along in the WhatsApp message, so every lead shows its source ----
+        const SOURCE_KEY = 'bn-source-v1';
+        function captureSource() {
+            try {
+                const q = new URLSearchParams(location.search);
+                const clean = v => String(v || '').replace(/[^\p{L}\p{N} _.-]/gu, '').slice(0, 40).trim();
+                const source = clean(q.get('utm_source') || q.get('src'));
+                if (source) sessionStorage.setItem(SOURCE_KEY, JSON.stringify({ source, medium: clean(q.get('utm_medium')), campaign: clean(q.get('utm_campaign')) }));
+            } catch (_) { /* private mode: no attribution, nothing breaks */ }
+        }
+        function sourceLine() {
+            let s = null;
+            try { s = JSON.parse(sessionStorage.getItem(SOURCE_KEY) || 'null'); } catch (_) { return ''; }
+            if (!s || !s.source) return '';
+            const SOURCES = { instagram: 'Instagram', ig: 'Instagram', facebook: 'Facebook', fb: 'Facebook', whatsapp: 'WhatsApp', qr: 'Código QR', tiktok: 'TikTok', google: 'Google' };
+            const MEDIUMS = { story: 'historia', stories: 'historia', highlight: 'destacada', bio: 'bio', post: 'publicación', reel: 'reel', card: 'tarjeta', flyer: 'volante' };
+            const src = SOURCES[s.source.toLowerCase()] || s.source;
+            const med = s.medium ? ` (${MEDIUMS[s.medium.toLowerCase()] || s.medium})` : '';
+            return `Vía: ${src}${med}${s.campaign ? ` · ${s.campaign}` : ''}`;
         }
 
         // ---- navigation ----
@@ -3261,6 +3285,7 @@
 
         function init() {
             try {
+                captureSource();
                 trackPageView(DEMO_PAGE.slug);
                 renderPage(DEMO_PAGE);
             } catch (error) {
