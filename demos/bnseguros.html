@@ -1,0 +1,3301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- DEMO / mock for client review: standalone copy of p/index.html. Not indexed. -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="page-title">LinkMia</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" id="theme-color" content="#FF6B35">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- SEO & Social -->
+    <meta name="description" id="page-description" content="Connect with us">
+    <meta property="og:title" id="og-title" content="LinkMia">
+    <meta property="og:description" id="og-description" content="Connect with us">
+    <meta property="og:image" id="og-image" content="">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #F7931E;
+            --background-color: #1a1a1a;
+            --card-background: #2a2a2a;
+            --text-color: #ffffff;
+            --text-muted: #888;
+            --spacing: 16px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none; /* decorative overlay; card layout sits under it */
+        }
+
+        body.has-bg-image::before {
+            opacity: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* LAYOUT: MINIMAL */
+        .layout-minimal .hero {
+            text-align: center;
+            padding: 40px 0 32px;
+        }
+
+        .layout-minimal .hero-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+            display: block;
+        }
+
+        /* LAYOUT: HERO */
+        .layout-hero {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .layout-hero .hero {
+            position: relative;
+            min-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px 40px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .layout-hero .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+            z-index: 0;
+        }
+
+        .layout-hero .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .layout-hero .hero-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 4px solid white;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .layout-hero .container {
+            flex: 1;
+            padding-top: 0;
+        }
+
+        /* LAYOUT: CARD */
+        .layout-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .layout-card .card-wrapper {
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .layout-card .hero {
+            text-align: center;
+            padding-bottom: 24px;
+        }
+
+        .layout-card .hero-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 16px;
+            border: 4px solid var(--primary-color);
+        }
+
+        /* Typography */
+        .restaurant-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .location {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .location svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Buttons */
+        .button-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-emoji {
+            font-size: 1.1em;
+        }
+
+        /* Button Fill Styles */
+        .btn-filled, .btn-primary {
+            background: var(--primary-color);
+            color: var(--on-primary-color, white);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-soft {
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--primary-color);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--card-background);
+            color: var(--text-color);
+            border: 1px solid #444;
+        }
+
+        /* Button Shapes */
+        .btn-shape-square {
+            border-radius: 0;
+        }
+
+        .btn-shape-default {
+            border-radius: 12px;
+        }
+
+        .btn-shape-rounded {
+            border-radius: 50px;
+        }
+
+        /* Button Shadow */
+        .btn-shadow {
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Hover states */
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-filled:hover, .btn-primary:hover {
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--on-primary-color, white);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* Spacing variants */
+        .spacing-compact .button-grid { gap: 8px; }
+        .spacing-compact .btn { padding: 12px 20px; }
+        .spacing-spacious .button-grid { gap: 16px; }
+        .spacing-spacious .btn { padding: 20px 28px; }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-background);
+            border-radius: 50%;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: var(--on-primary-color, white);
+            transform: scale(1.1);
+        }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding-top: 16px;
+            border-top: 1px solid #333;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .powered-by a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            border: 3px solid #333;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error State */
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .error-state h1 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .error-state p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .error-state a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Bio Text */
+        .bio {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* Button Entrance Animations */
+        .btn.anim-fade {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .btn.anim-slide {
+            animation: slideUp 0.4s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .btn.anim-scale {
+            animation: scaleIn 0.3s ease forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .btn.anim-bounce {
+            animation: bounceIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Button Hover Animations */
+        .btn.hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn.hover-glow:hover {
+            box-shadow: 0 0 20px var(--primary-color), 0 0 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn.hover-pulse:hover {
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        /* ============================================
+           THEME: "app" - the LinkMia booking-flow look
+           (AirportMVP css/style.css design system) in the page's OWN colours.
+           Opt-in via layout.theme = "app"; everything is scoped to .theme-app.
+           ============================================ */
+        .theme-app {
+            --line: rgba(255, 255, 255, 0.12);             /* every outline and divider */
+            --surface-control: rgba(255, 255, 255, 0.04);  /* every tappable box */
+            --selected-bg: rgba(var(--primary-rgb), 0.12); /* brand tint */
+            --r-control: 12px;
+            --r-card: 16px;
+            --card-pad-x: 20px;
+            --page-pad: 24px;
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --glow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+            --ease: 0.2s ease;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        @media (max-width: 480px) { .theme-app { --page-pad: 16px; } }
+
+        .theme-app .app-page {
+            max-width: 576px;
+            margin: 0 auto;
+            padding: var(--page-pad);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            gap: var(--page-pad);
+        }
+
+        .theme-app .app-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.10) 100%), var(--card-background);
+            border-radius: var(--r-card);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: appFadeIn 0.3s ease both;
+        }
+
+        /* header row: like the booking card's progress row */
+        .theme-app .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 12px var(--card-pad-x);
+            border-bottom: 1px solid var(--line);
+            min-height: 60px;
+        }
+
+        .theme-app .app-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            background: var(--surface-control);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .theme-app .app-pill svg { width: 14px; height: 14px; flex: none; }
+
+        .theme-app .app-social { display: flex; gap: 8px; }
+        .theme-app .app-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            background: var(--surface-control);
+            color: var(--text-color);
+            transition: all var(--ease);
+        }
+        .theme-app .app-social a:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .theme-app .app-social .social-icon { width: 18px; height: 18px; }
+
+        .theme-app .app-body { padding: 24px var(--card-pad-x); }
+
+        /* identity */
+        .theme-app .app-identity { text-align: center; margin-bottom: 24px; }
+        .theme-app .app-avatar {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.18);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            overflow: hidden;
+        }
+        .theme-app .app-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .theme-app .app-name {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--text-color);
+            margin-bottom: 4px;
+        }
+        .theme-app .app-tagline { font-size: 15px; color: var(--text-muted); }
+
+        /* section label: like "SELECT AIRPORT" */
+        .theme-app .app-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        /* primary actions: like "Start your journey" / "Continue" */
+        .theme-app .app-actions { display: flex; flex-direction: column; gap: 12px; }
+        .theme-app .app-cta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 56px;
+            padding: 10px 16px 10px 10px;
+            border-radius: var(--r-control);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.08) 100%), var(--primary-color);
+            box-shadow: var(--glow);
+            color: var(--on-primary-color, #fff);
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform var(--ease), box-shadow var(--ease);
+        }
+        .theme-app .app-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4); }
+        .theme-app .app-cta:active { transform: scale(0.98); }
+        .theme-app .app-cta-icon {
+            width: 36px;
+            height: 36px;
+            flex: none;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.10);
+            font-size: 20px;
+        }
+        .theme-app .app-cta-text { flex: 1; line-height: 1.25; }
+        .theme-app .app-chevron { width: 18px; height: 18px; flex: none; opacity: 0.8; }
+
+        /* secondary actions: like the mode / airport tappable boxes */
+        .theme-app .app-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .theme-app .app-option:last-child:nth-child(odd) { grid-column: 1 / -1; }
+        .theme-app .app-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 76px;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            line-height: 1.25;
+            transition: all var(--ease);
+        }
+        .theme-app .app-option-icon { font-size: 22px; }
+        .theme-app .app-option:hover {
+            border-color: rgba(var(--primary-rgb), 0.5);
+            background: rgba(var(--primary-rgb), 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.15);
+        }
+        .theme-app .app-option:active { transform: scale(0.98); }
+
+        .theme-app .app-cta:focus-visible,
+        .theme-app .app-option:focus-visible,
+        .theme-app .app-social a:focus-visible,
+        .theme-app .app-pill:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* hours: like the summary rows (muted label, white value) */
+        .theme-app .app-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+        }
+        .theme-app .app-rows { display: flex; flex-direction: column; gap: 6px; }
+        .theme-app .app-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+        .theme-app .app-row-label { color: var(--text-muted); }
+        .theme-app .app-row-value { color: var(--text-color); font-weight: 500; text-align: right; }
+
+        .theme-app .app-footer { display: flex; justify-content: center; margin-top: auto; }
+        .theme-app .app-footer a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+
+        /* logo in the circle: contain so wide logos are not cropped */
+        .theme-app .app-avatar img { object-fit: contain; padding: 8px; }
+
+        /* a CTA that opens the quote flow */
+        .theme-app button.app-cta {
+            width: 100%;
+            border: none;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        /* ============================================
+           QUOTE FLOW - one question per screen, full-screen layer over the
+           page (State Farm pacing, LinkMia booking-flow look, page colours)
+           ============================================ */
+        html.q-locked, html.q-locked body { overflow: hidden; }
+
+        .q-flow {
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            background: var(--page-background, #1b2150);
+            color: var(--text-color);
+            color-scheme: dark;
+            animation: qFade 0.2s ease both;
+        }
+        .q-top, .q-view, .q-foot-inner { width: 100%; max-width: 576px; margin: 0 auto; }
+        .q-top { flex: none; position: relative; z-index: 1; padding: max(12px, env(safe-area-inset-top)) 16px 10px; transition: box-shadow var(--ease); }
+        .q-flow.is-scrolled .q-top { box-shadow: 0 1px 0 var(--line), 0 8px 16px rgba(0, 0, 0, 0.25); }
+        .q-bar { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 8px; min-height: 44px; }
+        .q-bar .is-hidden { visibility: hidden; }
+        .q-bar-text { min-width: 0; text-align: center; line-height: 1.3; }
+        .q-section {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .q-count { display: block; font-size: 13px; font-weight: 600; color: var(--text-color); }
+        .q-count:empty { display: none; }
+        .q-progress { height: 4px; margin: 12px 4px 0; border-radius: 4px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+        .q-progress[hidden] { display: block; visibility: hidden; }
+        .q-progress-fill { height: 100%; width: 0; border-radius: inherit; background: var(--primary-color); transition: width 0.35s ease; }
+
+        .q-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+        .q-view { padding: 24px 20px 32px; }
+        .q-view.q-in-fwd { animation: qInFwd 0.28s ease both; }
+        .q-view.q-in-back { animation: qInBack 0.28s ease both; }
+
+        .q-foot { flex: none; border-top: 1px solid var(--line); background: var(--page-background, #1b2150); }
+        .q-foot[hidden] { display: none; }
+        .q-foot-inner { display: flex; flex-direction: column; gap: 6px; padding: 12px 20px max(12px, env(safe-area-inset-bottom)); }
+
+        /* question header */
+        .q-title { margin: 0 0 8px; font-size: 26px; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; outline: none; }
+        .q-sub { margin: 0 0 8px; font-size: 15px; color: var(--text-muted); }
+        .q-context {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 100%;
+            margin: 0 0 14px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            background: var(--surface-control);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .q-context svg { width: 16px; height: 16px; flex: none; color: var(--primary-color); }
+        .q-context span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .q-help {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 44px;
+            padding: 0;
+            border: none;
+            background: none;
+            color: var(--primary-color);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+        }
+        .q-help svg { width: 18px; height: 18px; flex: none; }
+        .q-help:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; border-radius: 4px; }
+
+        /* fields */
+        .q-fields { display: flex; flex-direction: column; gap: 22px; margin-top: 16px; }
+        .q-field { display: flex; flex-direction: column; gap: 8px; }
+        .q-field[hidden] { display: none; }
+        .q-label { font-size: 15px; font-weight: 600; color: var(--text-color); }
+        .q-label .opt { font-weight: 400; color: var(--text-muted); }
+        .q-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+        .q-label-row .q-help { min-height: 32px; font-size: 14px; }
+        .q-hint { margin: 0; font-size: 13px; color: var(--text-muted); }
+        .q-hint:empty { display: none; }
+        .q-error { margin: 0; font-size: 13px; color: #FF8A80; }
+        .q-error:empty { display: none; }
+
+        .q-input, .q-select {
+            width: 100%;
+            min-height: 52px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 16px;          /* 16px+ keeps iOS from zooming on focus */
+            outline: none;
+            transition: border-color var(--ease), background var(--ease);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .q-input::placeholder { color: rgba(255, 255, 255, 0.38); }
+        .q-input[list]::-webkit-calendar-picker-indicator { display: none !important; }   /* type-ahead only, no ▼ */
+        .q-input:focus, .q-select:focus { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.07); }
+        .q-input[aria-invalid="true"], .q-select[aria-invalid="true"] { border-color: #FF453A; }
+        .q-select {
+            padding-right: 36px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23b9bdd6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            cursor: pointer;
+        }
+        .q-select:invalid, .q-select.is-empty { color: rgba(255, 255, 255, 0.45); }
+        .q-select option { color: #111; }
+        input[type="date"].q-input { min-height: 52px; }
+        .q-dob { display: grid; grid-template-columns: 1fr 1.5fr 1.25fr; gap: 8px; }
+
+        /* option cards: radio (round mark) or checkbox (square mark) */
+        .q-options { display: flex; flex-direction: column; gap: 10px; }
+        .q-options[aria-invalid="true"] .q-opt label { border-color: rgba(255, 69, 58, 0.7); }
+        .q-opt { position: relative; }
+        .q-opt input { position: absolute; top: 0; left: 0; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }
+        .q-opt label {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 60px;
+            padding: 14px 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            cursor: pointer;
+            transition: border-color var(--ease), background var(--ease), transform var(--ease);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .q-opt label:active { transform: scale(0.99); }
+        .q-mark {
+            width: 22px;
+            height: 22px;
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+            transition: border-color var(--ease), background var(--ease);
+        }
+        .q-mark::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            transform: scale(0);
+            transition: transform 0.15s ease;
+        }
+        .q-opt-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .q-opt-label { font-size: 16px; font-weight: 600; }
+        .q-opt-desc { font-size: 13px; color: var(--text-muted); }
+        .q-opt input:checked + label { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.08); }
+        .q-opt input:checked + label .q-mark { border-color: var(--primary-color); }
+        .q-opt input:checked + label .q-mark::after { transform: scale(1); }
+        .q-opt input:focus-visible + label { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .q-opt.is-check .q-mark { border-radius: 6px; }
+        .q-opt.is-check .q-mark::after { display: none; }
+        .q-opt.is-check .q-mark svg { width: 14px; height: 14px; color: var(--on-primary-color, #fff); opacity: 0; }
+        .q-opt.is-check input:checked + label .q-mark { background: var(--primary-color); }
+        .q-opt.is-check input:checked + label .q-mark svg { opacity: 1; }
+        /* Sí / No side by side */
+        .q-options.is-pair { display: grid; grid-template-columns: 1fr 1fr; }
+        .q-options.is-pair label { justify-content: center; min-height: 52px; padding: 12px; }
+        .q-options.is-pair .q-mark { display: none; }
+        .q-options.is-pair input:checked + label { color: var(--primary-color); }
+        /* date chips: Hoy / Mañana / Otra fecha */
+        .q-options.is-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .q-options.is-chips label { flex-direction: column; justify-content: center; gap: 2px; min-height: 68px; padding: 10px 6px; text-align: center; }
+        .q-options.is-chips .q-mark { display: none; }
+        .q-options.is-chips .q-opt-text { align-items: center; }
+        .q-options.is-chips .q-opt-label { font-size: 15px; }
+        .q-options.is-chips input:checked + label .q-opt-label { color: var(--primary-color); }
+        .q-date-line { margin: 0; font-size: 14px; color: var(--text-color); }
+        .q-date-line:empty { display: none; }
+
+        /* picker row: like CARFAX "Makes & Models" / the booking summary rows */
+        .q-picker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-height: 60px;
+            padding: 10px 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color var(--ease), background var(--ease);
+        }
+        .q-picker:active { transform: scale(0.99); }
+        .q-picker:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .q-picker[aria-invalid="true"] { border-color: #FF453A; }
+        .q-picker.is-set { border-color: rgba(var(--primary-rgb), 0.5); }
+        .q-picker-icon { flex: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+        .q-picker-icon svg { width: 24px; height: 24px; }
+        .q-picker.is-set .q-picker-icon { color: var(--primary-color); }
+        .q-picker-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .q-picker-value { font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
+        .q-picker:not(.is-set) .q-picker-value { color: rgba(255, 255, 255, 0.45); font-weight: 500; }
+        .q-picker-sub { font-size: 13px; color: var(--text-muted); }
+        .q-picker-sub:empty { display: none; }
+        .q-picker .app-chevron { color: var(--text-muted); }
+
+        /* contextual note (e.g. "financed cars usually need full coverage") */
+        .q-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 16px;
+            padding: 12px 14px;
+            border: 1px solid rgba(var(--primary-rgb), 0.45);
+            border-radius: var(--r-control);
+            background: rgba(var(--primary-rgb), 0.06);
+            font-size: 14px;
+            line-height: 1.45;
+        }
+        .q-note:empty { display: none; }
+        .q-note::before {
+            content: '';
+            flex: none;
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+            background: var(--primary-color);
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+        }
+        .q-privacy { display: flex; align-items: flex-start; gap: 8px; margin: 22px 0 0; font-size: 13px; color: var(--text-muted); }
+        .q-privacy svg { width: 16px; height: 16px; flex: none; margin-top: 2px; }
+
+        /* footer actions */
+        .q-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            min-height: 56px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--r-control);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.08) 100%), var(--primary-color);
+            box-shadow: var(--glow);
+            color: var(--on-primary-color, #fff);
+            font-family: inherit;
+            font-size: 17px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform var(--ease), box-shadow var(--ease), background var(--ease), color var(--ease);
+        }
+        .q-primary:active { transform: scale(0.98); }
+        .q-primary svg { width: 20px; height: 20px; flex: none; }
+        .q-primary.is-incomplete { background: rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.55); box-shadow: none; }
+        .q-primary:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; }
+        .q-secondary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 10px 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--r-control);
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .q-secondary:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .q-alt {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            align-self: center;
+            min-height: 44px;
+            padding: 0 8px;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+        }
+        .q-alt svg { width: 16px; height: 16px; flex: none; }
+        .q-alt:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; border-radius: 4px; }
+        .q-foot-note { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); text-align: center; }
+
+        /* intro */
+        .q-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
+        .q-brand-mark {
+            width: 36px;
+            height: 36px;
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--primary-color);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.18);
+            color: var(--primary-color);
+            font-size: 13px;
+            font-weight: 800;
+            overflow: hidden;
+        }
+        .q-brand-mark img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+        .q-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 4px 0 16px; font-size: 14px; color: var(--text-muted); }
+        .q-meta span { display: inline-flex; align-items: center; gap: 6px; }
+        .q-meta svg { width: 18px; height: 18px; color: var(--primary-color); }
+        .q-lead { margin: 0 0 20px; font-size: 16px; }
+        .q-have { padding: 16px; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-control); }
+        .q-have-title { margin: 0 0 12px; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+        .q-have ul { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .q-have li { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; }
+        .q-have li svg { width: 20px; height: 20px; flex: none; color: #32D74B; }
+
+        /* review */
+        .q-card { margin-top: 16px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface-control); overflow: hidden; }
+        .q-card-title { margin: 0; padding: 14px 16px 4px; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+        .q-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-height: 56px;
+            padding: 10px 16px;
+            border: none;
+            border-top: 1px solid var(--line);
+            background: none;
+            color: var(--text-color);
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+        .q-card-title + .q-row { border-top: none; }
+        .q-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .q-row-label { font-size: 13px; color: var(--text-muted); }
+        .q-row-value { font-size: 16px; font-weight: 500; overflow-wrap: anywhere; }
+        .q-row.is-missing .q-row-value { color: #FF8A80; }
+        .q-row .app-chevron { color: var(--text-muted); }
+        .q-row:active { background: rgba(var(--primary-rgb), 0.06); }
+        .q-row:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
+        .q-bundle { margin-top: 20px; }
+
+        /* sent */
+        .q-done { padding-top: 32px; text-align: center; }
+        .q-done-check {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #32D74B;
+            border-radius: 50%;
+            background: rgba(50, 215, 75, 0.15);
+            color: #32D74B;
+        }
+        .q-done-check svg { width: 36px; height: 36px; }
+        .q-done-text { margin: 0 0 24px; font-size: 15px; color: var(--text-muted); }
+        .q-done .q-alt { margin-top: 12px; }
+        .q-recap { margin-top: 28px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-control); text-align: left; }
+        .q-recap-label { display: block; font-size: 13px; color: var(--text-muted); }
+        .q-recap-value { display: block; font-size: 15px; font-weight: 600; }
+
+        @keyframes qFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes qInFwd { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+        @keyframes qInBack { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) {
+            .q-flow, .q-view.q-in-fwd, .q-view.q-in-back { animation: none; }
+            .q-progress-fill, .q-mark::after { transition: none; }
+        }
+
+        /* bottom sheet: LinkMia sheet convention (dim 0.7, 576px, 20px top radius, slideUp 0.3s) */
+        .sheet-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            animation: sheetFade 0.2s ease both;
+            color-scheme: dark;
+        }
+        .sheet {
+            width: 100%;
+            max-width: 576px;
+            max-height: 90vh;
+            max-height: 90dvh;
+            display: flex;
+            flex-direction: column;
+            background: var(--card-background);
+            color: var(--text-color);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease both;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .sheet-head {
+            flex: none;
+            display: grid;
+            grid-template-columns: 44px 1fr 44px;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 16px 12px;
+        }
+        .sheet-title { font-size: 18px; font-weight: 700; text-align: center; outline: none; }
+        .sheet-head.has-back .sheet-title { text-align: left; }
+        .sheet-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .sheet-btn svg { width: 20px; height: 20px; }
+        .sheet-btn:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .sheet-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 0 16px 24px; }
+        .sheet-search {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .sheet-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--text-muted); }
+        .sheet-search input {
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 14px 12px 42px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 16px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .sheet-search input:focus { border-color: var(--primary-color); }
+        .sheet-search input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        .sheet-section {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 8px 4px 10px;
+        }
+        .make-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+        .make-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 88px;
+            padding: 10px 6px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .make-mono {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(var(--primary-rgb), 0.6);
+            color: var(--primary-color);
+            font-size: 15px;
+            font-weight: 800;
+        }
+        .make-tile:active, .sheet-row:active { background: rgba(var(--primary-rgb), 0.10); }
+        .sheet-list { list-style: none; margin: 0; padding: 0; }
+        .sheet-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            min-height: 52px;
+            padding: 12px 4px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            background: none;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 17px;
+            text-align: left;
+            cursor: pointer;
+        }
+        .sheet-row.is-selected { color: var(--primary-color); font-weight: 600; }
+        .sheet-row .check { width: 20px; height: 20px; flex: none; }
+        .sheet-row.muted { color: var(--text-muted); }
+        .make-tile:focus-visible, .sheet-row:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
+        .sheet-empty { color: var(--text-muted); text-align: center; padding: 16px 0; font-size: 14px; }
+        .sheet-other { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
+        .sheet-other .q-input { width: 100%; }
+        .sheet-text { margin-bottom: 20px; font-size: 15px; line-height: 1.55; }
+        .sheet-text p { margin: 0 0 12px; }
+        .sheet-text ul { display: flex; flex-direction: column; gap: 10px; margin: 0; padding-left: 20px; }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+        @keyframes sheetFade { from { opacity: 0; } to { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { .sheet, .sheet-backdrop { animation: none; } }
+
+        @keyframes appFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .theme-app .app-card { animation: none; }
+            .theme-app .app-cta, .theme-app .app-option { transition: none; }
+            .theme-app .app-cta:hover, .theme-app .app-option:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <div id="error-state" class="error-state hidden">
+        <h1>Page Not Found</h1>
+        <p>This link page doesn't exist or has been removed.</p>
+        <a href="https://link.linkmia.com">Go to LinkMia</a>
+    </div>
+
+    <!-- Minimal & Hero Layout -->
+    <div id="content-default" class="hidden">
+        <div class="hero" id="hero">
+            <img id="hero-image" class="hero-image" src="" alt="Logo">
+            <h1 class="restaurant-name" id="restaurant-name"></h1>
+            <p class="tagline" id="tagline"></p>
+            <p class="bio" id="bio"></p>
+            <p class="location" id="location">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                </svg>
+                <span id="location-text"></span>
+            </p>
+        </div>
+
+        <div class="container" id="container">
+            <div class="button-grid" id="button-grid"></div>
+            <div class="social-links" id="social-links"></div>
+            <div class="footer">
+                <p id="hours"></p>
+                <p class="powered-by">Powered by <a href="https://linkmia.com" target="_blank">LinkMia</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- App theme (layout.theme = "app") -->
+    <div id="content-app" class="app-page hidden">
+        <div class="app-card">
+            <div class="app-header">
+                <span class="app-pill" id="app-location">
+                    <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span id="app-location-text"></span>
+                </span>
+                <div class="app-social" id="app-social"></div>
+            </div>
+            <div class="app-body">
+                <div class="app-identity">
+                    <div class="app-avatar" id="app-avatar" aria-hidden="true"></div>
+                    <h1 class="app-name" id="app-name"></h1>
+                    <p class="app-tagline" id="app-tagline"></p>
+                </div>
+                <div class="app-actions" id="app-actions"></div>
+                <div class="app-options" id="app-options"></div>
+                <div class="app-section" id="app-hours-section">
+                    <p class="app-label" id="app-hours-label"></p>
+                    <div class="app-rows" id="app-hours"></div>
+                </div>
+            </div>
+        </div>
+        <div class="app-footer">
+            <span class="app-pill">Powered by <a href="https://linkmia.com" target="_blank" rel="noopener">LinkMia</a></span>
+        </div>
+    </div>
+
+    <!-- Card Layout -->
+    <div id="content-card" class="layout-card hidden">
+        <div class="card-wrapper">
+            <div class="hero">
+                <img id="card-hero-image" class="hero-image" src="" alt="Logo">
+                <h1 class="restaurant-name" id="card-restaurant-name"></h1>
+                <p class="tagline" id="card-tagline"></p>
+                <p class="bio" id="card-bio"></p>
+                <p class="location">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span id="card-location-text"></span>
+                </p>
+            </div>
+            <div class="button-grid" id="card-button-grid"></div>
+            <div class="social-links" id="card-social-links"></div>
+            <div class="footer">
+                <p id="card-hours"></p>
+                <p class="powered-by">Powered by <a href="https://linkmia.com" target="_blank">LinkMia</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // ANALYTICS (Cookie-free tracking)
+        // ============================================
+        const ANALYTICS_KEY = 'linkmia_analytics';
+
+        function trackPageView(slug) {
+            try {
+                let analytics = {};
+                const stored = localStorage.getItem(ANALYTICS_KEY);
+                if (stored) {
+                    analytics = JSON.parse(stored);
+                }
+
+                if (!analytics[slug]) {
+                    analytics[slug] = { views: 0, clicks: 0, lastVisit: null };
+                }
+
+                analytics[slug].views = (analytics[slug].views || 0) + 1;
+                analytics[slug].lastVisit = new Date().toISOString();
+
+                localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analytics));
+            } catch (e) {
+                // Analytics tracking failed silently
+            }
+        }
+
+        function trackClick(slug) {
+            try {
+                let analytics = {};
+                const stored = localStorage.getItem(ANALYTICS_KEY);
+                if (stored) {
+                    analytics = JSON.parse(stored);
+                }
+
+                if (!analytics[slug]) {
+                    analytics[slug] = { views: 0, clicks: 0, lastVisit: null };
+                }
+
+                analytics[slug].clicks = (analytics[slug].clicks || 0) + 1;
+
+                localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analytics));
+            } catch (e) {
+                // Analytics tracking failed silently
+            }
+        }
+
+        // ============================================
+        // GET SLUG FROM URL
+        // ============================================
+        function getSlugFromURL() {
+            const path = window.location.pathname;
+            // Handle /p/slug or /p/slug/
+            const match = path.match(/\/p\/([^\/]+)/);
+            return match ? match[1] : null;
+        }
+
+        // ============================================
+        // SOCIAL ICONS
+        // ============================================
+        const socialIcons = {
+            instagram: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+            facebook: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
+            tiktok: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>',
+            twitter: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>',
+            youtube: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+            whatsapp: '<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>'
+        };
+
+        // ============================================
+        // LOAD GOOGLE FONTS
+        // ============================================
+        function loadFont(fontName) {
+            if (!fontName || fontName === 'system') return;
+            const link = document.createElement('link');
+            link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(' ', '+')}&display=swap`;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+
+        // ============================================
+        // CONTRAST: dark text on light primary colors
+        // ============================================
+        // WCAG relative luminance of a #rgb/#rrggbb color; null if unparseable.
+        function relativeLuminance(hex) {
+            let h = String(hex || '').trim().replace(/^#/, '');
+            if (h.length === 3) h = h.split('').map(c => c + c).join('');
+            if (!/^[0-9a-f]{6}$/i.test(h)) return null;
+            const [r, g, b] = [0, 2, 4].map(i => {
+                const c = parseInt(h.slice(i, i + 2), 16) / 255;
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+
+        // Light backgrounds (e.g. yellow) get dark navy text; everything else stays white.
+        function textColorOn(bg) {
+            const lum = relativeLuminance(bg);
+            return lum !== null && lum >= 0.5 ? '#1b2150' : '#ffffff';
+        }
+
+        // "#ffd200" -> "255, 210, 0" (for rgba() tints); null if unparseable.
+        function hexToRgbTriplet(hex) {
+            let h = String(hex || '').trim().replace(/^#/, '');
+            if (h.length === 3) h = h.split('').map(c => c + c).join('');
+            if (!/^[0-9a-f]{6}$/i.test(h)) return null;
+            return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)).join(', ');
+        }
+
+        // "Best National Insurance" -> "BN" (stand-in when there is no logo)
+        function initialsOf(name) {
+            return String(name || '').split(/\s+/).filter(Boolean).slice(0, 2)
+                .map(w => w[0].toUpperCase()).join('');
+        }
+
+        const chevronSVG = '<svg class="app-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg>';
+
+        // ============================================
+        // QUOTE FLOW: one question per screen -> review -> WhatsApp
+        // (State Farm-style pacing in the LinkMia booking-flow look)
+        // ============================================
+        const THIS_YEAR = new Date().getFullYear();
+        const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const WEEKDAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+        const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+        function el(tag, props, ...children) {
+            const n = document.createElement(tag);
+            Object.entries(props || {}).forEach(([k, v]) => {
+                if (v === undefined || v === null || v === false) return;
+                if (k === 'class') n.className = v;
+                else if (k === 'text') n.textContent = v;
+                else n.setAttribute(k, v === true ? '' : v);
+            });
+            children.forEach(c => c && n.appendChild(c));
+            return n;
+        }
+        const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+        const resolve = (x, a) => (typeof x === 'function' ? x(a) : x);
+
+        function whatsappNumber(config) {
+            return String(config.leadForms?.whatsapp || '').replace(/\D/g, '');
+        }
+
+        // ---- dates: always the device's local calendar, never UTC ----
+        function today() { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+        function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+        function isoDate(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+        function parseIsoDate(s) {
+            const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+            if (!m) return null;
+            const d = new Date(+m[1], +m[2] - 1, +m[3]);
+            return d.getMonth() === +m[2] - 1 && d.getDate() === +m[3] ? d : null;
+        }
+        const longDate = d => `${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+        const shortDate = d => `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`;
+        function startDateOf(a) {
+            if (a.inicio === 'hoy') return today();
+            if (a.inicio === 'manana') return addDays(today(), 1);
+            if (a.inicio === 'fecha') return parseIsoDate(a.inicioFecha);
+            return null;
+        }
+        function dobOf(a) {
+            if (!a.dobD || !a.dobM || !a.dobY) return null;
+            const d = new Date(+a.dobY, +a.dobM - 1, +a.dobD);
+            return d.getMonth() === +a.dobM - 1 ? d : 'invalid';
+        }
+        function ageOn(dob, ref) {
+            let age = ref.getFullYear() - dob.getFullYear();
+            if (ref.getMonth() < dob.getMonth() || (ref.getMonth() === dob.getMonth() && ref.getDate() < dob.getDate())) age--;
+            return age;
+        }
+
+        const check = {
+            vin: v => (/^[A-HJ-NPR-Z0-9]{17}$/.test(v) ? '' : 'El VIN tiene 17 caracteres: letras y números, sin I, O ni Q.'),
+            zip: v => (/^\d{5}$/.test(v) ? '' : 'Escribe un ZIP de 5 dígitos.'),
+            email: v => (EMAIL_RE.test(v) ? '' : 'Escribe un email válido.'),
+            phone: v => {
+                const d = v.replace(/\D/g, '');
+                return d.length === 10 || (d.length === 11 && d[0] === '1') ? '' : 'Escribe un teléfono de 10 dígitos.';
+            },
+            name: v => (v.replace(/\s+/g, ' ').length >= 2 ? '' : 'Escribe tu nombre.'),
+            miles: v => {
+                const d = v.replace(/[\s,.]/g, '');
+                return /^\d{1,7}$/.test(d) && Number(d) <= 999999 ? '' : 'Escribe solo números (ej. 45000).';
+            },
+            address: v => (/^\d+$/.test(v) ? check.zip(v) : v.length >= 5 ? '' : 'Escribe la dirección completa o un ZIP de 5 dígitos.')
+        };
+
+        const YES_NO = [{ value: 'si', label: 'Sí' }, { value: 'no', label: 'No' }];
+        const currentInsurance = a => (a.seguroActual === 'si'
+            ? ((a.aseguradora || '').trim() ? `Sí, con ${a.aseguradora.trim()}` : 'Sí')
+            : a.seguroActual === 'no' ? 'No' : '');
+
+        // Last screen of both flows. The WhatsApp message itself carries the
+        // customer's number, so phone is only for a different number.
+        const CONTACT_STEP = {
+            id: 'contacto',
+            section: 'yo',
+            title: 'Último paso: tus datos',
+            sub: 'Te respondemos por WhatsApp, al número desde donde nos escribas.',
+            privacy: 'Tus datos se envían solo a Best National Insurance, por WhatsApp, para preparar tu cotización.',
+            fields: [
+                { name: 'nombre', kind: 'text', label: 'Nombre completo', required: true, reqMsg: 'Escribe tu nombre.', validate: check.name, autocomplete: 'name', autocapitalize: 'words', placeholder: 'Tu nombre y apellido', sum: 'Nombre', rank: 1 },
+                { name: 'email', kind: 'text', type: 'email', label: 'Email', validate: check.email, inputmode: 'email', autocomplete: 'email', autocapitalize: 'off', spellcheck: 'false', placeholder: 'tu@email.com', sum: 'Email', rank: 8 },
+                { name: 'telefono', kind: 'text', type: 'tel', label: 'Otro teléfono', hint: 'Solo si es distinto al número de tu WhatsApp.', validate: check.phone, inputmode: 'tel', autocomplete: 'tel', placeholder: '(305) 555-1234', sum: 'Otro teléfono', rank: 9 }
+            ]
+        };
+
+        const QUOTE_FLOWS = {
+            auto: {
+                product: () => 'seguro de auto',
+                intro: {
+                    eyebrow: 'Seguro de auto',
+                    title: 'Cotiza tu seguro de auto',
+                    have: ['Año, marca y modelo del auto', 'Tu fecha de nacimiento y tu ZIP', 'El VIN, si lo tienes (opcional)']
+                },
+                sections: [
+                    { id: 'veh', title: 'Vehículo', msg: 'Vehículo' },
+                    { id: 'cob', title: 'Cobertura', msg: 'Cobertura' },
+                    { id: 'yo', title: 'Tus datos', msg: 'Mis datos' }
+                ],
+                context: a => (a.marca && a.modelo ? { icon: 'car', text: [a.anio, a.marca, a.modelo].filter(Boolean).join(' ') } : null),
+                bundle: {
+                    label: 'También quiero cotizar el seguro de mi casa',
+                    desc: 'Agrupar casa y auto suele salir más barato.',
+                    msg: 'También me interesa cotizar el seguro de mi casa.'
+                },
+                defaults: () => ({}),
+                steps: [
+                    {
+                        id: 'vehiculo', section: 'veh',
+                        title: '¿Qué auto quieres asegurar?',
+                        fields: [
+                            { name: 'anio', kind: 'year', vehicle: true, label: 'Año', required: true, reqMsg: 'Elige el año.', icon: 'calendar', placeholder: 'Elige el año', sumHidden: true },
+                            { name: 'vehiculo', kind: 'makeModel', label: 'Marca y modelo', required: true, icon: 'car', placeholder: 'Elige marca y modelo', sum: 'Auto', display: a => (a.marca && a.modelo ? [a.anio, a.marca, a.modelo].filter(Boolean).join(' ') : '') },
+                            {
+                                name: 'vin', kind: 'text', label: 'VIN', hint: 'Acelera tu cotización. Tiene 17 letras y números.',
+                                validate: check.vin, transform: v => v.toUpperCase().replace(/[^A-Z0-9]/g, ''),
+                                maxlength: 17, autocapitalize: 'characters', autocomplete: 'off', spellcheck: 'false', placeholder: 'Ej. 1HGCM82633A004352', sum: 'VIN',
+                                help: {
+                                    label: '¿Dónde lo encuentro?', title: '¿Dónde está el VIN?',
+                                    paras: ['El VIN es el número de identificación del vehículo: 17 letras y números. Lo encuentras en:'],
+                                    items: [['', 'Tu registro o el título del auto.'], ['', 'Tu tarjeta de seguro actual.'], ['', 'El tablero, del lado del conductor (se ve a través del parabrisas).'], ['', 'El marco de la puerta del conductor.']]
+                                }
+                            },
+                            {
+                                name: 'millaje', kind: 'text', label: 'Millaje aproximado', hint: 'Lo que marca el odómetro.',
+                                validate: check.miles, transform: v => v.replace(/[^\d,.]/g, ''),
+                                inputmode: 'numeric', pattern: '[0-9,.]*', maxlength: 9, autocomplete: 'off', placeholder: 'Ej. 45,000', sum: 'Millaje',
+                                display: a => {
+                                    const v = (a.millaje || '').trim();
+                                    return v && !check.miles(v) ? `${Number(v.replace(/\D/g, '')).toLocaleString('en-US')} millas` : '';
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        id: 'uso', section: 'veh', context: true,
+                        title: '¿Cómo usas el auto?',
+                        help: {
+                            label: '¿Cuál debo elegir?', title: '¿Cuál debo elegir?',
+                            items: [
+                                ['Personal:', 'para ir al trabajo o a la escuela, hacer mandados y el uso diario.'],
+                                ['Apps de trabajo:', 'si manejas para Uber o Lyft, o haces entregas (DoorDash, Instacart, Amazon Flex). Normalmente necesitas una cobertura especial para esto.'],
+                                ['Negocio:', 'si el auto es de tu empresa o lo usas para trabajar (visitar clientes, llevar herramientas o mercancía).']
+                            ]
+                        },
+                        fields: [
+                            {
+                                name: 'uso', kind: 'choice', hideLabel: true, label: 'Uso', required: true, sum: 'Uso',
+                                options: [
+                                    { value: 'personal', label: 'Personal', desc: 'Trabajo, escuela y uso diario' },
+                                    { value: 'apps', label: 'Apps de trabajo', desc: 'Uber, Lyft, DoorDash o entregas', msg: 'Apps de trabajo (Uber, Lyft, entregas)' },
+                                    { value: 'negocio', label: 'Negocio', desc: 'Auto de empresa o para tu trabajo' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'propiedad', section: 'veh', context: true,
+                        title: '¿El auto es tuyo, financiado o en leasing?',
+                        help: {
+                            label: '¿Por qué preguntamos esto?', title: '¿Por qué preguntamos esto?',
+                            paras: ['Si tu auto está financiado o en leasing, el banco o la compañía de leasing normalmente exige cobertura completa y que aparezca en tu póliza.']
+                        },
+                        fields: [
+                            {
+                                name: 'propiedad', kind: 'choice', hideLabel: true, label: 'Propiedad', required: true, sum: 'Propiedad',
+                                options: [
+                                    { value: 'pagado', label: 'Es mío, está pagado', msg: 'Pagado' },
+                                    { value: 'financiado', label: 'Lo estoy financiando', desc: 'Tengo un préstamo con un banco o concesionario', msg: 'Financiado' },
+                                    { value: 'leasing', label: 'Es leasing', desc: 'Lo alquilo a largo plazo', msg: 'Leasing' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'inicio', section: 'cob',
+                        title: '¿Cuándo quieres que empiece tu seguro?',
+                        sub: 'Si no estás seguro, elige hoy. Lo puedes ajustar con tu agente.',
+                        fields: [{ name: 'inicio', kind: 'startDate', hideLabel: true, label: 'Inicio', required: true, maxDays: 90, sum: 'Inicio' }]
+                    },
+                    {
+                        id: 'cobertura', section: 'cob', context: true,
+                        title: '¿Qué cobertura buscas?',
+                        help: {
+                            label: '¿Qué incluye cada una?', title: '¿Qué incluye cada una?',
+                            items: [
+                                ['Lo básico:', 'lo que exige Florida: tu protección personal (PIP) y los daños que causes a la propiedad de otros.'],
+                                ['Cobertura completa:', 'además protege tu propio auto, por choques (collision) y por robo, inundación, vandalismo y otros daños (comprehensive).'],
+                                ['No sé:', 'un agente te explica las opciones y te recomienda la mejor para ti.']
+                            ]
+                        },
+                        note: a => (a.cobertura === 'basica' && (a.propiedad === 'financiado' || a.propiedad === 'leasing')
+                            ? `Como tu auto está ${a.propiedad === 'leasing' ? 'en leasing' : 'financiado'}, el banco normalmente exige cobertura completa. Tu agente te lo confirma.`
+                            : ''),
+                        fields: [
+                            {
+                                name: 'cobertura', kind: 'choice', hideLabel: true, label: 'Cobertura', required: true, sum: 'Tipo',
+                                options: [
+                                    { value: 'basica', label: 'Lo básico', desc: 'Lo mínimo que exige la ley en Florida', msg: 'Lo básico (mínimo de Florida)' },
+                                    { value: 'completa', label: 'Cobertura completa', desc: 'También protege tu auto: choques, robo, inundación' },
+                                    { value: 'asesoria', label: 'No sé, aconséjenme', desc: 'Un agente te explica las opciones', msg: 'No sé, quiero que me aconsejen' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'seguroActual', section: 'cob',
+                        title: '¿Tienes seguro de auto ahora?',
+                        sub: 'Tener seguro sin interrupciones puede ayudarte a conseguir un mejor precio.',
+                        fields: [
+                            { name: 'seguroActual', kind: 'choice', layout: 'pair', hideLabel: true, label: 'Seguro actual', required: true, options: YES_NO, sum: 'Seguro actual', display: currentInsurance },
+                            { name: 'aseguradora', kind: 'text', label: '¿Con qué compañía?', showIf: a => a.seguroActual === 'si', list: 'q-carriers-auto', autocomplete: 'off', autocapitalize: 'words', placeholder: 'Ej. GEICO, Progressive', sumHidden: true }
+                        ]
+                    },
+                    {
+                        id: 'conductor', section: 'yo',
+                        title: 'Cuéntanos sobre ti',
+                        sub: 'Esto nos ayuda a calcular un precio más exacto.',
+                        fields: [
+                            { name: 'dob', kind: 'dob', label: 'Fecha de nacimiento', required: true, sum: 'Fecha de nacimiento', rank: 2 },
+                            { name: 'zip', kind: 'text', label: 'ZIP donde se guarda el auto', hint: 'Donde el auto pasa la noche.', required: true, reqMsg: 'Escribe un ZIP de 5 dígitos.', validate: check.zip, transform: v => v.replace(/\D/g, ''), inputmode: 'numeric', pattern: '[0-9]*', maxlength: 5, autocomplete: 'postal-code', placeholder: 'Ej. 33125', sum: 'ZIP', rank: 3 },
+                            { name: 'accidentes', kind: 'choice', layout: 'pair', label: '¿Accidentes o multas en los últimos 3 años?', required: true, options: YES_NO, sum: 'Accidentes o multas (3 años)', rank: 4 }
+                        ]
+                    },
+                    CONTACT_STEP
+                ]
+            },
+
+            casa: {
+                product: a => (a.ocupacion === 'inquilino' ? 'seguro de inquilino (renters)'
+                    : a.ocupacion === 'alquilo' ? 'seguro para una propiedad que alquilo'
+                    : 'seguro de casa'),
+                intro: {
+                    eyebrow: 'Seguro de casa',
+                    title: 'Cotiza tu seguro de casa',
+                    have: ['La dirección o el ZIP de la propiedad', 'El año de construcción y la edad del techo (aproximados)', 'Tu póliza actual, si tienes una']
+                },
+                sections: [
+                    { id: 'prop', title: 'Propiedad', msg: 'Propiedad' },
+                    { id: 'seg', title: 'Seguro', msg: 'Seguro' },
+                    { id: 'yo', title: 'Tus datos', msg: 'Mis datos' }
+                ],
+                context: a => ((a.direccion || '').trim() ? { icon: 'home', text: a.direccion.trim() } : null),
+                bundle: {
+                    label: 'También quiero cotizar el seguro de mi auto',
+                    desc: 'Agrupar casa y auto suele salir más barato.',
+                    msg: 'También me interesa cotizar el seguro de mi auto.'
+                },
+                defaults: () => ({}),
+                steps: [
+                    {
+                        id: 'direccion', section: 'prop',
+                        title: '¿Dónde está la propiedad?',
+                        sub: 'Con el ZIP basta para empezar.',
+                        fields: [{ name: 'direccion', kind: 'text', label: 'Dirección o ZIP', required: true, reqMsg: 'Escribe la dirección o el ZIP.', validate: check.address, autocomplete: 'street-address', placeholder: 'Ej. 123 SW 8th St, Miami, FL 33130', sum: 'Dirección' }]
+                    },
+                    {
+                        id: 'tipo', section: 'prop', context: true,
+                        title: '¿Qué tipo de propiedad es?',
+                        fields: [
+                            {
+                                name: 'tipo', kind: 'choice', hideLabel: true, label: 'Tipo', required: true, sum: 'Tipo',
+                                options: [
+                                    { value: 'casa', label: 'Casa', desc: 'Casa independiente' },
+                                    { value: 'townhouse', label: 'Townhouse', desc: 'Casa adosada' },
+                                    { value: 'condo', label: 'Condo o apartamento', desc: 'Unidad en un edificio o condominio', msg: 'Condo / apartamento' },
+                                    { value: 'movil', label: 'Casa móvil', desc: 'Mobile home o prefabricada' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'ocupacion', section: 'prop', context: true,
+                        title: '¿Vives ahí o la alquilas?',
+                        help: {
+                            label: '¿Cuál debo elegir?', title: '¿Cuál debo elegir?',
+                            items: [
+                                ['Vivo ahí:', 'es tu casa principal.'],
+                                ['Segunda casa:', 'la usas por temporadas o de vacaciones.'],
+                                ['La alquilo a otros:', 'es una propiedad de inversión que rentas a inquilinos.'],
+                                ['Soy inquilino:', 'alquilas donde vives. Lo que necesitas es un seguro de inquilino (renters), que protege tus pertenencias y tu responsabilidad, no el edificio.']
+                            ]
+                        },
+                        fields: [
+                            {
+                                name: 'ocupacion', kind: 'choice', hideLabel: true, label: 'Uso de la propiedad', required: true, sum: 'Uso de la propiedad',
+                                options: [
+                                    { value: 'vivo', label: 'Vivo ahí', desc: 'Es mi casa principal' },
+                                    { value: 'segunda', label: 'Es mi segunda casa', desc: 'Casa de vacaciones o de temporada', msg: 'Segunda casa' },
+                                    { value: 'alquilo', label: 'La alquilo a otros', desc: 'Es una propiedad de inversión' },
+                                    { value: 'inquilino', label: 'Soy inquilino', desc: 'Alquilo el lugar donde vivo', msg: 'Soy inquilino (renters)' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'construccion', section: 'prop', context: true,
+                        when: a => a.ocupacion !== 'inquilino',
+                        title: '¿En qué año se construyó?',
+                        sub: 'Un aproximado está bien.',
+                        help: {
+                            label: '¿Dónde lo encuentro?', title: '¿Dónde encuentro el año de construcción?',
+                            paras: ['Aparece en el registro de la propiedad del condado. En Miami-Dade, búscalo con tu dirección en el sitio del Property Appraiser.']
+                        },
+                        fields: [{ name: 'construccion', kind: 'year', hideLabel: true, label: 'Año de construcción', required: true, reqMsg: 'Elige el año o «No estoy seguro».', icon: 'calendar', placeholder: 'Elige el año', min: 1900, max: THIS_YEAR, unknown: 'No estoy seguro', sheetTitle: 'Año de construcción', sum: 'Año de construcción' }]
+                    },
+                    {
+                        id: 'techo', section: 'prop', context: true,
+                        when: a => a.ocupacion !== 'inquilino' && a.tipo !== 'condo',
+                        title: '¿Qué edad tiene el techo?',
+                        help: {
+                            label: '¿Por qué importa?', title: '¿Por qué importa la edad del techo?',
+                            paras: ['En Florida, la edad del techo es uno de los factores que más influyen en el precio y en la aprobación del seguro de casa.', 'Si lo cambiaste, ten a mano el año o el permiso de construcción.']
+                        },
+                        fields: [
+                            {
+                                name: 'techo', kind: 'choice', hideLabel: true, label: 'Edad del techo', required: true, sum: 'Edad del techo',
+                                options: [
+                                    { value: 'lt5', label: 'Menos de 5 años' },
+                                    { value: '5-10', label: 'Entre 5 y 10 años', msg: '5 a 10 años' },
+                                    { value: '11-15', label: 'Entre 11 y 15 años', msg: '11 a 15 años' },
+                                    { value: 'gt15', label: 'Más de 15 años' },
+                                    { value: 'nose', label: 'No estoy seguro' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'huracan', section: 'prop', context: true,
+                        when: a => a.ocupacion !== 'inquilino',
+                        title: '¿Tiene protección contra huracanes?',
+                        sub: 'Puedes elegir más de una.',
+                        help: {
+                            label: '¿Por qué preguntamos esto?', title: 'Protección contra huracanes',
+                            paras: ['Las ventanas y puertas de impacto y los shutters pueden darte descuentos en Florida.', 'Normalmente se comprueban con una inspección de mitigación de viento (wind mitigation).']
+                        },
+                        fields: [
+                            {
+                                name: 'huracan', kind: 'multi', hideLabel: true, label: 'Protección contra huracanes', required: true, sum: 'Protección contra huracanes',
+                                options: [
+                                    { value: 'impacto', label: 'Ventanas y puertas de impacto' },
+                                    { value: 'shutters', label: 'Shutters (contraventanas)' },
+                                    { value: 'ninguna', label: 'No tiene', exclusive: true },
+                                    { value: 'nose', label: 'No estoy seguro', exclusive: true }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'seguroActual', section: 'seg',
+                        title: a => (a.ocupacion === 'inquilino' ? '¿Tienes seguro de inquilino ahora?' : '¿Tienes seguro para esta propiedad ahora?'),
+                        fields: [
+                            { name: 'seguroActual', kind: 'choice', layout: 'pair', hideLabel: true, label: 'Seguro actual', required: true, options: YES_NO, sum: 'Seguro actual', display: currentInsurance },
+                            { name: 'aseguradora', kind: 'text', label: '¿Con qué compañía?', showIf: a => a.seguroActual === 'si', list: 'q-carriers-home', autocomplete: 'off', autocapitalize: 'words', placeholder: 'Ej. Citizens, Universal', sumHidden: true },
+                            {
+                                name: 'renovacion', kind: 'select', label: '¿En qué mes se renueva?', showIf: a => a.seguroActual === 'si', placeholder: 'Elige el mes', sum: 'Renovación',
+                                options: MONTHS.map((m, i) => ({ value: String(i + 1), label: cap(m) })).concat({ value: 'nose', label: 'No sé' })
+                            }
+                        ]
+                    },
+                    CONTACT_STEP
+                ]
+            }
+        };
+
+        const CARRIERS = {
+            'q-carriers-auto': ['GEICO', 'Progressive', 'State Farm', 'Allstate', 'Direct Auto', 'Infinity', 'USAA', 'Liberty Mutual', 'Travelers', 'Mercury'],
+            'q-carriers-home': ['Citizens', 'Universal', 'Heritage', 'Security First', 'American Integrity', 'Florida Peninsula', 'Slide', 'Tower Hill', 'State Farm', 'Allstate']
+        };
+
+        // Vehicle catalog for the pickers (common US makes/models; "Otro" covers the rest).
+        const POPULAR_MAKES = ['Toyota', 'Honda', 'Nissan', 'Hyundai', 'Kia', 'Ford', 'Chevrolet', 'Jeep', 'Tesla', 'BMW', 'Mercedes-Benz', 'Lexus'];
+        const VEHICLES = {
+            'Acura': ['ILX', 'Integra', 'MDX', 'RDX', 'TLX', 'TSX', 'ZDX'],
+            'Alfa Romeo': ['Giulia', 'Stelvio', 'Tonale'],
+            'Audi': ['A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'e-tron', 'Q3', 'Q4 e-tron', 'Q5', 'Q7', 'Q8'],
+            'BMW': ['2 Series', '3 Series', '4 Series', '5 Series', '7 Series', 'i4', 'iX', 'X1', 'X3', 'X5', 'X7'],
+            'Buick': ['Enclave', 'Encore', 'Encore GX', 'Envision', 'LaCrosse'],
+            'Cadillac': ['CT4', 'CT5', 'Escalade', 'Lyriq', 'XT4', 'XT5', 'XT6'],
+            'Chevrolet': ['Blazer', 'Camaro', 'Colorado', 'Corvette', 'Cruze', 'Equinox', 'Malibu', 'Silverado 1500', 'Spark', 'Suburban', 'Tahoe', 'Trailblazer', 'Traverse', 'Trax'],
+            'Chrysler': ['300', 'Pacifica', 'Voyager'],
+            'Dodge': ['Challenger', 'Charger', 'Durango', 'Grand Caravan', 'Hornet', 'Journey'],
+            'Fiat': ['500', '500X'],
+            'Ford': ['Bronco', 'Bronco Sport', 'Edge', 'Escape', 'Expedition', 'Explorer', 'F-150', 'Fusion', 'Maverick', 'Mustang', 'Mustang Mach-E', 'Ranger', 'Transit'],
+            'Genesis': ['G70', 'G80', 'G90', 'GV70', 'GV80'],
+            'GMC': ['Acadia', 'Canyon', 'Sierra 1500', 'Terrain', 'Yukon'],
+            'Honda': ['Accord', 'Civic', 'CR-V', 'Fit', 'HR-V', 'Odyssey', 'Passport', 'Pilot', 'Ridgeline'],
+            'Hyundai': ['Accent', 'Elantra', 'Ioniq 5', 'Kona', 'Palisade', 'Santa Cruz', 'Santa Fe', 'Sonata', 'Tucson', 'Venue'],
+            'Infiniti': ['Q50', 'Q60', 'QX50', 'QX55', 'QX60', 'QX80'],
+            'Jaguar': ['E-Pace', 'F-Pace', 'F-Type', 'I-Pace', 'XF'],
+            'Jeep': ['Cherokee', 'Compass', 'Gladiator', 'Grand Cherokee', 'Renegade', 'Wagoneer', 'Wrangler'],
+            'Kia': ['Carnival', 'EV6', 'Forte', 'K5', 'Niro', 'Optima', 'Rio', 'Seltos', 'Sorento', 'Soul', 'Sportage', 'Telluride'],
+            'Land Rover': ['Defender', 'Discovery', 'Discovery Sport', 'Range Rover', 'Range Rover Evoque', 'Range Rover Sport', 'Range Rover Velar'],
+            'Lexus': ['ES', 'GX', 'IS', 'LX', 'NX', 'RX', 'RZ', 'TX', 'UX'],
+            'Lincoln': ['Aviator', 'Corsair', 'MKZ', 'Nautilus', 'Navigator'],
+            'Maserati': ['Ghibli', 'Grecale', 'Levante', 'Quattroporte'],
+            'Mazda': ['CX-30', 'CX-5', 'CX-50', 'CX-9', 'CX-90', 'Mazda3', 'Mazda6', 'MX-5 Miata'],
+            'Mercedes-Benz': ['A-Class', 'C-Class', 'CLA', 'E-Class', 'EQS', 'G-Class', 'GLA', 'GLB', 'GLC', 'GLE', 'GLS', 'S-Class', 'Sprinter'],
+            'MINI': ['Clubman', 'Countryman', 'Hardtop'],
+            'Mitsubishi': ['Eclipse Cross', 'Mirage', 'Outlander', 'Outlander Sport'],
+            'Nissan': ['Altima', 'Armada', 'Frontier', 'Kicks', 'Leaf', 'Maxima', 'Murano', 'Pathfinder', 'Rogue', 'Sentra', 'Titan', 'Versa'],
+            'Porsche': ['911', 'Cayenne', 'Macan', 'Panamera', 'Taycan'],
+            'Ram': ['1500', '2500', 'ProMaster'],
+            'Subaru': ['Ascent', 'Crosstrek', 'Forester', 'Impreza', 'Legacy', 'Outback', 'WRX'],
+            'Tesla': ['Cybertruck', 'Model 3', 'Model S', 'Model X', 'Model Y'],
+            'Toyota': ['4Runner', 'C-HR', 'Camry', 'Corolla', 'Corolla Cross', 'Highlander', 'Prius', 'RAV4', 'Sequoia', 'Sienna', 'Tacoma', 'Tundra', 'Venza', 'Yaris'],
+            'Volkswagen': ['Atlas', 'Atlas Cross Sport', 'Golf', 'GTI', 'ID.4', 'Jetta', 'Passat', 'Taos', 'Tiguan'],
+            'Volvo': ['S60', 'S90', 'XC40', 'XC60', 'XC90']
+        };
+
+        const ICON = {
+            close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+            back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+            search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+            calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+            car: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3.5 16h17v2.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V18h-9v.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/><path d="M5 11h14"/><circle cx="8" cy="14" r=".6" fill="currentColor"/><circle cx="16" cy="14" r=".6" fill="currentColor"/></svg>',
+            home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>',
+            clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+            shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+            info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>',
+            lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+            checkCircle: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.2-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4-7 7z"/></svg>',
+            tick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>',
+            check: '<svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>'
+        };
+        function icon(name, props) {
+            const s = el('span', Object.assign({ 'aria-hidden': 'true' }, props || {}));
+            s.innerHTML = name === 'whatsapp' ? socialIcons.whatsapp : ICON[name] || '';
+            return s;
+        }
+
+        // ---- layers: the flow and its sheets make everything under them inert ----
+        const modals = [];
+        function pushModal(node, onEscape) {
+            const under = modals.length ? modals[modals.length - 1].node : document.getElementById('content-app');
+            if (under) { under.inert = true; under.setAttribute('aria-hidden', 'true'); }
+            modals.push({ node, onEscape });
+            document.documentElement.classList.add('q-locked');
+        }
+        function popModal(node) {
+            const i = modals.findIndex(m => m.node === node);
+            if (i < 0) return;
+            modals.splice(i, 1);
+            const under = modals.length ? modals[modals.length - 1].node : document.getElementById('content-app');
+            if (under) { under.inert = false; under.removeAttribute('aria-hidden'); }
+            if (!modals.length) document.documentElement.classList.remove('q-locked');
+        }
+        document.addEventListener('keydown', e => {
+            const top = modals[modals.length - 1];
+            if (!top) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                if (top.onEscape) top.onEscape();
+            } else if (e.key === 'Tab') {   // keep focus inside the top layer
+                const f = [...top.node.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex="0"]')]
+                    .filter(n => n.offsetParent !== null && !n.closest('[hidden]'));
+                if (!f.length) return;
+                if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+                else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+            }
+        });
+
+        // ---- history: every screen is a history entry, so the phone's Back
+        //      button goes back one question (and closes an open picker first) ----
+        const H = { ok: false };
+        try { history.replaceState(history.state, ''); H.ok = true; } catch (_) { /* sandboxed: in-page stack only */ }
+        if (H.ok && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+        let PAGE = null;          // the page config (WhatsApp number, logo)
+        let QF = null;            // the open flow
+        let activeSheet = null;   // the open bottom sheet, if any
+
+        // ---- drafts: answers survive a reload or a trip to another app (this tab only) ----
+        const draftKey = kind => `bn-quote-${kind}-v1`;
+        function loadDraft(kind) {
+            try { return JSON.parse(sessionStorage.getItem(draftKey(kind)) || 'null'); } catch (_) { return null; }
+        }
+        function saveDraft() {
+            if (!QF) return;
+            try { sessionStorage.setItem(draftKey(QF.kind), JSON.stringify({ a: QF.a, sent: QF.sent, sentUrl: QF.sentUrl })); } catch (_) { /* private mode */ }
+        }
+        function clearDraft(kind) {
+            try { sessionStorage.removeItem(draftKey(kind)); } catch (_) { /* private mode */ }
+        }
+        function hasProgress(a, spec) {
+            const d = spec.defaults();
+            return Object.keys(a).some(k => {
+                const v = a[k];
+                if (k in d && d[k] === v) return false;
+                return !(v === '' || v == null || v === false || (Array.isArray(v) && !v.length));
+            });
+        }
+
+        // ---- answers, validation, display ----
+        function visibleSteps() { return QF.spec.steps.filter(s => !s.when || s.when(QF.a)); }
+        function fieldShown(f, a) { return !f.showIf || f.showIf(a); }
+        function optionOf(f, v) { return (f.options || []).find(o => o.value === v); }
+
+        function fieldError(f, a) {
+            if (!fieldShown(f, a)) return '';
+            const v = a[f.name];
+            switch (f.kind) {
+                case 'choice':
+                case 'select':
+                    return f.required && !v ? 'Elige una opción.' : '';
+                case 'multi':
+                    return f.required && !(v && v.length) ? 'Elige al menos una opción.' : '';
+                case 'year':
+                    return f.required && !v ? f.reqMsg || 'Elige el año.' : '';
+                case 'makeModel':
+                    return f.required && !(a.marca && a.modelo) ? 'Elige la marca y el modelo.' : '';
+                case 'startDate': {
+                    if (!v) return 'Elige cuándo quieres que empiece.';
+                    const d = startDateOf(a);
+                    if (!d) return 'Elige la fecha.';
+                    if (d < today() || d > addDays(today(), f.maxDays)) return `Elige una fecha entre hoy y los próximos ${f.maxDays} días.`;
+                    return '';
+                }
+                case 'dob': {
+                    const d = dobOf(a);
+                    if (!d) return f.required ? 'Elige día, mes y año.' : '';
+                    if (d === 'invalid') return 'Esa fecha no existe. Revisa el día.';
+                    const age = ageOn(d, today());
+                    if (age < 16) return 'Debes tener al menos 16 años.';
+                    if (age > 100) return 'Revisa el año de nacimiento.';
+                    return '';
+                }
+                default: {
+                    const s = (v || '').trim();
+                    if (!s) return f.required ? f.reqMsg || 'Este campo es obligatorio.' : '';
+                    return f.validate ? f.validate(s) : '';
+                }
+            }
+        }
+        function stepErrors(step) {
+            return step.fields.map(f => ({ f, msg: fieldError(f, QF.a) })).filter(x => x.msg);
+        }
+        const stepDone = step => !stepErrors(step).length;
+        const firstIncomplete = () => visibleSteps().find(s => !stepDone(s)) || null;
+
+        function displayValue(f, a) {
+            if (f.display) return f.display(a);
+            const v = a[f.name];
+            switch (f.kind) {
+                case 'choice':
+                case 'select': { const o = optionOf(f, v); return o ? o.msg || o.label : ''; }
+                case 'multi': return (v || []).map(x => optionOf(f, x)).filter(Boolean).map(o => o.msg || o.label).join(', ');
+                case 'year': return v === 'unknown' ? f.unknown || 'No sé' : v || '';
+                case 'startDate': {
+                    if (fieldError(f, a)) return '';
+                    const d = startDateOf(a);
+                    return (a.inicio === 'hoy' ? 'Hoy, ' : a.inicio === 'manana' ? 'Mañana, ' : '') + longDate(d);
+                }
+                case 'dob': return fieldError(f, a) ? '' : longDate(dobOf(a));
+                default: return fieldError(f, a) ? '' : (v || '').trim().replace(/\s+/g, ' ');
+            }
+        }
+        function sectionRows(secId) {
+            const rows = [];
+            visibleSteps().filter(s => s.section === secId).forEach(step => step.fields.forEach(f => {
+                if (f.sumHidden || !fieldShown(f, QF.a)) return;
+                const value = displayValue(f, QF.a);
+                if (value) rows.push({ key: f.name, label: f.sum || f.label, value, step: step.id, rank: f.rank || 50 });
+            }));
+            return rows.sort((x, y) => x.rank - y.rank);
+        }
+
+        function composeMessage(mode) {        // mode: 'full' | 'partial' | 'intro'
+            const { spec, a } = QF;
+            const name = mode === 'intro' ? '' : displayValue(CONTACT_STEP.fields[0], a);
+            const lines = [`Hola Best National${name ? `, soy ${name}` : ''}. Quiero una cotización de *${spec.product(a)}*.`];
+            if (mode !== 'intro') {
+                spec.sections.forEach(sec => {
+                    const rows = sectionRows(sec.id).filter(r => r.key !== 'nombre');
+                    if (rows.length) lines.push('', `*${sec.msg}*`, ...rows.map(r => `• ${r.label}: ${r.value}`));
+                });
+                if (a.bundle) lines.push('', spec.bundle.msg);
+            }
+            if (mode === 'partial') lines.push('', 'No terminé el formulario; prefiero continuar por aquí.');
+            if (mode === 'intro') lines.push('', 'Prefiero hacer la cotización por aquí.');
+            const via = sourceLine();
+            if (via) lines.push('', via);
+            return lines.join('\n');
+        }
+
+        // ---- where the visitor came from (?utm_source=instagram&utm_medium=story&utm_campaign=tip-auto)
+        //      rides along in the WhatsApp message, so every lead shows its source ----
+        const SOURCE_KEY = 'bn-source-v1';
+        function captureSource() {
+            try {
+                const q = new URLSearchParams(location.search);
+                const clean = v => String(v || '').replace(/[^\p{L}\p{N} _.-]/gu, '').slice(0, 40).trim();
+                const source = clean(q.get('utm_source') || q.get('src'));
+                if (source) sessionStorage.setItem(SOURCE_KEY, JSON.stringify({ source, medium: clean(q.get('utm_medium')), campaign: clean(q.get('utm_campaign')) }));
+            } catch (_) { /* private mode: no attribution, nothing breaks */ }
+        }
+        function sourceLine() {
+            let s = null;
+            try { s = JSON.parse(sessionStorage.getItem(SOURCE_KEY) || 'null'); } catch (_) { return ''; }
+            if (!s || !s.source) return '';
+            const SOURCES = { instagram: 'Instagram', ig: 'Instagram', facebook: 'Facebook', fb: 'Facebook', whatsapp: 'WhatsApp', qr: 'Código QR', tiktok: 'TikTok', google: 'Google' };
+            const MEDIUMS = { story: 'historia', stories: 'historia', highlight: 'destacada', bio: 'bio', post: 'publicación', reel: 'reel', card: 'tarjeta', flyer: 'volante' };
+            const src = SOURCES[s.source.toLowerCase()] || s.source;
+            const med = s.medium ? ` (${MEDIUMS[s.medium.toLowerCase()] || s.medium})` : '';
+            return `Vía: ${src}${med}${s.campaign ? ` · ${s.campaign}` : ''}`;
+        }
+
+        // ---- navigation ----
+        function newState(view, extra) {
+            return Object.assign({ bnq: QF.kind, view, i: (QF.st ? QF.st.i : 0) + 1, edit: 0 }, extra || {});
+        }
+        function pushState(st) {
+            if (H.ok) {
+                try { history.pushState(st, ''); } catch (_) { H.ok = false; }
+            }
+            if (!H.ok) QF.stack.push(QF.st);
+            QF.st = st;
+        }
+        function go(view, extra) {
+            if (QF.pendingPop) { QF.afterPop = () => go(view, extra); return; }
+            pushState(newState(view, extra));
+            render('fwd');
+        }
+        function goBack(n) {
+            if (QF.pendingPop) { QF.afterPop = () => goBack(n); return; }
+            if (H.ok) { history.go(-n); return; }
+            let st;
+            for (let k = 0; k < n; k++) { st = QF.stack.pop(); if (!st) break; }
+            if (!st) { closeFlowUI(); return; }
+            QF.st = st;
+            render('back');
+        }
+        function waitForPop() {
+            QF.pendingPop = true;
+            const q = QF;
+            setTimeout(() => {           // popstate normally lands in a few ms
+                if (q.pendingPop) { q.pendingPop = false; const fn = q.afterPop; q.afterPop = null; if (fn) fn(); }
+            }, 600);
+        }
+
+        window.addEventListener('popstate', e => {
+            const st = e.state;
+            if (activeSheet && !(st && st.sheet)) activeSheet.close({ fromHistory: true });
+            if (!st || !st.bnq || !QUOTE_FLOWS[st.bnq]) {
+                if (QF && QF.open) closeFlowUI();
+                return;
+            }
+            if (!QF || !QF.open || QF.kind !== st.bnq) {       // e.g. browser Forward back into a flow
+                if (QF && QF.open) closeFlowUI();
+                openFlowUI(st.bnq, null);
+                QF.st = st;
+                render('fwd');
+                return;
+            }
+            const same = st.view === QF.st.view && (st.edit || 0) === (QF.st.edit || 0);
+            const dir = st.i < QF.st.i ? 'back' : 'fwd';
+            QF.st = st;
+            if (!same) render(dir);
+            if (QF.pendingPop) {
+                QF.pendingPop = false;
+                const fn = QF.afterPop;
+                QF.afterPop = null;
+                if (fn) fn();
+            }
+        });
+
+        // ---- open / close ----
+        function openFlowUI(kind, opener) {
+            const spec = QUOTE_FLOWS[kind];
+            const draft = loadDraft(kind);
+            const a = Object.assign(spec.defaults(), draft && draft.a ? draft.a : {});
+
+            const back = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Atrás' });
+            back.innerHTML = ICON.back;
+            const close = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Cerrar' });
+            close.innerHTML = ICON.close;
+            const section = el('span', { class: 'q-section' });
+            const count = el('span', { class: 'q-count' });
+            const fill = el('div', { class: 'q-progress-fill' });
+            const progress = el('div', { class: 'q-progress', role: 'progressbar', 'aria-label': 'Progreso', 'aria-valuemin': '0' }, fill);
+            const scroll = el('div', { class: 'q-scroll' });
+            const footInner = el('div', { class: 'q-foot-inner' });
+            const foot = el('div', { class: 'q-foot' }, footInner);
+            const root = el('div', { class: 'q-flow', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'q-title' },
+                el('div', { class: 'q-top' },
+                    el('div', { class: 'q-bar' }, back, el('div', { class: 'q-bar-text' }, section, count), close),
+                    progress),
+                scroll, foot);
+            Object.entries(CARRIERS).forEach(([id, names]) => {
+                root.appendChild(el('datalist', { id }, ...names.map(n => el('option', { value: n }))));
+            });
+
+            QF = {
+                kind, spec, a, st: null, stack: [], tried: new Set(), ctl: null,
+                opener: opener || document.querySelector(`.app-cta[data-form="${kind}"]`),
+                open: true, sent: !!(draft && draft.sent), sentUrl: draft ? draft.sentUrl || null : null,
+                pendingPop: false, afterPop: null,
+                els: { root, back, close, section, count, progress, fill, scroll, foot, footInner }
+            };
+            back.addEventListener('click', () => goBack(1));
+            close.addEventListener('click', closeFlow);
+            scroll.addEventListener('scroll', () => root.classList.toggle('is-scrolled', scroll.scrollTop > 4), { passive: true });
+            document.body.appendChild(root);
+            pushModal(root, closeFlow);
+        }
+
+        function openQuoteFlow(kind, opener) {
+            if (QF && QF.open) return;
+            const draft = loadDraft(kind);
+            if (draft && draft.sent) clearDraft(kind);   // a sent quote starts fresh next time
+            openFlowUI(kind, opener);
+            go('intro');
+        }
+
+        // Back to the page: unwind this flow's history entries (popstate closes the layer).
+        function closeFlow() {
+            if (!QF || !QF.open) return;
+            if (activeSheet) activeSheet.close({ fromHistory: true, noFocus: true });
+            if (QF.sent) clearDraft(QF.kind);
+            if (H.ok && QF.st) {
+                const q = QF;
+                history.go(-QF.st.i);
+                setTimeout(() => { if (q.open) closeFlowUI(); }, 700);   // if the browser ignores go()
+            } else {
+                closeFlowUI();
+            }
+        }
+
+        function closeFlowUI() {
+            if (!QF || !QF.open) return;
+            if (activeSheet) activeSheet.close({ fromHistory: true, noFocus: true });
+            QF.open = false;
+            QF.ctl = null;
+            popModal(QF.els.root);
+            QF.els.root.remove();
+            if (QF.opener && QF.opener.isConnected) QF.opener.focus({ preventScroll: true });
+        }
+
+        function restoreFlowFromHistory() {       // reload mid-quote: reopen where it was
+            if (!H.ok) return;
+            const st = history.state;
+            if (!st || !st.bnq || !QUOTE_FLOWS[st.bnq]) return;
+            openFlowUI(st.bnq, null);
+            QF.st = st;
+            render('fwd');
+            if (st.sheet) { waitForPop(); history.back(); }   // the picker that was open is gone
+        }
+
+        // ---- rendering ----
+        function render(dir) {
+            const { view } = QF.st;
+            const step = QF.spec.steps.find(s => s.id === view) || null;
+            QF.ctl = null;
+            const out = view === 'summary' ? viewSummary()
+                : view === 'done' ? viewDone()
+                : step ? viewStep(step)
+                : viewIntro();
+
+            updateHeader();
+            const { els } = QF;
+
+            out.node.classList.add(dir === 'back' ? 'q-in-back' : 'q-in-fwd');
+            els.scroll.replaceChildren(out.node);
+            els.scroll.scrollTop = 0;
+            els.root.classList.remove('is-scrolled');
+            els.footInner.replaceChildren(...out.foot);
+            els.foot.hidden = !out.foot.length;
+            if (QF.ctl) { refreshStep(); QF.ctl.ready = true; }
+            saveDraft();
+            requestAnimationFrame(() => {
+                const t = document.getElementById('q-title');
+                if (t) t.focus({ preventScroll: true });
+            });
+        }
+
+        // Section name, "Paso X de N" and the bar. The count can change while a
+        // question is open (e.g. Condo drops the roof question), so it's live.
+        function updateHeader() {
+            const { view } = QF.st;
+            const steps = visibleSteps();
+            const step = QF.spec.steps.find(s => s.id === view) || null;
+            const total = steps.length + 1;
+            const idx = view === 'summary' ? total : step ? steps.indexOf(step) + 1 : 0;
+            const sec = step ? QF.spec.sections.find(s => s.id === step.section) : null;
+            const { els } = QF;
+            els.section.textContent = view === 'summary' ? 'Revisión' : view === 'done' ? 'Enviado' : sec ? sec.title : QF.spec.intro.eyebrow;
+            els.count.textContent = idx ? `Paso ${idx} de ${total}` : '';
+            els.progress.hidden = !idx;
+            els.fill.style.width = idx ? `${(idx / total) * 100}%` : '0';
+            els.progress.setAttribute('aria-valuemax', String(total));
+            els.progress.setAttribute('aria-valuenow', String(idx));
+            els.progress.setAttribute('aria-valuetext', idx ? `Paso ${idx} de ${total}` : '');
+            els.back.classList.toggle('is-hidden', view === 'intro');
+        }
+
+        function titleEl(text) { return el('h2', { id: 'q-title', class: 'q-title', tabindex: '-1', text }); }
+        function primaryButton(content, props) {
+            const b = el('button', Object.assign({ type: 'button', class: 'q-primary' }, props || {}));
+            (Array.isArray(content) ? content : [el('span', { text: content })]).forEach(c => b.appendChild(c));
+            return b;
+        }
+        function altLink(text, onClick, withIcon) {
+            const b = el('button', { type: 'button', class: 'q-alt' }, withIcon ? icon('whatsapp') : null, el('span', { text }));
+            b.addEventListener('click', onClick);
+            return b;
+        }
+        function helpButton(help) {
+            const b = el('button', { type: 'button', class: 'q-help', 'aria-haspopup': 'dialog' }, icon('info'), el('span', { text: help.label }));
+            b.addEventListener('click', () => openHelp(help));
+            return b;
+        }
+        function contextChip(c) {
+            return el('p', { class: 'q-context' }, icon(c.icon), el('span', { text: c.text }));
+        }
+        function brandMark() {
+            const mark = el('span', { class: 'q-brand-mark', 'aria-hidden': 'true' });
+            const logo = document.querySelector('#app-avatar img');
+            if (logo) mark.appendChild(logo.cloneNode());
+            else mark.textContent = initialsOf(PAGE ? PAGE.name : '');
+            return mark;
+        }
+
+        function viewIntro() {
+            const { spec } = QF;
+            const resumable = !QF.sent && hasProgress(QF.a, spec);
+            const v = el('div', { class: 'q-view' });
+            v.append(
+                el('div', { class: 'q-brand' }, brandMark(), el('span', { text: PAGE ? PAGE.name : '' })),
+                titleEl(spec.intro.title),
+                el('p', { class: 'q-meta' },
+                    el('span', {}, icon('clock'), el('span', { text: 'Unos 2 minutos' })),
+                    el('span', {}, icon('shield'), el('span', { text: 'Gratis y sin compromiso' }))),
+                el('p', { class: 'q-lead', text: 'Responde unas preguntas rápidas y te enviamos tu cotización por WhatsApp.' }),
+                el('div', { class: 'q-have' },
+                    el('p', { class: 'q-have-title', text: 'Ten esto a mano' }),
+                    el('ul', {}, ...spec.intro.have.map(t => el('li', {}, icon('checkCircle'), el('span', { text: t }))))));
+            if (resumable) v.appendChild(el('p', { class: 'q-note', text: 'Tienes una cotización sin terminar. Puedes seguir donde la dejaste.' }));
+
+            const start = primaryButton(resumable ? 'Continuar donde lo dejaste' : 'Empezar');
+            start.addEventListener('click', () => startQuote(resumable));
+            const foot = [start];
+            if (resumable) {
+                const again = el('button', { type: 'button', class: 'q-secondary', text: 'Empezar de nuevo' });
+                again.addEventListener('click', () => startQuote(false, true));
+                foot.push(again);
+            }
+            foot.push(altLink('Prefiero escribir por WhatsApp', () => sendQuote('intro'), true));
+            return { node: v, foot };
+        }
+
+        function startQuote(resume, reset) {
+            if (reset) {
+                QF.a = QF.spec.defaults();
+                QF.tried.clear();
+                QF.sent = false;
+                QF.sentUrl = null;
+                clearDraft(QF.kind);
+            }
+            const steps = visibleSteps();
+            if (!resume) { go(steps[0].id); return; }
+            // Pick up at the first unanswered screen; the answered ones become
+            // history entries so Back walks through them.
+            const target = firstIncomplete();
+            for (const s of steps) {
+                if (target && s.id === target.id) break;
+                pushState(newState(s.id));
+            }
+            go(target ? target.id : 'summary');
+        }
+
+        function viewStep(step) {
+            const a = QF.a;
+            const v = el('div', { class: 'q-view' });
+            const form = el('form', { id: 'q-form', novalidate: true, 'aria-labelledby': 'q-title' });
+            if (step.context) {
+                const c = QF.spec.context(a);
+                if (c) form.appendChild(contextChip(c));
+            }
+            form.appendChild(titleEl(resolve(step.title, a)));
+            if (step.sub) form.appendChild(el('p', { class: 'q-sub', text: resolve(step.sub, a) }));
+            if (step.help) form.appendChild(helpButton(step.help));
+
+            const ctl = { step, form, fields: [] };
+            QF.ctl = ctl;
+            const fields = el('div', { class: 'q-fields' });
+            step.fields.forEach(f => {
+                const r = renderField(f, step);
+                ctl.fields.push(r);
+                fields.appendChild(r.wrap);
+            });
+            form.appendChild(fields);
+            ctl.note = el('p', { class: 'q-note', role: 'status' });
+            form.appendChild(ctl.note);
+            if (step.privacy) form.appendChild(el('p', { class: 'q-privacy' }, icon('lock'), el('span', { text: step.privacy })));
+            form.addEventListener('submit', e => { e.preventDefault(); continueFrom(step); });
+            v.appendChild(form);
+
+            ctl.primary = primaryButton(QF.st.edit ? 'Guardar y volver' : 'Continuar', { type: 'submit', form: 'q-form' });
+            return { node: v, foot: [ctl.primary, altLink('Prefiero terminar por WhatsApp', () => sendQuote('partial'), true)] };
+        }
+
+        function refreshStep() {
+            const ctl = QF.ctl;
+            if (!ctl) return;
+            const tried = QF.tried.has(ctl.step.id);
+            ctl.fields.forEach(r => {
+                r.wrap.hidden = !fieldShown(r.f, QF.a);
+                if (r.sync) r.sync();
+                const msg = fieldError(r.f, QF.a);
+                if (tried) r.setError(msg);                 // after a Continue attempt, errors stay live
+                else if (r.errorShown && !msg) r.setError('');
+            });
+            const note = ctl.step.note ? ctl.step.note(QF.a) : '';
+            const appeared = note && !ctl.note.textContent;
+            ctl.note.textContent = note;
+            if (appeared && ctl.ready) {
+                ctl.note.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+            }
+            ctl.primary.classList.toggle('is-incomplete', !stepDone(ctl.step));
+        }
+
+        function onAnswer() {
+            saveDraft();
+            refreshStep();
+            updateHeader();
+        }
+
+        function continueFrom(step) {
+            if (QF.pendingPop) { QF.afterPop = () => continueFrom(step); return; }
+            QF.tried.add(step.id);
+            refreshStep();
+            const errs = stepErrors(step);
+            if (errs.length) {
+                const r = QF.ctl.fields.find(x => x.f === errs[0].f);
+                if (r) r.focus();
+                return;
+            }
+            if (QF.st.edit) {                // came from the review: return to it
+                const next = firstIncomplete();
+                if (next && next.id !== step.id) go(next.id, { edit: QF.st.edit + 1 });
+                else goBack(QF.st.edit);
+                return;
+            }
+            const steps = visibleSteps();
+            const i = steps.indexOf(step);
+            const next = i < 0 ? firstIncomplete() : steps[i + 1];
+            go(next ? next.id : 'summary');
+        }
+
+        // One control per field kind. Each returns { f, wrap, setError, focus, sync? }.
+        function renderField(f, step) {
+            const a = QF.a;
+            const id = `q-${f.name}`;
+            const errId = `${id}-err`;
+            const hintId = `${id}-hint`;
+            const labelId = `${id}-label`;
+            const wrap = el('div', { class: 'q-field' });
+            const err = el('p', { id: errId, class: 'q-error', 'aria-live': 'polite' });
+            const r = { f, wrap, controls: [], errorShown: false, focusTarget: null };
+            r.setError = msg => {
+                err.textContent = msg || '';
+                r.errorShown = !!msg;
+                r.controls.forEach(c => (msg ? c.setAttribute('aria-invalid', 'true') : c.removeAttribute('aria-invalid')));
+            };
+            r.focus = () => {
+                const c = r.focusTarget ? r.focusTarget() : r.controls[0];
+                if (c) c.focus();
+            };
+
+            if (!f.hideLabel) {
+                const kids = [document.createTextNode(f.label)];
+                if (!f.required) kids.push(el('span', { class: 'opt', text: ' (opcional)' }));
+                const isFor = f.kind === 'text' || f.kind === 'select';
+                const label = el(isFor ? 'label' : 'span', { id: labelId, class: 'q-label', for: isFor ? id : null }, ...kids);
+                wrap.appendChild(f.help ? el('div', { class: 'q-label-row' }, label, helpButton(f.help)) : label);
+            }
+            const labelledBy = f.hideLabel ? 'q-title' : labelId;
+            const describedBy = [f.hint ? hintId : null, errId].filter(Boolean).join(' ');
+
+            switch (f.kind) {
+                case 'text': {
+                    const input = el('input', {
+                        id, name: f.name, class: 'q-input', type: f.type || 'text',
+                        inputmode: f.inputmode, autocomplete: f.autocomplete || 'off', autocapitalize: f.autocapitalize,
+                        spellcheck: f.spellcheck, placeholder: f.placeholder, maxlength: f.maxlength, pattern: f.pattern,
+                        list: f.list, enterkeyhint: 'next', 'aria-describedby': describedBy,
+                        'aria-required': f.required ? 'true' : null
+                    });
+                    input.value = a[f.name] || '';
+                    input.addEventListener('input', () => {
+                        if (f.transform) {
+                            const t = f.transform(input.value);
+                            if (t !== input.value) input.value = t;
+                        }
+                        a[f.name] = input.value;
+                        onAnswer();
+                    });
+                    input.addEventListener('blur', () => {   // point out a typo once they move on
+                        if (input.value.trim() && !QF.tried.has(step.id)) r.setError(fieldError(f, a));
+                    });
+                    input.addEventListener('keydown', e => {  // keyboard "Siguiente": next box, then Continue
+                        if (e.key !== 'Enter') return;
+                        e.preventDefault();
+                        const boxes = [...input.form.querySelectorAll('.q-input')].filter(n => !n.closest('[hidden]'));
+                        const k = boxes.indexOf(input);
+                        if (k >= 0 && k < boxes.length - 1) boxes[k + 1].focus();
+                        else continueFrom(step);
+                    });
+                    wrap.appendChild(input);
+                    r.controls.push(input);
+                    break;
+                }
+
+                case 'choice': {
+                    const group = el('div', {
+                        class: 'q-options' + (f.layout === 'pair' ? ' is-pair' : ''), role: 'radiogroup',
+                        'aria-labelledby': labelledBy, 'aria-describedby': describedBy, 'aria-required': f.required ? 'true' : null
+                    });
+                    f.options.forEach((o, k) => {
+                        const oid = `${id}-${k}`;
+                        const input = el('input', { type: 'radio', id: oid, name: id, value: o.value });
+                        input.checked = a[f.name] === o.value;
+                        input.addEventListener('change', () => { a[f.name] = o.value; onAnswer(); });
+                        const text = el('span', { class: 'q-opt-text' }, el('span', { class: 'q-opt-label', text: o.label }), o.desc ? el('span', { class: 'q-opt-desc', text: o.desc }) : null);
+                        group.appendChild(el('div', { class: 'q-opt' }, input, el('label', { for: oid }, el('span', { class: 'q-mark', 'aria-hidden': 'true' }), text)));
+                    });
+                    wrap.appendChild(group);
+                    r.controls.push(group);
+                    r.focusTarget = () => group.querySelector('input:checked') || group.querySelector('input');
+                    break;
+                }
+
+                case 'multi': {
+                    const group = el('div', { class: 'q-options', role: 'group', 'aria-labelledby': labelledBy, 'aria-describedby': describedBy });
+                    f.options.forEach((o, k) => {
+                        const oid = `${id}-${k}`;
+                        const input = el('input', { type: 'checkbox', id: oid, value: o.value });
+                        input.checked = (a[f.name] || []).includes(o.value);
+                        input.addEventListener('change', () => {
+                            let sel = (a[f.name] || []).filter(x => x !== o.value);
+                            // "No tiene" / "No estoy seguro" exclude the real answers, and vice versa
+                            if (input.checked) sel = o.exclusive ? [o.value] : sel.filter(x => !(optionOf(f, x) || {}).exclusive).concat(o.value);
+                            a[f.name] = f.options.map(x => x.value).filter(x => sel.includes(x));
+                            group.querySelectorAll('input').forEach(n => { n.checked = a[f.name].includes(n.value); });
+                            onAnswer();
+                        });
+                        const mark = el('span', { class: 'q-mark', 'aria-hidden': 'true' });
+                        mark.innerHTML = ICON.tick;
+                        const label = el('label', { for: oid }, mark, el('span', { class: 'q-opt-text' }, el('span', { class: 'q-opt-label', text: o.label })));
+                        group.appendChild(el('div', { class: 'q-opt is-check' }, input, label));
+                    });
+                    wrap.appendChild(group);
+                    r.controls.push(group);
+                    r.focusTarget = () => group.querySelector('input');
+                    break;
+                }
+
+                case 'year':
+                case 'makeModel': {
+                    const valueId = `${id}-value`;
+                    const value = el('span', { id: valueId, class: 'q-picker-value' });
+                    const sub = el('span', { class: 'q-picker-sub' });
+                    const row = el('button', {
+                        type: 'button', id, class: 'q-picker', 'aria-haspopup': 'dialog',
+                        'aria-labelledby': `${labelledBy} ${valueId}`, 'aria-describedby': describedBy
+                    }, icon(f.icon, { class: 'q-picker-icon' }), el('span', { class: 'q-picker-text' }, value, sub));
+                    row.insertAdjacentHTML('beforeend', chevronSVG);
+                    r.sync = () => {
+                        let main = '';
+                        let under = '';
+                        if (f.kind === 'makeModel') {
+                            if (a.marca && a.modelo) { main = a.modelo; under = a.marca; }
+                        } else if (a[f.name]) {
+                            main = a[f.name] === 'unknown' ? f.unknown : a[f.name];
+                        }
+                        row.classList.toggle('is-set', !!main);
+                        value.textContent = main || f.placeholder;
+                        sub.textContent = under;
+                    };
+                    row.addEventListener('click', () => {
+                        if (f.kind === 'makeModel') openVehicleSheet('make', onAnswer);
+                        else if (f.vehicle) openVehicleSheet('year', onAnswer);
+                        else openYearSheet({ title: f.sheetTitle || f.label, min: f.min, max: f.max, unknown: f.unknown, current: a[f.name] }, y => { a[f.name] = y; onAnswer(); });
+                    });
+                    wrap.appendChild(row);
+                    r.controls.push(row);
+                    break;
+                }
+
+                case 'startDate': {
+                    if (!a[f.name]) a[f.name] = 'hoy';     // State Farm-style default: today
+                    const t = today();
+                    const opts = [
+                        { value: 'hoy', label: 'Hoy', desc: shortDate(t) },
+                        { value: 'manana', label: 'Mañana', desc: shortDate(addDays(t, 1)) },
+                        { value: 'fecha', label: 'Otra fecha', desc: 'Elegir' }
+                    ];
+                    const group = el('div', { class: 'q-options is-chips', role: 'radiogroup', 'aria-labelledby': labelledBy, 'aria-describedby': describedBy });
+                    const dateInput = el('input', {
+                        type: 'date', id: `${id}-date`, class: 'q-input',
+                        min: isoDate(t), max: isoDate(addDays(t, f.maxDays)), 'aria-describedby': errId
+                    });
+                    dateInput.value = a.inicioFecha || '';
+                    const dateField = el('div', { class: 'q-field' }, el('label', { class: 'q-label', for: dateInput.id, text: 'Elige la fecha' }), dateInput);
+                    opts.forEach((o, k) => {
+                        const oid = `${id}-${k}`;
+                        const input = el('input', { type: 'radio', id: oid, name: id, value: o.value });
+                        input.checked = a[f.name] === o.value;
+                        input.addEventListener('change', () => {
+                            a[f.name] = o.value;
+                            onAnswer();
+                            if (o.value === 'fecha') {
+                                dateInput.focus();
+                                try { dateInput.showPicker(); } catch (_) { /* older browsers: the field is right there */ }
+                            }
+                        });
+                        group.appendChild(el('div', { class: 'q-opt' }, input,
+                            el('label', { for: oid }, el('span', { class: 'q-mark', 'aria-hidden': 'true' }),
+                                el('span', { class: 'q-opt-text' }, el('span', { class: 'q-opt-label', text: o.label }), el('span', { class: 'q-opt-desc', text: o.desc })))));
+                    });
+                    ['input', 'change'].forEach(ev => dateInput.addEventListener(ev, () => {
+                        if (a.inicioFecha === dateInput.value) return;
+                        a.inicioFecha = dateInput.value;
+                        onAnswer();
+                    }));
+                    const line = el('p', { class: 'q-date-line', 'aria-live': 'polite' });
+                    r.sync = () => {
+                        dateField.hidden = a[f.name] !== 'fecha';
+                        const d = startDateOf(a);
+                        line.textContent = d && !fieldError(f, a) ? `Tu seguro empezaría el ${WEEKDAYS[d.getDay()]} ${longDate(d)}.` : '';
+                    };
+                    wrap.append(group, dateField, line);
+                    r.controls.push(group, dateInput);
+                    r.focusTarget = () => (a[f.name] === 'fecha' ? dateInput : group.querySelector('input:checked') || group.querySelector('input'));
+                    break;
+                }
+
+                case 'dob': {
+                    const group = el('div', { class: 'q-dob', role: 'group', 'aria-labelledby': labelledBy, 'aria-describedby': describedBy });
+                    const years = [];
+                    for (let y = THIS_YEAR - 16; y >= THIS_YEAR - 100; y--) years.push([String(y), String(y)]);
+                    const parts = [
+                        ['dobD', 'Día', Array.from({ length: 31 }, (_, k) => [String(k + 1), String(k + 1)]), 'bday-day'],
+                        ['dobM', 'Mes', MONTHS.map((m, k) => [String(k + 1), cap(m.slice(0, 3))]), 'bday-month'],
+                        ['dobY', 'Año', years, 'bday-year']
+                    ];
+                    const selects = parts.map(([key, label, options, autocomplete]) => {
+                        const s = el('select', { id: `${id}-${key}`, class: 'q-select', 'aria-label': label, autocomplete });
+                        s.appendChild(el('option', { value: '', text: label }));
+                        options.forEach(([val, txt]) => s.appendChild(el('option', { value: val, text: txt })));
+                        s.value = a[key] || '';
+                        s.classList.toggle('is-empty', !s.value);
+                        s.addEventListener('change', () => {
+                            a[key] = s.value;
+                            s.classList.toggle('is-empty', !s.value);
+                            onAnswer();
+                            if (selects.every(x => x.value) && !QF.tried.has(step.id)) r.setError(fieldError(f, a));
+                        });
+                        group.appendChild(s);
+                        return s;
+                    });
+                    wrap.appendChild(group);
+                    r.controls.push(...selects);
+                    r.focusTarget = () => selects.find(s => !s.value) || selects[0];
+                    break;
+                }
+
+                case 'select': {
+                    const s = el('select', { id, class: 'q-select', 'aria-describedby': describedBy });
+                    s.appendChild(el('option', { value: '', text: f.placeholder || 'Elige' }));
+                    f.options.forEach(o => s.appendChild(el('option', { value: o.value, text: o.label })));
+                    s.value = a[f.name] || '';
+                    s.classList.toggle('is-empty', !s.value);
+                    s.addEventListener('change', () => { a[f.name] = s.value; s.classList.toggle('is-empty', !s.value); onAnswer(); });
+                    wrap.appendChild(s);
+                    r.controls.push(s);
+                    break;
+                }
+            }
+            if (f.hint) wrap.appendChild(el('p', { id: hintId, class: 'q-hint', text: f.hint }));
+            wrap.appendChild(err);
+            return r;
+        }
+
+        function viewSummary() {
+            const { spec, a } = QF;
+            const v = el('div', { class: 'q-view' });
+            v.append(titleEl('Revisa tu información'), el('p', { class: 'q-sub', text: 'Toca cualquier dato si quieres cambiarlo.' }));
+            spec.sections.forEach(sec => {
+                const rows = sectionRows(sec.id);
+                const missing = visibleSteps().filter(s => s.section === sec.id && !stepDone(s) && !rows.some(r => r.step === s.id));
+                if (!rows.length && !missing.length) return;
+                const card = el('section', { class: 'q-card', 'aria-labelledby': `q-sec-${sec.id}` }, el('h3', { id: `q-sec-${sec.id}`, class: 'q-card-title', text: sec.title }));
+                rows.forEach(r => card.appendChild(summaryRow(r.label, r.value, r.step, false)));
+                missing.forEach(s => card.appendChild(summaryRow(resolve(s.title, a), 'Falta completar', s.id, true)));
+                v.appendChild(card);
+            });
+
+            const bundle = el('input', { type: 'checkbox', id: 'q-bundle' });
+            bundle.checked = !!a.bundle;
+            bundle.addEventListener('change', () => { a.bundle = bundle.checked; saveDraft(); });
+            const mark = el('span', { class: 'q-mark', 'aria-hidden': 'true' });
+            mark.innerHTML = ICON.tick;
+            v.appendChild(el('div', { class: 'q-opt is-check q-bundle' }, bundle,
+                el('label', { for: 'q-bundle' }, mark, el('span', { class: 'q-opt-text' },
+                    el('span', { class: 'q-opt-label', text: spec.bundle.label }), el('span', { class: 'q-opt-desc', text: spec.bundle.desc })))));
+
+            const send = primaryButton([icon('whatsapp'), el('span', { text: 'Enviar por WhatsApp' })]);
+            send.addEventListener('click', () => {
+                const next = firstIncomplete();
+                if (next) { QF.tried.add(next.id); go(next.id, { edit: 1 }); return; }
+                sendQuote('full');
+            });
+            return { node: v, foot: [send, el('p', { class: 'q-foot-note', text: 'Se abrirá WhatsApp con tu información lista. Solo toca Enviar.' })] };
+        }
+
+        function summaryRow(label, value, stepId, missing) {
+            const b = el('button', { type: 'button', class: 'q-row' + (missing ? ' is-missing' : ''), 'aria-label': `${label}: ${value}. Editar` },
+                el('span', { class: 'q-row-text' }, el('span', { class: 'q-row-label', text: label }), el('span', { class: 'q-row-value', text: value })));
+            b.insertAdjacentHTML('beforeend', chevronSVG);
+            b.addEventListener('click', () => go(stepId, { edit: 1 }));
+            return b;
+        }
+
+        function sendQuote(mode) {
+            if (QF.pendingPop) { QF.afterPop = () => sendQuote(mode); return; }
+            const url = `https://wa.me/${whatsappNumber(PAGE)}?text=${encodeURIComponent(composeMessage(mode))}`;
+            QF.sent = true;
+            QF.sentUrl = url;
+            go('done');
+            // Opening inside the tap keeps it a user gesture; if the browser
+            // (e.g. an in-app browser) refuses the new tab, go there directly.
+            // (No 'noopener' feature: with it window.open always returns null.)
+            const win = window.open(url, '_blank');
+            if (win) { try { win.opener = null; } catch (_) { /* cross-origin already */ } }
+            else window.location.href = url;
+        }
+
+        function viewDone() {
+            const { spec, a } = QF;
+            const url = QF.sentUrl || `https://wa.me/${whatsappNumber(PAGE)}?text=${encodeURIComponent(composeMessage('full'))}`;
+            const check = el('div', { class: 'q-done-check', 'aria-hidden': 'true' });
+            check.innerHTML = ICON.tick;
+            const open = el('a', { class: 'q-primary', href: url, target: '_blank', rel: 'noopener' }, icon('whatsapp'), el('span', { text: 'Abrir WhatsApp' }));
+            const home = altLink('Volver al inicio', () => {
+                clearDraft(QF.kind);
+                QF.sent = false;
+                closeFlow();
+            });
+            const ctx = spec.context(a);
+            const v = el('div', { class: 'q-view q-done' },
+                check,
+                titleEl('¡Listo! Te estamos conectando por WhatsApp…'),
+                el('p', { class: 'q-done-text', text: 'Solo toca Enviar en WhatsApp. Si no se abrió, usa este botón:' }),
+                open, home,
+                el('div', { class: 'q-recap' },
+                    el('span', { class: 'q-recap-label', text: 'Cotización' }),
+                    el('span', { class: 'q-recap-value', text: cap(spec.product(a)) + (ctx ? ` · ${ctx.text}` : '') })));
+            return { node: v, foot: [] };
+        }
+
+        // ---- bottom sheets (pickers and help) ----
+        function openSheet({ onClose } = {}) {
+            let pushed = false;
+            if (activeSheet) {                 // swap sheets: reuse the open one's history entry
+                pushed = activeSheet.isPushed();
+                activeSheet.close({ noFocus: true, fromHistory: true });
+            }
+            const opener = document.activeElement;
+            const backdrop = el('div', { class: 'sheet-backdrop' });
+            const sheet = el('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'sheet-title' });
+            const head = el('div', { class: 'sheet-head' });
+            const body = el('div', { class: 'sheet-body' });
+            sheet.append(head, body);
+            backdrop.appendChild(sheet);
+            const api = {};
+
+            function close(opts = {}) {
+                if (!backdrop.isConnected) return;
+                backdrop.remove();
+                popModal(backdrop);
+                if (activeSheet === api) activeSheet = null;
+                if (onClose) onClose();
+                // the picker had its own history entry; drop it
+                if (pushed && !opts.fromHistory && QF && QF.open) { waitForPop(); history.back(); }
+                if (!opts.noFocus && opener && opener.isConnected) opener.focus({ preventScroll: true });
+            }
+            function setView(viewTitle, { back } = {}) {
+                head.replaceChildren();
+                head.classList.toggle('has-back', !!back);
+                if (back) {
+                    const b = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Atrás' });
+                    b.innerHTML = ICON.back;
+                    b.addEventListener('click', back);
+                    head.appendChild(b);
+                } else {
+                    head.appendChild(el('span'));
+                }
+                head.appendChild(el('h2', { id: 'sheet-title', class: 'sheet-title', tabindex: '-1', text: viewTitle }));
+                const x = el('button', { type: 'button', class: 'sheet-btn', 'aria-label': 'Cerrar' });
+                x.innerHTML = ICON.close;
+                x.addEventListener('click', () => close());
+                head.appendChild(x);
+                body.replaceChildren();
+                body.scrollTop = 0;
+                return body;
+            }
+            backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+            document.body.appendChild(backdrop);
+            pushModal(backdrop, () => close());
+            if (!pushed && QF && QF.open && H.ok && QF.st) {       // phone Back closes the picker, not the question
+                const st = Object.assign({}, QF.st, { i: QF.st.i + 1, sheet: true });
+                try { history.pushState(st, ''); QF.st = st; pushed = true; } catch (_) { /* in-page only */ }
+            }
+            Object.assign(api, { setView, close, isPushed: () => pushed, focusTitle: () => { const t = sheet.querySelector('#sheet-title'); if (t) t.focus({ preventScroll: true }); } });
+            activeSheet = api;
+            return api;
+        }
+
+        function sheetRow(text, { selected, muted, onPick }) {
+            const b = el('button', { type: 'button', class: 'sheet-row' + (selected ? ' is-selected' : '') + (muted ? ' muted' : '') },
+                el('span', { text }));
+            if (selected) { b.setAttribute('aria-current', 'true'); b.insertAdjacentHTML('beforeend', ICON.check); }
+            b.addEventListener('click', onPick);
+            return el('li', {}, b);
+        }
+
+        function openHelp(help) {
+            const api = openSheet();
+            const body = api.setView(help.title || help.label);
+            const box = el('div', { class: 'sheet-text' });
+            (help.paras || []).forEach(p => box.appendChild(el('p', { text: p })));
+            if (help.items) {
+                box.appendChild(el('ul', {}, ...help.items.map(([lead, text]) =>
+                    el('li', {}, lead ? el('strong', { text: `${lead} ` }) : null, document.createTextNode(text)))));
+            }
+            const ok = primaryButton('Entendido');
+            ok.addEventListener('click', () => api.close());
+            body.append(box, ok);
+            api.focusTitle();
+        }
+
+        // "Otro": typed fallback inside the sheet
+        function otherView(api, title, fields, back, done) {
+            const body = api.setView(title, { back });
+            const wrap = el('form', { class: 'sheet-other', novalidate: true });
+            const inputs = fields.map(f => {
+                const id = 'sheet-other-' + f.name;
+                const input = el('input', { id, class: 'q-input', value: f.value || '', placeholder: f.placeholder, autocomplete: 'off', autocapitalize: 'words', enterkeyhint: 'done' });
+                wrap.append(el('label', { class: 'q-label', for: id, text: f.label }), input);
+                return input;
+            });
+            const err = el('p', { class: 'q-error', 'aria-live': 'polite' });
+            wrap.append(err, primaryButton('Listo', { type: 'submit' }));
+            wrap.addEventListener('submit', e => {
+                e.preventDefault();
+                const vals = inputs.map(i => i.value.trim());
+                if (vals.some(v => !v)) { err.textContent = 'Completa los campos.'; inputs[vals.findIndex(v => !v)].focus(); return; }
+                done(vals);
+            });
+            body.appendChild(wrap);
+            inputs[0].focus();
+        }
+
+        function openYearSheet({ title, min, max, unknown, current }, onPick) {
+            const api = openSheet();
+            const body = api.setView(title);
+            const list = el('ul', { class: 'sheet-list' });
+            const pick = y => { onPick(y); api.close(); };
+            if (unknown) list.appendChild(sheetRow(unknown, { selected: current === 'unknown', muted: true, onPick: () => pick('unknown') }));
+            for (let y = max; y >= min; y--) {
+                const year = String(y);
+                list.appendChild(sheetRow(year, { selected: year === current, onPick: () => pick(year) }));
+            }
+            body.appendChild(list);
+            const sel = list.querySelector('.is-selected');
+            if (sel) sel.scrollIntoView({ block: 'center' });
+            api.focusTitle();
+        }
+
+        // Year -> make -> model in one sheet, like the CARFAX / State Farm pickers.
+        function openVehicleSheet(start, onChange) {
+            const a = QF.a;
+            const api = openSheet();
+            const finish = (make, model) => { a.marca = make; a.modelo = model; onChange(); api.close(); };
+
+            function yearView() {
+                const body = api.setView('Año del vehículo');
+                const list = el('ul', { class: 'sheet-list' });
+                for (let y = THIS_YEAR + 1; y >= 1980; y--) {
+                    const year = String(y);
+                    list.appendChild(sheetRow(year, {
+                        selected: a.anio === year,
+                        onPick: () => {
+                            a.anio = year;
+                            onChange();
+                            if (a.marca && a.modelo) api.close();
+                            else if (a.marca && VEHICLES[a.marca]) modelsView(a.marca);
+                            else makesView();
+                        }
+                    }));
+                }
+                body.appendChild(list);
+                const sel = list.querySelector('.is-selected');
+                if (sel) sel.scrollIntoView({ block: 'center' });
+                api.focusTitle();
+            }
+
+            function makesView() {
+                const body = api.setView('Marca', { back: start === 'year' ? yearView : null });
+                const search = el('div', { class: 'sheet-search' });
+                search.innerHTML = ICON.search;
+                const input = el('input', { type: 'search', placeholder: 'Buscar marca', 'aria-label': 'Buscar marca', autocomplete: 'off', enterkeyhint: 'search' });
+                search.appendChild(input);
+                const popularLabel = el('p', { class: 'sheet-section', text: 'Marcas populares' });
+                const grid = el('div', { class: 'make-grid' });
+                POPULAR_MAKES.forEach(make => {
+                    const t = el('button', { type: 'button', class: 'make-tile' },
+                        el('span', { class: 'make-mono', 'aria-hidden': 'true', text: make[0] }), el('span', { text: make }));
+                    t.addEventListener('click', () => modelsView(make));
+                    grid.appendChild(t);
+                });
+                const allLabel = el('p', { class: 'sheet-section', text: 'Todas las marcas' });
+                const list = el('ul', { class: 'sheet-list' });
+                const empty = el('p', { class: 'sheet-empty', text: 'No encontramos esa marca.' });
+                function renderList(q) {
+                    list.replaceChildren();
+                    const needle = q.toLowerCase();
+                    const makes = Object.keys(VEHICLES).filter(m => m.toLowerCase().includes(needle));
+                    makes.forEach(make => list.appendChild(sheetRow(make, { selected: a.marca === make, onPick: () => modelsView(make) })));
+                    list.appendChild(sheetRow('Otra marca', { muted: true, onPick: () => otherMake(q) }));
+                    empty.style.display = makes.length ? 'none' : '';
+                    popularLabel.style.display = grid.style.display = needle ? 'none' : '';
+                    allLabel.textContent = needle ? 'Resultados' : 'Todas las marcas';
+                }
+                input.addEventListener('input', () => renderList(input.value.trim()));
+                body.append(search, popularLabel, grid, allLabel, empty, list);
+                renderList('');
+                api.focusTitle();
+            }
+
+            function modelsView(make) {
+                const body = api.setView(`Modelos ${make}`, { back: makesView });
+                const list = el('ul', { class: 'sheet-list' });
+                VEHICLES[make].forEach(model => list.appendChild(sheetRow(model, {
+                    selected: a.marca === make && a.modelo === model,
+                    onPick: () => finish(make, model)
+                })));
+                list.appendChild(sheetRow('Otro modelo', {
+                    muted: true,
+                    onPick: () => otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
+                        () => modelsView(make), ([model]) => finish(make, model))
+                }));
+                body.appendChild(list);
+                api.focusTitle();
+            }
+
+            function otherMake(prefill) {
+                otherView(api, 'Otra marca', [
+                    { name: 'marca', label: 'Marca', placeholder: 'Escribe la marca', value: prefill },
+                    { name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }
+                ], makesView, ([make, model]) => finish(make, model));
+            }
+
+            if (start === 'year') yearView();
+            else if (a.marca && VEHICLES[a.marca]) modelsView(a.marca);
+            else makesView();
+        }
+
+        function renderAppTheme(config) {
+            document.body.className = 'theme-app';
+            document.getElementById('content-app').classList.remove('hidden');
+            const rgb = hexToRgbTriplet(config.layout?.colors?.primary) || '255, 107, 53';
+            document.documentElement.style.setProperty('--primary-rgb', rgb);
+            document.documentElement.style.setProperty('--page-background', config.layout?.background?.value || '#1a1a1a');
+            PAGE = config;
+
+            // header row
+            const loc = config.location || '';
+            document.getElementById('app-location-text').textContent = loc;
+            if (!loc) document.getElementById('app-location').remove();
+            renderSocial(config.social || {}, 'app-social');
+
+            // identity: logo if there is one, otherwise initials
+            const avatar = document.getElementById('app-avatar');
+            const logo = config.layout?.image?.url;
+            avatar.textContent = initialsOf(config.name);
+            if (logo) {
+                // Show initials until the logo loads; keep them if it never does.
+                const img = new Image();
+                img.alt = '';
+                img.onload = () => { avatar.textContent = ''; avatar.appendChild(img); };
+                img.src = logo;
+            }
+            document.getElementById('app-name').textContent = config.name;
+            document.getElementById('app-tagline').textContent = config.tagline || '';
+
+            // buttons: type "primary" -> gradient CTA, anything else -> tappable box
+            const slug = config.slug;
+            const actions = document.getElementById('app-actions');
+            const options = document.getElementById('app-options');
+            (config.buttons || []).forEach(button => {
+                const primary = button.type === 'primary';
+                const flow = button.form && QUOTE_FLOWS[button.form] ? button.form : null;
+                const a = document.createElement(flow ? 'button' : 'a');
+                if (flow) {
+                    a.type = 'button';
+                    a.dataset.form = flow;
+                    a.setAttribute('aria-haspopup', 'dialog');
+                    a.addEventListener('click', () => openQuoteFlow(flow, a));
+                } else {
+                    a.href = button.url;
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                }
+                a.className = primary ? 'app-cta' : 'app-option';
+                if (button.emoji) {
+                    const icon = document.createElement('span');
+                    icon.className = primary ? 'app-cta-icon' : 'app-option-icon';
+                    icon.setAttribute('aria-hidden', 'true');
+                    icon.textContent = button.emoji;
+                    a.appendChild(icon);
+                }
+                const text = document.createElement('span');
+                text.className = primary ? 'app-cta-text' : '';
+                text.textContent = button.text;
+                a.appendChild(text);
+                if (primary) a.insertAdjacentHTML('beforeend', chevronSVG);
+                a.addEventListener('click', () => { if (slug) trackClick(slug); });
+                (primary ? actions : options).appendChild(a);
+            });
+            if (!actions.children.length) actions.remove();
+            if (!options.children.length) options.remove();
+
+            // hours: "Lun–Vie 9am–6:30pm · Sáb 10am–2pm" -> label/value rows
+            const hours = (config.hours || '').split('·').map(s => s.trim()).filter(Boolean);
+            if (hours.length) {
+                document.getElementById('app-hours-label').textContent = config.labels?.hours || 'Horario';
+                const rows = document.getElementById('app-hours');
+                hours.forEach(part => {
+                    const cut = part.indexOf(' ');
+                    const row = document.createElement('div');
+                    row.className = 'app-row';
+                    const label = document.createElement('span');
+                    label.className = 'app-row-label';
+                    const value = document.createElement('span');
+                    value.className = 'app-row-value';
+                    if (cut > 0) {
+                        label.textContent = part.slice(0, cut);
+                        value.textContent = part.slice(cut + 1);
+                    } else {
+                        value.textContent = part;
+                    }
+                    row.append(label, value);
+                    rows.appendChild(row);
+                });
+            } else {
+                document.getElementById('app-hours-section').remove();
+            }
+
+            document.getElementById('loading').style.display = 'none';
+            restoreFlowFromHistory();
+        }
+
+        function setHeroImage(id, config) {
+            const img = document.getElementById(id);
+            const url = config.layout?.image?.url;
+            if (!url) {
+                img.remove();
+                return;
+            }
+            img.src = url;
+            img.alt = `${config.name} Logo`;
+        }
+
+        // ============================================
+        // RENDER PAGE
+        // ============================================
+        function renderPage(config) {
+            const isCard = config.layout?.style === 'card';
+
+            // Load custom font
+            const font = config.layout?.font;
+            if (font && font !== 'system') {
+                loadFont(font);
+                document.body.style.fontFamily = `'${font}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`;
+            }
+
+            // Set CSS variables
+            document.documentElement.style.setProperty('--primary-color', config.layout?.colors?.primary || '#FF6B35');
+            document.documentElement.style.setProperty('--on-primary-color', textColorOn(config.layout?.colors?.primary || '#FF6B35'));
+            document.documentElement.style.setProperty('--secondary-color', config.layout?.colors?.secondary || '#F7931E');
+            document.documentElement.style.setProperty('--text-color', config.layout?.colors?.text || '#ffffff');
+            document.documentElement.style.setProperty('--text-muted', config.layout?.colors?.textMuted || '#888888');
+            document.documentElement.style.setProperty('--card-background', config.layout?.colors?.cardBackground || '#2a2a2a');
+
+            // Set page metadata
+            document.getElementById('page-title').textContent = config.name;
+            document.getElementById('page-description').content = `${config.name} - ${config.tagline || 'Connect with us'}`;
+            document.getElementById('theme-color').content = config.layout?.colors?.primary || '#FF6B35';
+            document.getElementById('og-title').content = config.name;
+            document.getElementById('og-description').content = config.tagline || 'Connect with us';
+            if (config.layout?.image?.url) {
+                document.getElementById('og-image').content = config.layout.image.url;
+            }
+
+            // Apply background based on type
+            const bgType = config.layout?.background?.type || 'color';
+            const bgValue = config.layout?.background?.value || '#1a1a1a';
+
+            if (bgType === 'gradient') {
+                document.body.style.background = bgValue;
+            } else if (bgType === 'image' && bgValue) {
+                const overlay = config.layout?.background?.overlay || 50;
+                document.body.style.background = `linear-gradient(rgba(0,0,0,${overlay/100}), rgba(0,0,0,${overlay/100})), url(${bgValue}) center/cover no-repeat fixed`;
+                document.body.classList.add('has-bg-image');
+            } else {
+                document.body.style.backgroundColor = bgValue;
+            }
+
+            if (config.layout?.theme === 'app') {
+                renderAppTheme(config);
+                return;
+            }
+
+            if (isCard) {
+                // Card Layout
+                document.body.classList.add('layout-card');
+                document.getElementById('content-card').classList.remove('hidden');
+
+                setHeroImage('card-hero-image', config);
+                document.getElementById('card-restaurant-name').textContent = config.name;
+                document.getElementById('card-tagline').textContent = config.tagline || '';
+                document.getElementById('card-bio').textContent = config.bio || '';
+                document.getElementById('card-location-text').textContent = config.location || '';
+                document.getElementById('card-hours').textContent = config.hours || '';
+
+                renderButtons(config.buttons || [], 'card-button-grid', config);
+                renderSocial(config.social || {}, 'card-social-links');
+            } else {
+                // Minimal or Hero Layout
+                document.body.className = `layout-${config.layout?.style || 'minimal'} spacing-${config.layout?.spacing || 'comfortable'}`;
+                document.getElementById('content-default').classList.remove('hidden');
+
+                // Hero background for hero layout
+                if (config.layout?.style === 'hero' && config.layout?.image?.heroBackground) {
+                    document.getElementById('hero').style.backgroundImage = `url(${config.layout.image.heroBackground})`;
+                }
+
+                setHeroImage('hero-image', config);
+                document.getElementById('restaurant-name').textContent = config.name;
+                document.getElementById('tagline').textContent = config.tagline || '';
+                document.getElementById('bio').textContent = config.bio || '';
+                document.getElementById('location-text').textContent = config.location || '';
+                document.getElementById('hours').textContent = config.hours || '';
+
+                renderButtons(config.buttons || [], 'button-grid', config);
+                renderSocial(config.social || {}, 'social-links');
+            }
+
+            // Hide loading
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function renderButtons(buttons, containerId, config) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            const buttonStyle = config?.layout?.buttonStyle || 'filled';
+            const buttonShape = config?.layout?.buttonShape || 'default';
+            const buttonShadow = config?.layout?.buttonShadow || false;
+            const entranceAnim = config?.layout?.animation?.entrance || 'none';
+            const hoverAnim = config?.layout?.animation?.hover || 'none';
+            const slug = config?.slug;
+
+            buttons.forEach((button, index) => {
+                const btn = document.createElement('a');
+                btn.href = button.url;
+
+                // Build class list
+                const classes = ['btn', `btn-${buttonStyle}`, `btn-shape-${buttonShape}`];
+                if (buttonShadow) classes.push('btn-shadow');
+                if (entranceAnim !== 'none') classes.push(`anim-${entranceAnim}`);
+                if (hoverAnim !== 'none') classes.push(`hover-${hoverAnim}`);
+                btn.className = classes.join(' ');
+
+                // Add animation delay for staggered entrance
+                if (entranceAnim !== 'none') {
+                    btn.style.animationDelay = `${index * 0.1}s`;
+                }
+
+                // Add emoji if present
+                if (button.emoji) {
+                    const emojiSpan = document.createElement('span');
+                    emojiSpan.className = 'btn-emoji';
+                    emojiSpan.textContent = button.emoji;
+                    btn.appendChild(emojiSpan);
+                }
+
+                // Add text
+                const textSpan = document.createElement('span');
+                textSpan.textContent = button.text;
+                btn.appendChild(textSpan);
+
+                btn.target = '_blank';
+                btn.rel = 'noopener';
+
+                // Track clicks (cookie-free)
+                btn.addEventListener('click', () => {
+                    if (slug) trackClick(slug);
+                });
+
+                container.appendChild(btn);
+            });
+        }
+
+        function renderSocial(social, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            Object.entries(social).forEach(([platform, url]) => {
+                if (url && socialIcons[platform]) {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.className = 'social-link';
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                    link.title = platform.charAt(0).toUpperCase() + platform.slice(1);
+                    link.innerHTML = socialIcons[platform];
+                    container.appendChild(link);
+                }
+            });
+        }
+
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-state').classList.remove('hidden');
+        }
+
+        // ============================================
+        // LOAD DATA
+        // ============================================
+        // DEMO: this page's content is embedded here instead of loaded from
+        // /data/pages.json, so the mock works on its own (even opened as a file)
+        // and never touches the live pages. Same shape as a pages.json entry.
+        const DEMO_PAGE = {
+            "slug": "bnseguros",
+            "name": "Best National Insurance",
+            "tagline": "Asegurando un futuro brillante",
+            "location": "Miami, FL",
+            "hours": "Lun–Vie 9am–6:30pm · Sáb 10am–2pm · Dom 10am–3pm",
+            "layout": {
+                "style": "card",
+                "theme": "app",
+                "image": {
+                    "url": "bnseguros-logo.png",
+                    "heroBackground": ""
+                },
+                "background": {
+                    "type": "color",
+                    "value": "#1b2150",
+                    "blur": 0
+                },
+                "colors": {
+                    "primary": "#ffd200",
+                    "secondary": "#ffffff",
+                    "text": "#ffffff",
+                    "textMuted": "#b9bdd6",
+                    "cardBackground": "#262c66"
+                },
+                "spacing": "comfortable",
+                "buttonStyle": "filled",
+                "buttonShape": "rounded",
+                "buttonShadow": true
+            },
+            "leadForms": { "whatsapp": "13054070139" },
+            "buttons": [
+                {
+                    "text": "Cotiza tu Seguro de Auto",
+                    "emoji": "🚙",
+                    "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20auto",
+                    "type": "primary",
+                    "form": "auto"
+                },
+                {
+                    "text": "Cotiza tu Seguro de Casa",
+                    "emoji": "🏠",
+                    "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20casa",
+                    "type": "primary",
+                    "form": "casa"
+                },
+                {
+                    "text": "Llámanos",
+                    "emoji": "📞",
+                    "url": "tel:+13054047151",
+                    "type": "secondary"
+                },
+                {
+                    "text": "Visita nuestra web",
+                    "emoji": "🌐",
+                    "url": "https://bestnationalins.com",
+                    "type": "secondary"
+                }
+            ],
+            "social": {
+                "instagram": "https://www.instagram.com/bn_insurance",
+                "facebook": ""
+            },
+            "isActive": true,
+            "createdAt": "2026-09-28T00:00:00.000Z",
+            "updatedAt": "2026-09-28T00:00:00.000Z"
+        };
+
+        function init() {
+            try {
+                captureSource();
+                trackPageView(DEMO_PAGE.slug);
+                renderPage(DEMO_PAGE);
+            } catch (error) {
+                console.error('Error rendering demo:', error);
+                showError();
+            }
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
