@@ -17,6 +17,18 @@
   to = "/s/index.html"
   status = 200
 
+# Clean public URL for the Best National demo (rewrite, not redirect:
+# the address bar keeps /bnseguros). /demos/bnseguros.html keeps working.
+[[redirects]]
+  from = "/bnseguros"
+  to = "/demos/bnseguros.html"
+  status = 200
+
+[[redirects]]
+  from = "/bnseguros/"
+  to = "/demos/bnseguros.html"
+  status = 200
+
 # Security headers
 [[headers]]
   for = "/*"
