@@ -295,6 +295,33 @@
         .spacing-spacious .button-grid { gap: 16px; }
         .spacing-spacious .btn { padding: 20px 28px; }
 
+        /* Optional: large profile image (layout.image.profileSize: "large") */
+        .hero-image.profile-large {
+            width: 180px;
+            height: 180px;
+        }
+
+        /* Optional: featured media card (config.featuredMedia) */
+        .featured-media {
+            margin: 0 0 24px;
+        }
+
+        .featured-media video {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            background: var(--card-background);
+            object-fit: cover;
+        }
+
+        .featured-media figcaption {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
         /* Social Links */
         .social-links {
             display: flex;
@@ -691,8 +718,50 @@
                 renderSocial(config.social || {}, 'social-links');
             }
 
+            // Optional extras: pages without these fields render exactly as before
+            if (config.layout?.image?.profileSize === 'large') {
+                document.getElementById(isCard ? 'card-hero-image' : 'hero-image').classList.add('profile-large');
+            }
+            renderFeaturedMedia(config.featuredMedia, isCard ? 'card-button-grid' : 'button-grid');
+
             // Hide loading
             document.getElementById('loading').style.display = 'none';
+        }
+
+        // Featured video card, placed right above the buttons. Muted + playsinline
+        // lets it autoplay inline on phones without going fullscreen; no controls.
+        function renderFeaturedMedia(media, buttonGridId) {
+            if (!media?.video) return;
+
+            const figure = document.createElement('figure');
+            figure.className = 'featured-media';
+
+            const video = document.createElement('video');
+            video.muted = true;
+            video.setAttribute('muted', '');
+            video.loop = true;
+            video.playsInline = true;
+            video.setAttribute('playsinline', '');
+            video.setAttribute('disablepictureinpicture', '');
+            if (media.poster) video.poster = media.poster;
+            // Respect "reduce motion": keep the poster frame instead of looping.
+            const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+            if (!reduceMotion) {
+                video.autoplay = true;
+                video.setAttribute('autoplay', '');
+            }
+            if (media.label) video.setAttribute('aria-label', media.label);
+            video.src = media.video;
+            figure.appendChild(video);
+
+            if (media.label) {
+                const caption = document.createElement('figcaption');
+                caption.textContent = media.label;
+                figure.appendChild(caption);
+            }
+
+            const grid = document.getElementById(buttonGridId);
+            grid.parentNode.insertBefore(figure, grid);
         }
 
         function renderButtons(buttons, containerId, config) {
