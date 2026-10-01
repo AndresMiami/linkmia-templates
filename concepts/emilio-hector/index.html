@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<!--
+  EMILIO HÉCTOR RODRÍGUEZ — redesign concept (v2)
+  Prepared by Andres Corcoba.
+
+  BEFORE GOING LIVE
+  1. WHATSAPP_NUMBER (top of the last <script>) uses the phone on his current
+     contact page (305-505-7416). Confirm that number has WhatsApp.
+  2. Artwork photos load from his current GoDaddy image host (img1.wsimg.com).
+     If he leaves GoDaddy, download the originals first, put them in /img and
+     change IMG_BASE. Higher-resolution originals from Emilio will look better.
+  3. Remove the concept ribbon: set SHOW_CONCEPT_RIBBON = false.
+  4. Photography: add the "Woman" series photos to the PHOTOS list when available.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Emilio Héctor Rodríguez</title>
+<meta name="description" content="Emilio Héctor Rodríguez, Cuban-American abstract painter and fine-art photographer in Miami. Paintings, exhibitions, collections, press, and direct inquiries on WhatsApp.">
+<meta property="og:title" content="Emilio Héctor Rodríguez — Abstract painting · Miami">
+<meta property="og:description" content="Mathematics, spirituality and art. Paintings, exhibitions in 16 countries, and direct inquiries.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://img1.wsimg.com/isteam/ip/802e2cfd-4d11-455b-88e8-6ff5da853614/GENESIS_3.288185910_std.jpg/:/rs=w:1200">
+<meta name="theme-color" content="#2a3ad0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=DM+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400..700&display=swap">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Emilio Héctor Rodríguez","jobTitle":"Visual artist","birthDate":"1950","birthPlace":"Sancti Spíritus, Cuba","homeLocation":"Miami, Florida","email":"ehr0926@gmail.com","sameAs":["https://x.com/ehr0926art"]}
+</script>
+<style>
+/* Layout: an exhibition catalogue on a gallery wall. Wide margins, 12-column grid,
+   works hung uncropped on wall cells with museum wall labels, and a "to scale"
+   wall where every canvas hangs at true relative size on a shared 57-inch centre line. */
+:root{
+  --wall:#eef0f3;      /* gallery wall, cool white */
+  --panel:#ffffff;     /* raised surfaces: labels, dialog */
+  --ink:#14151b;       /* text */
+  --muted:#565b69;     /* secondary text */
+  --rule:#d6d9e1;      /* hairlines */
+  --ultra:#2a3ad0;     /* ultramarine: the one accent */
+  --on-ultra:#ffffff;
+  --ultra-soft:rgba(42,58,208,.08);
+  --canvas:#dfe2e9;    /* empty-frame fill when a photo can't load */
+  --shadow:0 1px 2px rgba(20,22,32,.08),0 14px 34px rgba(20,22,32,.16);
+  --scrim:rgba(10,11,16,.72);
+  --band:#14151b; --band-fg:#eef0f3; /* contact band stays dark in both themes */
+
+  --f-display:"Bodoni Moda","Bodoni 72",Didot,"Didot LT STD",Georgia,serif;
+  --f-body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-data:"DM Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --s-12:.75rem; --s-14:.875rem; --s-16:1rem; --s-18:1.125rem; --s-22:1.375rem;
+  --s-30:1.875rem; --s-44:clamp(2rem,4.2vw,2.75rem); --s-96:clamp(3rem,8.4vw,6.4rem);
+  --gutter:clamp(16px,4vw,48px);
+  --max:1240px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --wall:#0e0f14; --panel:#171821; --ink:#eceef3; --muted:#a3a7b5; --rule:#2a2d39;
+    --ultra:#929dff; --on-ultra:#0e0f14; --ultra-soft:rgba(146,157,255,.12);
+    --canvas:#1e2029; --shadow:0 1px 2px rgba(0,0,0,.5),0 16px 40px rgba(0,0,0,.55);
+    --scrim:rgba(4,4,8,.82); --band:#07080b; --band-fg:#eceef3; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --wall:#0e0f14; --panel:#171821; --ink:#eceef3; --muted:#a3a7b5; --rule:#2a2d39;
+  --ultra:#929dff; --on-ultra:#0e0f14; --ultra-soft:rgba(146,157,255,.12);
+  --canvas:#1e2029; --shadow:0 1px 2px rgba(0,0,0,.5),0 16px 40px rgba(0,0,0,.55);
+  --scrim:rgba(4,4,8,.82); --band:#07080b; --band-fg:#eceef3; color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--wall);color:var(--ink);font-family:var(--f-body);font-size:var(--s-16);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ultra);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--gutter)}
+.kicker{font-family:var(--f-data);font-size:var(--s-12);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+.title-it{font-family:var(--f-display);font-style:italic}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:.55em;border:1px solid var(--ultra);background:var(--ultra);color:var(--on-ultra);
+  font-weight:600;font-size:var(--s-14);letter-spacing:.02em;padding:.8em 1.25em;border-radius:999px;text-decoration:none;cursor:pointer;
+  transition:transform .15s ease,background-color .15s ease,color .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn svg{width:1.1em;height:1.1em;flex:none}
+.link{color:var(--ultra);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+.link:hover{border-bottom-width:2px}
+
+/* Concept ribbon */
+.ribbon{background:var(--ink);color:var(--wall);font-family:var(--f-data);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:6px 16px}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--wall) 88%,transparent);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--rule)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:60px}
+.brand{text-decoration:none;display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand b{font-family:var(--f-display);font-weight:500;font-size:var(--s-22);letter-spacing:.01em;white-space:nowrap}
+.brand span{font-family:var(--f-data);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.navlinks{display:flex;align-items:center;gap:22px}
+.navlinks a{text-decoration:none;font-size:var(--s-14);color:var(--muted)}
+.navlinks a:hover{color:var(--ink)}
+.lang{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:2px}
+.lang button{border:0;background:transparent;font-family:var(--f-data);font-size:12px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;cursor:pointer;color:var(--muted)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--wall)}
+.burger{display:none;border:1px solid var(--rule);background:transparent;border-radius:999px;padding:6px 12px;font-size:var(--s-14);cursor:pointer}
+@media (max-width:900px){
+  .navlinks{display:none;position:absolute;left:0;right:0;top:100%;background:var(--wall);flex-direction:column;align-items:flex-start;gap:14px;padding:18px var(--gutter) 22px;border-bottom:1px solid var(--rule)}
+  .navlinks.open{display:flex}
+  .navlinks a{font-size:var(--s-18);color:var(--ink)}
+  .burger{display:inline-block}
+  .brand span{display:none}
+}
+
+/* Hero */
+.hero{padding-block:clamp(40px,7vw,96px) clamp(40px,6vw,80px)}
+.hero-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(24px,4vw,56px);align-items:center}
+.hero-copy{grid-column:1 / span 6;display:grid;gap:26px;min-width:0}
+.hero-art{grid-column:7 / span 6;min-width:0}
+.hero h1{font-size:var(--s-96);font-weight:400;line-height:.98;letter-spacing:-.02em}
+.hero h1 em{font-style:italic;display:block}
+.hero .lead{font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--muted);max-width:34em}
+.hero .lead strong{color:var(--ink);font-weight:500}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.onview{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline;border-top:1px solid var(--rule);padding-top:18px;max-width:34em}
+.onview .dot{width:8px;height:8px;border-radius:50%;background:var(--ultra);box-shadow:0 0 0 4px var(--ultra-soft);align-self:center}
+.onview .k{color:var(--ultra)}
+.onview .t{grid-column:2;font-family:var(--f-display);font-style:italic;font-size:var(--s-18);line-height:1.3}
+.onview .v{grid-column:2;color:var(--muted);font-size:var(--s-14)}
+@media (max-width:900px){
+  .hero-grid{gap:22px}
+  .hero-copy{display:contents}
+  .hero-copy > *,.hero-art{grid-column:1 / -1}
+  .hero-copy .kicker{order:1}.hero h1{order:2}.hero-art{order:3}.hero .lead{order:4}.cta-row{order:5}.onview{order:6}
+  .hero-art .label{padding-left:0;margin-top:10px}
+}
+
+/* Wall cell + label (used in hero, grid) */
+.cell{position:relative;aspect-ratio:1/1;background:transparent;cursor:zoom-in;display:block;width:100%;border:0;padding:0}
+.cell.tall{aspect-ratio:4/5}
+.cell img,.cell .ph{position:absolute;inset:0;margin:auto;max-width:84%;max-height:84%;width:auto;height:auto;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.cell:hover img,.cell:hover .ph{transform:translateY(-4px)}
+.cell img{opacity:0;transition:opacity .5s ease,transform .35s cubic-bezier(.2,.7,.2,1)}
+.cell img.ok{opacity:1}
+.ph{background:var(--canvas);display:grid;place-items:center;text-align:center;padding:10px;color:var(--muted);
+  background-image:repeating-linear-gradient(45deg,transparent 0 11px,color-mix(in srgb,var(--ink) 5%,transparent) 11px 12px)}
+.ph i{font-family:var(--f-display);font-size:var(--s-16);color:var(--ink);display:block;line-height:1.2}
+.ph small{font-family:var(--f-data);font-size:10px;letter-spacing:.08em}
+.label{display:grid;gap:2px;font-size:var(--s-14);color:var(--muted);line-height:1.45}
+.label .ti{font-family:var(--f-display);font-style:italic;font-size:var(--s-18);color:var(--ink)}
+.label .coll{color:var(--ink)}
+.hero-art .label{margin-top:18px;padding-left:8%}
+
+/* Facts strip */
+.facts{border-block:1px solid var(--rule)}
+.facts ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.facts li{padding:22px 0 22px 20px;border-left:1px solid var(--rule);display:grid;gap:2px}
+.facts li:first-child{border-left:0;padding-left:0}
+.facts b{font-family:var(--f-display);font-weight:400;font-size:var(--s-44);line-height:1}
+.facts span{font-size:var(--s-14);color:var(--muted)}
+@media (max-width:760px){.facts ul{grid-template-columns:repeat(2,minmax(0,1fr))}.facts li:nth-child(3){border-left:0;padding-left:0}.facts li{padding-block:16px}}
+
+/* Sections */
+section{padding-block:clamp(64px,9vw,120px)}
+.sec-head{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px 24px;margin-bottom:clamp(32px,5vw,56px);align-items:end}
+.sec-head .kicker{grid-column:1 / -1}
+.sec-head h2{grid-column:1 / span 7;font-size:var(--s-44)}
+.sec-head p{grid-column:8 / span 5;color:var(--muted);max-width:36em}
+@media (max-width:900px){.sec-head h2,.sec-head p{grid-column:1 / -1}}
+
+/* Work controls */
+.controls{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;margin-bottom:28px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--rule);background:transparent;border-radius:999px;padding:7px 14px;font-size:var(--s-14);cursor:pointer;color:var(--muted)}
+.chip:hover{color:var(--ink);border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--wall);border-color:var(--ink)}
+.chip .n{font-family:var(--f-data);font-size:11px;margin-left:6px;opacity:.7}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:6px 14px;font-size:var(--s-14);cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ultra);color:var(--on-ultra)}
+.series-note{max-width:44em;color:var(--muted);margin:-8px 0 28px;font-size:var(--s-16);min-height:1.6em}
+.series-note b{color:var(--ink);font-weight:500}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:clamp(28px,4vw,48px) clamp(20px,3vw,36px)}
+.work{display:grid;gap:14px;align-content:start}
+.work .label{padding-inline:8%}
+.work .ask{justify-self:start;margin-left:8%;font-size:13px;font-weight:600;color:var(--ultra);background:none;border:0;padding:0;cursor:pointer;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+.work .ask:hover{text-decoration:underline}
+.work[hidden]{display:none}
+
+/* To-scale wall */
+.wall-wrap{overflow-x:auto;overscroll-behavior-x:contain;border-block:1px solid var(--rule);background:linear-gradient(var(--wall),color-mix(in srgb,var(--ink) 4%,var(--wall)))}
+.wall{position:relative}
+.wall .piece{position:absolute;cursor:zoom-in;border:0;padding:0;background:var(--canvas);box-shadow:var(--shadow)}
+.wall .piece img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s}
+.wall .piece img.ok{opacity:1}
+.wall .piece .tag{position:absolute;left:0;top:calc(100% + 8px);font-family:var(--f-data);font-size:10px;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+.wall .piece .nm{position:absolute;inset:0;display:grid;place-items:center;padding:6px;text-align:center;font-family:var(--f-display);font-style:italic;font-size:12px;color:var(--ink)}
+.wall .piece img.ok + .nm{display:none}
+.wall .cl{position:absolute;left:0;right:0;border-top:1px dashed color-mix(in srgb,var(--ultra) 55%,transparent)}
+.wall .cl span{position:absolute;right:8px;top:-20px;font-family:var(--f-data);font-size:10px;letter-spacing:.06em;color:var(--ultra);background:var(--wall);padding:0 4px}
+.wall .floor{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ink)}
+.wall .tick{position:absolute;bottom:0;width:1px;height:8px;background:var(--ink)}
+.wall .tick span{position:absolute;top:12px;left:0;transform:translateX(-50%);white-space:nowrap;font-family:var(--f-data);font-size:10px;color:var(--muted)}
+.wall .tick.t0 span{transform:none}
+.wall .person{position:absolute;bottom:0;color:var(--muted)}
+.wall .person svg{display:block;width:100%;height:100%}
+.scale-note{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:14px;font-size:var(--s-14);color:var(--muted)}
+
+/* Photography band */
+.photo-band{margin-top:clamp(56px,8vw,96px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;border-top:1px solid var(--rule);padding-top:32px}
+.photo-band h3{grid-column:1 / span 4;font-size:var(--s-30)}
+.photo-band .txt{grid-column:5 / span 8;display:grid;gap:18px;max-width:44em;color:var(--muted)}
+@media (max-width:900px){.photo-band h3,.photo-band .txt{grid-column:1 / -1}}
+
+/* Artist */
+.artist-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(24px,4vw,56px)}
+.portrait{grid-column:1 / span 4;min-width:0}
+.portrait figure{margin:0;position:sticky;top:96px}
+.portrait .pimg{aspect-ratio:4/5;background:var(--canvas);position:relative;overflow:hidden}
+.portrait .pimg img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s}
+.portrait .pimg img.ok{opacity:1}
+.portrait .pimg .ph{position:absolute;inset:0;box-shadow:none}
+.portrait figcaption{font-size:12px;color:var(--muted);margin-top:8px;font-family:var(--f-data);letter-spacing:.04em}
+.bio{grid-column:5 / span 8;display:grid;gap:22px;min-width:0}
+.bio p{max-width:38em;font-size:var(--s-18);line-height:1.65}
+.bio p:first-of-type::first-letter{font-family:var(--f-display);float:left;font-size:4.2em;line-height:.85;padding:.06em .08em 0 0}
+@media (max-width:900px){.portrait,.bio{grid-column:1 / -1}.portrait figure{position:static;max-width:380px}}
+
+.timeline{list-style:none;margin:20px 0 0;padding:0;border-top:1px solid var(--rule)}
+.timeline li{display:grid;grid-template-columns:5.5em 1fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:var(--s-16)}
+.timeline .y{font-family:var(--f-data);color:var(--ultra);font-variant-numeric:tabular-nums}
+
+/* Statement */
+.statement{background:var(--panel);border-block:1px solid var(--rule)}
+.st-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(24px,4vw,56px);align-items:center}
+.st-quote{grid-column:1 / span 7;min-width:0}
+.st-quote blockquote{margin:0;font-family:var(--f-display);font-size:clamp(1.6rem,3.3vw,2.6rem);line-height:1.2;font-style:italic;text-wrap:balance}
+.st-quote cite{display:block;margin-top:18px;font-style:normal;font-size:var(--s-14);color:var(--muted)}
+.vertex{grid-column:8 / span 5;min-width:0}
+.vertex svg{width:100%;height:auto;overflow:visible}
+.vertex .ln{stroke:var(--ultra);stroke-width:1.4;fill:none;stroke-dasharray:420;stroke-dashoffset:0;animation:draw 1.6s cubic-bezier(.3,.6,.2,1) both}
+.vertex .ln:nth-of-type(2){animation-delay:.15s}.vertex .ln:nth-of-type(3){animation-delay:.3s}
+@keyframes draw{from{stroke-dashoffset:420}to{stroke-dashoffset:0}}
+.vertex text{font-family:var(--f-data);font-size:12px;letter-spacing:.12em;text-transform:uppercase;fill:var(--muted)}
+.vertex .pt{fill:var(--wall);stroke:var(--muted);stroke-width:1.2}
+.vertex .vx{fill:var(--ultra)}
+.vertex .vxl{fill:var(--ultra)}
+details.more{grid-column:1 / -1;border-top:1px solid var(--rule);padding-top:18px}
+details.more summary{cursor:pointer;font-weight:600;color:var(--ultra);list-style:none;display:inline-flex;gap:8px;align-items:center}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"+";font-family:var(--f-data);width:1em}
+details.more[open] summary::before{content:"–"}
+details.more .body{margin-top:16px;max-width:44em;font-size:var(--s-18);display:grid;gap:16px}
+.epigraph{grid-column:1 / -1;font-size:var(--s-14);color:var(--muted)}
+.epigraph i{font-family:var(--f-display);font-size:var(--s-16);color:var(--ink)}
+@media (max-width:900px){.st-quote,.vertex{grid-column:1 / -1}.vertex{max-width:420px}}
+
+/* 7 Plus One */
+.project{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:start}
+.project .num{grid-column:1 / span 4;font-family:var(--f-display);font-size:clamp(3.5rem,9vw,7rem);line-height:.9;letter-spacing:-.03em}
+.project .num small{display:block;font-family:var(--f-data);font-size:var(--s-12);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:14px}
+.project .txt{grid-column:5 / span 8;display:grid;gap:18px;max-width:42em}
+.project .txt p{font-size:var(--s-18)}
+.venues{display:flex;flex-wrap:wrap;gap:8px}
+.venues span{border:1px solid var(--rule);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--muted)}
+@media (max-width:900px){.project .num,.project .txt{grid-column:1 / -1}}
+
+/* Exhibitions */
+.ex-top{display:flex;flex-wrap:wrap;gap:16px 28px;justify-content:space-between;align-items:center;margin-bottom:24px}
+.countries{font-size:var(--s-14);color:var(--muted);max-width:60em;margin-bottom:28px}
+.countries b{color:var(--ink);font-weight:500}
+.ex-year{display:grid;grid-template-columns:6rem 1fr;gap:0 24px;border-top:1px solid var(--rule);padding-block:18px}
+.ex-year h3{font-family:var(--f-data);font-size:var(--s-14);color:var(--ultra);font-weight:400;letter-spacing:.04em;padding-top:3px}
+.ex-year ul{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.ex-year li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px}
+.ex-year .et{font-family:var(--f-display);font-style:italic;font-size:var(--s-18);line-height:1.3}
+.ex-year .et .tr{font-family:var(--f-body);font-style:normal;font-size:var(--s-14);color:var(--muted)}
+.ex-year .tag{display:inline-block;font-family:var(--f-data);font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--rule);border-radius:4px;padding:1px 6px;margin-left:8px;vertical-align:2px;color:var(--muted);font-style:normal}
+.ex-year .tag.now{border-color:var(--ultra);color:var(--ultra)}
+.ex-year .ev{grid-column:1;color:var(--muted);font-size:var(--s-14)}
+.ex-year .ed{grid-column:2;grid-row:1 / span 2;font-family:var(--f-data);font-size:12px;color:var(--muted);text-align:right;white-space:nowrap;padding-top:4px}
+@media (max-width:640px){
+  .ex-year{grid-template-columns:1fr}.ex-year h3{margin-bottom:10px}
+  .ex-year li{grid-template-columns:1fr}.ex-year .ed{grid-column:1;grid-row:auto;text-align:left;padding-top:0}
+}
+.showall{margin-top:24px}
+
+/* Collections & awards */
+.ca-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(32px,5vw,64px)}
+.ca-col{grid-column:1 / span 7;min-width:0}
+.awards{grid-column:8 / span 5;min-width:0;display:grid;gap:36px;align-content:start}
+.ca-grid h3{font-size:var(--s-30);margin-bottom:18px}
+.ca-col ul{list-style:none;margin:0;padding:0;columns:2 260px;column-gap:32px}
+.ca-col li{break-inside:avoid;padding:10px 0;border-top:1px solid var(--rule);font-size:var(--s-16);line-height:1.35}
+.ca-col li span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.ca-col .private{margin-top:18px;color:var(--muted);font-size:var(--s-14)}
+.awards ul{list-style:none;margin:0;padding:0}
+.awards li{display:grid;grid-template-columns:3.4rem 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--rule);line-height:1.4}
+.awards .y{font-family:var(--f-data);color:var(--ultra);font-size:var(--s-14)}
+.awards li small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+@media (max-width:900px){.ca-col,.awards{grid-column:1 / -1}}
+
+/* Press */
+.quotes{columns:3 300px;column-gap:clamp(20px,3vw,40px)}
+.q{break-inside:avoid;margin:0 0 clamp(20px,3vw,36px);padding-top:18px;border-top:2px solid var(--ink)}
+.q blockquote{margin:0;font-family:var(--f-display);font-size:var(--s-22);line-height:1.35}
+.q blockquote::before{content:"“"}
+.q blockquote::after{content:"”"}
+html[lang="es"] .q blockquote::before{content:"«"}
+html[lang="es"] .q blockquote::after{content:"»"}
+.q .who{margin-top:14px;font-size:var(--s-14);line-height:1.4}
+.q .who b{font-weight:600}
+.q .who span{display:block;color:var(--muted)}
+.q .orig{margin-top:10px;font-size:12px;color:var(--muted)}
+.q .orig button{border:0;background:none;padding:0;color:var(--ultra);cursor:pointer;font-size:12px;text-decoration:underline;text-underline-offset:2px}
+.q .orig p{margin-top:8px;font-family:var(--f-display);font-style:italic;font-size:var(--s-16);color:var(--ink)}
+
+.articles{margin-top:clamp(40px,6vw,72px);border-top:1px solid var(--rule)}
+.articles h3{font-size:var(--s-30);margin:28px 0 18px}
+.art-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:0 32px}
+.art-list li{border-top:1px solid var(--rule);padding:14px 0;display:grid;gap:4px}
+.art-list .ot{font-family:var(--f-data);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ultra)}
+.art-list .at{font-family:var(--f-display);font-style:italic;font-size:var(--s-18);line-height:1.3}
+.art-list .am{font-size:13px;color:var(--muted)}
+.biblio{margin-top:28px}
+.biblio .body{max-width:none!important}
+.biblio ol{list-style:none;margin:0;padding:0;columns:2 380px;column-gap:40px}
+.biblio li{break-inside:avoid;padding:8px 0;border-top:1px solid var(--rule);font-size:13px;line-height:1.45;color:var(--muted)}
+.biblio li b{color:var(--ink);font-weight:500}
+.biblio .by{font-family:var(--f-data);color:var(--ultra);margin-right:8px}
+
+/* Contact */
+.contact{background:var(--band);color:var(--band-fg)}
+.contact .kicker{color:color-mix(in srgb,var(--band-fg) 65%,transparent)}
+.contact .sec-head p{color:color-mix(in srgb,var(--band-fg) 72%,transparent)}
+.paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:color-mix(in srgb,var(--band-fg) 18%,transparent);border:1px solid color-mix(in srgb,var(--band-fg) 18%,transparent)}
+.path{background:var(--band);padding:28px 24px;display:grid;gap:14px;align-content:start}
+.path h3{font-size:var(--s-30)}
+.path p{color:color-mix(in srgb,var(--band-fg) 72%,transparent);font-size:var(--s-16)}
+.path .btn{justify-self:start;background:var(--band-fg);color:var(--band);border-color:var(--band-fg)}
+@media (max-width:860px){.paths{grid-template-columns:1fr}}
+.contact-row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:32px;margin-top:clamp(40px,6vw,72px)}
+.collect{grid-column:1 / span 6;display:grid;gap:12px;align-content:start}
+.collect h3{font-size:var(--s-30)}
+.collect p{color:color-mix(in srgb,var(--band-fg) 72%,transparent)}
+.collect form{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.collect input{flex:1 1 220px;min-width:0;border:1px solid color-mix(in srgb,var(--band-fg) 30%,transparent);background:transparent;color:var(--band-fg);border-radius:999px;padding:12px 18px;font:inherit}
+.collect input::placeholder{color:color-mix(in srgb,var(--band-fg) 50%,transparent)}
+.collect .btn{background:var(--band-fg);color:var(--band);border-color:var(--band-fg)}
+.collect .msg{font-size:var(--s-14);color:color-mix(in srgb,var(--band-fg) 80%,transparent);min-height:1.4em}
+.direct{grid-column:8 / span 5;display:grid;gap:0;align-content:start}
+.direct div{display:grid;grid-template-columns:7.5em 1fr auto;gap:12px;align-items:center;padding:14px 0;border-top:1px solid color-mix(in srgb,var(--band-fg) 18%,transparent)}
+.direct .k{font-family:var(--f-data);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--band-fg) 60%,transparent)}
+.direct a,.direct span.v{color:var(--band-fg);text-decoration:none;font-size:var(--s-18);word-break:break-word;min-width:0}
+.direct a:hover{text-decoration:underline}
+.copy{border:1px solid color-mix(in srgb,var(--band-fg) 30%,transparent);background:transparent;color:var(--band-fg);border-radius:999px;font-size:12px;padding:4px 10px;cursor:pointer}
+@media (max-width:860px){.collect,.direct{grid-column:1 / -1}}
+@media (max-width:520px){.direct div{grid-template-columns:5.2em minmax(0,1fr) auto}.direct a,.direct span.v{font-size:var(--s-16)}}
+.closing{margin-top:clamp(56px,8vw,96px);padding-top:32px;border-top:1px solid color-mix(in srgb,var(--band-fg) 18%,transparent);max-width:46em}
+.closing blockquote{margin:0;font-family:var(--f-display);font-style:italic;font-size:clamp(1.4rem,2.8vw,2.2rem);line-height:1.25}
+.closing cite{display:block;font-style:normal;margin-top:14px;font-size:var(--s-14);color:color-mix(in srgb,var(--band-fg) 65%,transparent)}
+
+footer{background:var(--band);color:color-mix(in srgb,var(--band-fg) 60%,transparent);font-size:13px;padding-block:24px calc(24px + env(safe-area-inset-bottom,0px));border-top:1px solid color-mix(in srgb,var(--band-fg) 14%,transparent)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+@media (max-width:760px){footer{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}}
+
+/* Sticky mobile bar */
+.mbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:45;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--wall) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--rule)}
+.mbar .btn{flex:1;justify-content:center}
+@media (max-width:760px){.mbar{display:flex;transition:transform .25s ease}.mbar.away{transform:translateY(110%)}}
+
+/* Lightbox */
+dialog.lb{border:0;padding:0;margin:auto;width:min(1180px,100vw - 24px);max-height:calc(100dvh - 24px);background:var(--panel);color:var(--ink);box-shadow:var(--shadow);overflow:hidden}
+dialog.lb::backdrop{background:var(--scrim)}
+.lb-in{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);max-height:calc(100dvh - 24px)}
+.lb-img{position:relative;background:var(--wall);display:grid;place-items:center;padding:clamp(16px,4vw,48px);min-height:320px}
+.lb-img img:not(.ok){display:none}
+.lb-img img{max-height:calc(100dvh - 140px);width:auto;max-width:100%;box-shadow:var(--shadow)}
+.lb-img .ph{width:min(70%,420px);box-shadow:var(--shadow)}
+.lb-side{padding:clamp(20px,3vw,36px);display:grid;gap:18px;align-content:start;overflow:auto}
+.lb-side h3{font-style:italic;font-size:var(--s-30)}
+.lb-side dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:var(--s-14)}
+.lb-side dt{font-family:var(--f-data);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.lb-side dd{margin:0}
+.lb-side .note{color:var(--muted);font-size:var(--s-14)}
+.lb-nav{display:flex;gap:8px;justify-content:space-between;align-items:center;border-top:1px solid var(--rule);padding-top:16px}
+.lb-close{position:absolute;top:10px;right:10px;z-index:2;border:1px solid var(--rule);background:var(--panel);border-radius:999px;width:40px;height:40px;cursor:pointer;font-size:20px;line-height:1}
+.iconbtn{border:1px solid var(--rule);background:transparent;border-radius:999px;padding:8px 14px;cursor:pointer;font-size:var(--s-14)}
+.iconbtn:hover{border-color:var(--ink)}
+.lb-count{font-family:var(--f-data);font-size:12px;color:var(--muted)}
+@media (max-width:820px){.lb-in{grid-template-columns:1fr;overflow:auto}.lb-img img:not(.ok){display:none}
+.lb-img img{max-height:56dvh}}
+
+/* Preview notice when images are blocked */
+.imgnote{display:none;margin:0 0 20px;padding:10px 14px;border:1px dashed var(--rule);font-size:13px;color:var(--muted)}
+body.noimgs .imgnote{display:block}
+/* ===== Phone refinements (desktop layout unchanged) ===== */
+@media (max-width:900px){
+  /* the desktop .hero-art .label rule further up re-added an 8% indent on phones */
+  .hero-art .label{padding-left:0}
+}
+@media (max-width:640px){
+  /* "On view now" label beside its dot, exhibition details aligned under it */
+  .onview .k{grid-column:2;grid-row:1}
+  .onview .t,.onview .v{grid-column:2}
+  /* the work: two columns instead of one long single file */
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 14px}
+  .cell img,.cell .ph{max-width:92%;max-height:92%}
+  .ph i{font-size:var(--s-14)}
+  .work{gap:10px}
+  .work .label{padding-inline:4%;font-size:12.5px;line-height:1.4}
+  .work .label .ti{font-size:16px;line-height:1.25}
+  .work .label .ld{font-size:11.5px!important}
+  .work .ask{margin-left:4%;font-size:12.5px}
+  /* filters: one swipeable row */
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-inline:calc(-1 * var(--gutter));padding-inline:var(--gutter)}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none}
+  .timeline li{grid-template-columns:4.2em 1fr;gap:12px}
+}
+</style>
+</head>
+<body>
+<div class="ribbon" id="ribbon" data-i18n="ribbon">Redesign concept · not yet live</div>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top"><b>Emilio Héctor</b><span>Miami · Abstract art</span></a>
+    <div class="navlinks" id="navlinks">
+      <a href="#work" data-i18n="nav.work">Work</a>
+      <a href="#artist" data-i18n="nav.artist">The artist</a>
+      <a href="#exhibitions" data-i18n="nav.ex">Exhibitions</a>
+      <a href="#press" data-i18n="nav.press">Press</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+      <div class="lang" role="group" aria-label="Language / Idioma">
+        <button type="button" id="lang-en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="navlinks" data-i18n="nav.menu">Menu</button>
+  </div>
+</nav>
+
+<main id="top">
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="kicker" data-i18n="hero.kicker">Abstract painting · Fine-art photography · Miami</div>
+        <h1>Emilio Héctor <em>Rodríguez</em></h1>
+        <p class="lead" data-i18n="hero.lead">Trained in mathematics and computer science at the University of Havana, he has painted abstraction in Miami since 2007. His canvases are where, in his words, <strong>mathematics, spirituality and art converge</strong>.</p>
+        <div class="cta-row">
+          <a class="btn" href="#work" data-i18n="hero.cta1">See the work</a>
+          <a class="btn ghost wa-general" href="#contact" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Zm0 1.6a7.4 7.4 0 1 1-3.8 13.8l-.3-.2-2.7.7.7-2.6-.2-.3A7.4 7.4 0 0 1 12 4.6Z"/></svg><span data-i18n="hero.cta2">Ask on WhatsApp</span></a>
+        </div>
+        <div class="onview" id="onview" aria-live="polite"></div>
+      </div>
+      <div class="hero-art">
+        <button class="cell tall" type="button" data-open="genesis-3" aria-label="Open Genesis 3">
+          <img data-src="GENESIS_3.288185910_std.jpg" alt="Genesis 3, acrylic on canvas, abstract painting in fiery reds and yellows">
+        </button>
+        <div class="label">
+          <span class="ti">Genesis 3</span>
+          <span data-i18n="hero.med">Acrylic on canvas · 36 × 48 in</span>
+          <span class="coll" data-i18n="hero.coll">Permanent collection, Florida International University Honors College</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FACTS -->
+  <div class="facts"><div class="wrap"><ul id="facts"></ul></div></div>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker" data-i18n="work.kicker">The work</div>
+        <h2 data-i18n="work.h">Selected paintings</h2>
+        <p data-i18n="work.p">Acrylic and mixed media on canvas. Open any work for its full details and size in inches and centimetres, or ask about it on WhatsApp.</p>
+      </div>
+      <p class="imgnote" data-i18n="work.imgnote">This preview can't load photos from emilio-hector.com, so each work shows as an empty frame at its true proportions. Opened in a normal browser, the paintings appear.</p>
+      <div class="controls">
+        <div class="chips" id="chips" role="group" aria-label="Filter works"></div>
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" id="view-grid" aria-pressed="true" data-i18n="work.grid">Grid</button>
+          <button type="button" id="view-wall" aria-pressed="false" data-i18n="work.wall">To scale</button>
+        </div>
+      </div>
+      <p class="series-note" id="series-note"></p>
+      <div class="grid" id="grid"></div>
+      <div id="wallview" hidden>
+        <div class="wall-wrap" tabindex="0" aria-label="Works hung at true relative scale"><div class="wall" id="wall"></div></div>
+        <div class="scale-note"><span data-i18n="work.scale1">Every canvas at true relative size, hung on a 57-inch centre line, the standard height in museums.</span><span data-i18n="work.scale2">Figure: 5 ft 7 in, for scale. Scroll sideways to see the whole wall.</span></div>
+      </div>
+
+      <div class="photo-band">
+        <h3 data-i18n="photo.h">Photography</h3>
+        <div class="txt">
+          <p data-i18n="photo.p1">Alongside painting, Emilio Héctor works in fine-art photography. In 2014 the Cuban American Phototheque Foundation invited him to become a member in recognition of his photographic work.</p>
+          <p data-i18n="photo.p2">His photographs have been shown at the Coral Gables Museum, the Plymouth Center for the Arts in Massachusetts and Black Box Gallery in Portland, and in the solo exhibition <i>Borrowed Instants: A Journey Through the Lens</i> at St. Thomas University (2017).</p>
+          <div><a class="btn ghost wa-photo" href="#contact" target="_blank" rel="noopener" data-i18n="photo.cta">Ask to see the photography portfolio</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTIST -->
+  <section id="artist" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker" data-i18n="artist.kicker">The artist</div>
+        <h2 data-i18n="artist.h">A mathematician who paints</h2>
+        <p data-i18n="artist.p">Born in Sancti Spíritus, Cuba, in 1950. In Miami since 1982.</p>
+      </div>
+      <div class="artist-grid">
+        <div class="portrait">
+          <figure>
+            <div class="pimg"><img data-src="EHR.jpg" data-w="800" alt="Portrait of Emilio Héctor Rodríguez"></div>
+            <figcaption data-i18n="artist.photo">Photo: Alberto Romeu</figcaption>
+          </figure>
+        </div>
+        <div class="bio">
+          <p data-i18n="bio.1">Emilio Héctor Rodríguez was born in 1950 in the colonial town of Sancti Spíritus, Cuba, and grew up in Havana, where childhood visits to the city's museums turned into an early talent for drawing and painting. In 1969–70 he studied with the Cuban painter Jesús Antonio Valdovino Díaz, then entered the University of Havana to study pure mathematics, graduating in computer science in 1976.</p>
+          <p data-i18n="bio.2">He left Cuba in 1981, spent a year in Paris, and settled in Miami in 1982, where he worked as a computer analyst and programmer. In 2005 he began painting in acrylic with Dominica Alcántara at the Latin Quarter Cultural Center. Since 2007 abstraction has been his central pursuit, developed further in the workshops of Baruj Salinas and Yovani Bauta at Miami Dade College.</p>
+          <p data-i18n="bio.3">In 2010, to mark a century since Kandinsky's first abstract work, he gathered a group of abstract artists that became the 7 Plus One Art Project, which he still leads as founder and artistic director. His work is held in public and private collections in the United States, Latin America, Europe and Asia.</p>
+          <ol class="timeline" id="timeline" aria-label="Timeline"></ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="statement" aria-labelledby="st-h">
+    <div class="wrap st-grid">
+      <h2 class="sr" id="st-h" data-i18n="st.h">Artist's statement</h2>
+      <div class="st-quote">
+        <div class="kicker" style="margin-bottom:18px" data-i18n="st.kicker">Artist's statement</div>
+        <blockquote data-i18n="st.q">“My paintings represent the vertex where Mathematics, spirituality and arts converge forever to satisfy my inner longing to integrate my ideas with colors and shapes.”</blockquote>
+        <cite>Emilio Héctor Rodríguez</cite>
+      </div>
+      <div class="vertex" aria-hidden="true">
+        <svg viewBox="0 0 420 300">
+          <line class="ln" x1="40" y1="40" x2="300" y2="170"/>
+          <line class="ln" x1="40" y1="270" x2="300" y2="170"/>
+          <line class="ln" x1="380" y1="20" x2="300" y2="170"/>
+          <circle class="pt" cx="40" cy="40" r="5"/><circle class="pt" cx="40" cy="270" r="5"/><circle class="pt" cx="380" cy="20" r="5"/>
+          <circle class="vx" cx="300" cy="170" r="7"/>
+          <text x="54" y="34" id="vx-a">Mathematics</text>
+          <text x="54" y="290" id="vx-b">Spirituality</text>
+          <text x="368" y="16" text-anchor="end" id="vx-c">Art</text>
+          <text x="314" y="196" class="vxl" id="vx-d">Vertex</text>
+        </svg>
+      </div>
+      <details class="more">
+        <summary data-i18n="st.more">Read the full statement</summary>
+        <div class="body" id="st-full"></div>
+      </details>
+      <p class="epigraph" id="epigraph"></p>
+    </div>
+  </section>
+
+  <!-- 7 PLUS ONE -->
+  <section aria-labelledby="p-h">
+    <div class="wrap project">
+      <div class="num">7+1<small data-i18n="p.since">Since 2010</small></div>
+      <div class="txt">
+        <div class="kicker" data-i18n="p.kicker">Founder &amp; artistic director</div>
+        <h2 id="p-h" style="font-size:var(--s-44)">7 Plus One Art Project</h2>
+        <p data-i18n="p.body">Born from a 2010 exhibition marking a century since Kandinsky's first abstract work, 7 Plus One brings abstract artists together for exhibitions at cultural and academic institutions across South Florida.</p>
+        <div class="venues" id="venues"></div>
+        <div><a class="btn ghost wa-curate" href="#contact" target="_blank" rel="noopener" data-i18n="p.cta">Propose an exhibition</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBITIONS -->
+  <section id="exhibitions" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker" data-i18n="ex.kicker">Exhibitions</div>
+        <h2 data-i18n="ex.h">Shown from Miami to Seoul</h2>
+        <p id="ex-sub"></p>
+      </div>
+      <div class="ex-top">
+        <div class="seg" role="group" aria-label="Exhibition type">
+          <button type="button" id="ex-solo" aria-pressed="true"></button>
+          <button type="button" id="ex-group" aria-pressed="false"></button>
+        </div>
+      </div>
+      <p class="countries" id="countries"></p>
+      <div id="exlist"></div>
+      <button class="btn ghost showall" type="button" id="ex-more"></button>
+    </div>
+  </section>
+
+  <!-- COLLECTIONS & AWARDS -->
+  <section style="padding-top:0" aria-labelledby="ca-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker" data-i18n="ca.kicker">Collections &amp; recognition</div>
+        <h2 id="ca-h" data-i18n="ca.h">Held by museums, universities and ministries</h2>
+      </div>
+      <div class="ca-grid">
+        <div class="ca-col">
+          <h3 data-i18n="ca.coll">Public collections</h3>
+          <ul id="collections"></ul>
+          <p class="private" data-i18n="ca.private">Also in private collections in London, Madrid, New York, Chicago, Vero Beach and Miami.</p>
+        </div>
+        <div class="awards">
+          <div><h3 data-i18n="ca.awards">Awards</h3><ul id="awards"></ul></div>
+          <div><h3 data-i18n="ca.recog">Recognitions</h3><ul id="recog"></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRESS -->
+  <section id="press" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker" data-i18n="press.kicker">Press &amp; criticism</div>
+        <h2 data-i18n="press.h">What critics have written</h2>
+        <p data-i18n="press.p">Critics and writers in Miami, Venezuela, Costa Rica and Italy on his work.</p>
+      </div>
+      <div class="quotes" id="quotes"></div>
+      <div class="articles">
+        <h3 data-i18n="press.feat">Articles and interviews</h3>
+        <ul class="art-list" id="articles"></ul>
+        <details class="more biblio">
+          <summary id="biblio-sum"></summary>
+          <div class="body"><ol id="biblio"></ol></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker" data-i18n="c.kicker">Contact</div>
+        <h2 data-i18n="c.h">Collect, commission, exhibit</h2>
+        <p data-i18n="c.p">Messages go straight to the studio on WhatsApp, in English or Spanish. Each button opens a message already written for you.</p>
+      </div>
+      <div class="paths">
+        <div class="path">
+          <h3 data-i18n="c.buy.h">Acquire a work</h3>
+          <p data-i18n="c.buy.p">Ask about availability, price, shipping, or seeing a painting in person in Miami.</p>
+          <a class="btn wa-buy" href="#" target="_blank" rel="noopener" data-i18n="c.buy.b">Ask about a work</a>
+        </div>
+        <div class="path">
+          <h3 data-i18n="c.com.h">Commission</h3>
+          <p data-i18n="c.com.p">He accepts commissions. Tell him the wall, the size and the feeling you have in mind.</p>
+          <a class="btn wa-commission" href="#" target="_blank" rel="noopener" data-i18n="c.com.b">Start a commission</a>
+        </div>
+        <div class="path">
+          <h3 data-i18n="c.ex.h">Exhibit</h3>
+          <p data-i18n="c.ex.p">For galleries, museums, libraries and curators: solo shows, group exhibitions and 7 Plus One projects.</p>
+          <a class="btn wa-curate" href="#" target="_blank" rel="noopener" data-i18n="c.ex.b">Propose an exhibition</a>
+        </div>
+      </div>
+
+      <div class="contact-row">
+        <div class="collect">
+          <h3 data-i18n="c.list.h">Collectors list</h3>
+          <p data-i18n="c.list.p">Get a WhatsApp message when there are new works or a new exhibition. Nothing else.</p>
+          <form id="collect-form" novalidate>
+            <label class="sr" for="collect-wa" data-i18n="c.list.label">Your WhatsApp number</label>
+            <input id="collect-wa" type="tel" inputmode="tel" autocomplete="tel" placeholder="Your WhatsApp, e.g. 305 555 1234" data-i18n-ph="c.list.ph">
+            <button class="btn" type="submit" data-i18n="c.list.b">Add me</button>
+          </form>
+          <p class="msg" id="collect-msg" role="status"></p>
+        </div>
+        <div class="direct">
+          <div><span class="k">WhatsApp</span><a class="wa-general" id="phone" href="#" target="_blank" rel="noopener">+1 305 505 7416</a><button class="copy" type="button" data-copy="+1 305 505 7416" data-i18n="c.copy">Copy</button></div>
+          <div><span class="k">Email</span><a href="mailto:ehr0926@gmail.com">ehr0926@gmail.com</a><button class="copy" type="button" data-copy="ehr0926@gmail.com" data-i18n="c.copy">Copy</button></div>
+          <div><span class="k">X</span><a href="https://x.com/ehr0926art" target="_blank" rel="noopener">@ehr0926art</a><span></span></div>
+          <div><span class="k" data-i18n="c.studio">Studio</span><span class="v">Miami, Florida</span><span></span></div>
+        </div>
+      </div>
+
+      <div class="closing">
+        <blockquote data-i18n="c.close">“A long time ago, as a child, art helped me to grow older. Now, as a senior, art is helping me to grow younger.”</blockquote>
+        <cite>Emilio Héctor Rodríguez</cite>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> Emilio Héctor Rodríguez · <span data-i18n="f.rights">All rights reserved.</span></span>
+    <span data-i18n="f.note">Artwork images © the artist.</span>
+  </div>
+</footer>
+
+<div class="mbar">
+  <a class="btn ghost" href="#work" data-i18n="m.work">See the work</a>
+  <a class="btn wa-general" href="#contact" target="_blank" rel="noopener">WhatsApp</a>
+</div>
+
+<dialog class="lb" id="lb" aria-labelledby="lb-title">
+  <button class="lb-close" type="button" id="lb-close" aria-label="Close">×</button>
+  <div class="lb-in">
+    <div class="lb-img" id="lb-img"></div>
+    <div class="lb-side">
+      <div class="kicker" id="lb-series"></div>
+      <h3 id="lb-title"></h3>
+      <dl id="lb-dl"></dl>
+      <p class="note" id="lb-note"></p>
+      <a class="btn" id="lb-ask" href="#" target="_blank" rel="noopener"></a>
+      <div class="lb-nav">
+        <button class="iconbtn" type="button" id="lb-prev">←</button>
+        <span class="lb-count" id="lb-count"></span>
+        <button class="iconbtn" type="button" id="lb-next">→</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<script>
+/* ===== CONTENT (sourced from emilio-hector.com, Sept 2026) ===== */
+var IMG_BASE = "https://img1.wsimg.com/isteam/ip/802e2cfd-4d11-455b-88e8-6ff5da853614/";
+
+var SERIES = {
+  genesis: {en:"Genesis", es:"Génesis",
+    note:{en:"<b>Genesis.</b> Organic forms that suggest the beginning: the origin of life and of the planet. <i>Genesis 3</i> belongs to the permanent collection of the FIU Honors College.",
+          es:"<b>Génesis.</b> Formas orgánicas que sugieren el principio: el origen de la vida y del planeta. <i>Genesis 3</i> pertenece a la colección permanente del FIU Honors College."}},
+  eccl: {en:"Ecclesiastes", es:"Eclesiastés",
+    note:{en:"<b>Ecclesiastes.</b> Each painting is titled after a verse from the Book of Ecclesiastes, the same book behind his 2010 solo exhibition <i>There Is an Appointed Time for Everything</i> (Ecclesiastes 3:1).",
+          es:"<b>Eclesiastés.</b> Cada obra lleva el nombre de un versículo del libro del Eclesiastés, el mismo que inspiró su exposición individual de 2010 <i>There Is an Appointed Time for Everything</i> («Todo tiene su tiempo», Eclesiastés 3:1)."}},
+  small: {en:"Small formats", es:"Formato pequeño",
+    note:{en:"<b>Small formats.</b> Mixed media on canvas, 18 to 20 inches. Sized for apartments, offices and smaller walls.",
+          es:"<b>Formato pequeño.</b> Técnica mixta sobre lienzo, de 18 a 20 pulgadas. Pensadas para apartamentos, oficinas y paredes más pequeñas."}}
+};
+
+var MEDIUM = {
+  acrylic:{en:"Acrylic on canvas", es:"Acrílico sobre lienzo"},
+  mixed:{en:"Mixed media on canvas", es:"Técnica mixta sobre lienzo"}
+};
+
+/* dims: [a, b] exactly as the artist lists them, in inches */
+var WORKS = [
+  {id:"genesis-1", t:"Genesis 1", s:"genesis", m:"acrylic", d:[36,48], f:"6%20-%20GENESIS%201.jpg"},
+  {id:"genesis-2", t:"Genesis 2", s:"genesis", m:"acrylic", d:[36,48], f:"7%20-%20GENESIS_2.jpg"},
+  {id:"genesis-3", t:"Genesis 3", s:"genesis", m:"acrylic", d:[36,48], f:"GENESIS_3.288185910_std.jpg",
+    coll:{en:"Permanent collection, Florida International University Honors College", es:"Colección permanente, Florida International University Honors College"}},
+  {id:"eccl-1-4", t:"Ecclesiastes 1:4", s:"eccl", m:"mixed", d:[36,36], f:"3%20-%20Ecclesiastes%201-4.JPG",
+    coll:{en:"Private collection", es:"Colección privada"},
+    verse:{en:"“One generation passes away, and another generation comes: but the earth abides for ever.”", es:"«Generación va, y generación viene; mas la tierra siempre permanece.»"}},
+  {id:"eccl-7-20", t:"Ecclesiastes 7:20", s:"eccl", m:"mixed", d:[36,36], f:"4%20-%20Ecclesiastes%207-20.JPG",
+    verse:{en:"“For there is not a just man upon earth, that does good, and sins not.”", es:"«Ciertamente no hay hombre justo en la tierra, que haga el bien y nunca peque.»"}},
+  {id:"eccl-5-5", t:"Ecclesiastes 5:5", s:"eccl", m:"mixed", d:[30,40], f:"2_Rodriguez-Ecclesiastes_55_-_jpeg.147190420_s.jpg",
+    verse:{en:"“Better is it that you should not vow, than that you should vow and not pay.”", es:"«Mejor es que no prometas, y no que prometas y no cumplas.»"}},
+  {id:"his-virtue", t:"His Virtue", s:"small", m:"mixed", d:[20,20], f:"HIS_VIRTUE.88181917_std.jpg"},
+  {id:"her-virtue", t:"Her Virtue", s:"small", m:"mixed", d:[20,20], f:"HER_VIRTUE.88182014_std.jpg"},
+  {id:"double-dream", t:"Double Dream", s:"small", m:"mixed", d:[20,20], f:"DOUBLE_DREAM.88182116_std.jpg"},
+  {id:"angels-dream", t:"The Angel's Dream", s:"small", m:"mixed", d:[20,20], f:"ANGELs_DREAM.88182238_std.jpg"},
+  {id:"more-face", t:"More Than a Face", s:"small", m:"mixed", d:[18,24], f:"More_than_a_face.16220751_std.jpg"},
+  {id:"more-body", t:"More Than a Body", s:"small", m:"mixed", d:[18,24], f:"More_than_a_body.16215643_std.jpg"}
+];
+
+var TIMELINE = [
+  ["1950", "Born in Sancti Spíritus, Cuba. The family moves to Havana before he turns three.", "Nace en Sancti Spíritus, Cuba. La familia se muda a La Habana antes de que cumpla tres años."],
+  ["1962", "Begins drawing and experimenting with oil and tempera, at 12.", "Comienza a dibujar y a experimentar con óleo y témpera, a los 12 años."],
+  ["1969–70", "Studies with painter Jesús Antonio Valdovino Díaz in El Vedado, Havana.", "Estudia con el pintor Jesús Antonio Valdovino Díaz en El Vedado, La Habana."],
+  ["1976", "Graduates in computer science from the University of Havana, after two years of pure mathematics.", "Se gradúa en Ciencias de la Computación en la Universidad de La Habana, tras dos años de Matemática Pura."],
+  ["1978", "Begins signing his work “Emilio Héctor”.", "Empieza a firmar su obra como «Emilio Héctor»."],
+  ["1981", "Leaves Cuba and spends a year in Paris.", "Sale de Cuba y vive un año en París."],
+  ["1982", "Settles in Miami.", "Se establece en Miami."],
+  ["2005", "Paints in acrylic with Dominica Alcántara at the Latin Quarter Cultural Center.", "Pinta en acrílico con Dominica Alcántara en el Latin Quarter Cultural Center."],
+  ["2007", "Turns fully to abstraction.", "Se dedica por completo a la abstracción."],
+  ["2010", "Founds the 7 Plus One Art Project.", "Funda el 7 Plus One Art Project."],
+  ["2014", "Invited to join the Cuban American Phototheque Foundation.", "Es invitado a formar parte de la Cuban American Phototheque Foundation."],
+  ["2023", "International Best Artists Award, FIAG Art Festival, Republic of Korea.", "Premio International Best Artists, FIAG Art Festival, República de Corea."],
+  ["2026", "Solo exhibition <i>The Paths of the Pilgrim</i>, Archbishop John C. Favalora Archive &amp; Museum.", "Exposición individual <i>The Paths of the Pilgrim</i>, Archbishop John C. Favalora Archive &amp; Museum."]
+];
+
+var STATEMENT = {
+  en:["Being a painter whose professional expertise is in the fields of Mathematics and Cybernetics is not a common profile. But it is my case indeed. This gives me an unusual perspective when I am proposing and defining my work. My interpretation of the environment is deeply affected by the criteria shaped by my formal education.",
+      "Abstract art allows me to take a deep look and experiment inside any existing reality. It is not only a tool I use to look under the skin of a creature or under the surface of an object, but it is also a path to look above them all. Abstract art, for me, is not just a simple instrument to describe what is hidden by the boundaries of life and by the matter surrounding me, but it allows me to recreate those boundaries, through imagination, beyond the limits of my sight and thoughts.",
+      "My paintings represent the vertex where Mathematics, spirituality and arts converge forever to satisfy my inner longing to integrate my ideas with colors and shapes. My art is only an example of the myriad of gifts which I receive from God every day. This experience is a blessing, a fundamental and legitimate part of my relationship with God."],
+  es:["El ser un pintor cuya experiencia profesional se ha desarrollado entre los campos de las Matemáticas y de la Cibernética no es un perfil común. Pero de hecho este es mi caso. Esto me brinda una perspectiva inusual en el momento de proponer y definir mi trabajo. Mi interpretación del entorno es afectada profundamente por los criterios adquiridos a través de mi enseñanza formal.",
+      "El arte abstracto me permite desarrollar una mirada profunda y experimentar dentro de cualquier realidad existente. Este no es sólo un instrumento que utilizo para adentrarme por debajo de la piel de una criatura o tras la superficie de un objeto, sino que es también una forma de explorar por encima de todos ellos. El arte abstracto, para mí, no es simplemente un instrumento que utilizo para describir lo que se esconde tras los límites de la vida y la materia que me rodea, sino que me permite que yo los recree, por medio de la imaginación, más allá de los límites de mi vista o pensamientos.",
+      "Mi pintura representa el vértice donde las Matemáticas, la espiritualidad y las artes convergen de una vez por todas para satisfacer mi deseo interior de integrar mis ideas por medio de colores y formas. Mi arte es sólo un ejemplo de la miríada de dones que recibo cada día de Dios. Esta experiencia es una bendición, una parte elemental y legítima de mi relación con Dios."]
+};
+
+/* Exhibitions. k = country code, o = online/virtual, s/e = ISO dates (recent shows only) */
+var SOLO = [
+  [2026,"The Paths of the Pilgrim","","Archbishop John C. Favalora Archive & Museum","Miami Gardens, Florida","US","Feb 21 – Jun 6",0,"2026-02-21","2026-06-06"],
+  [2025,"Voyage Into My Soul","","Westchester Regional Library","Miami, Florida","US","Oct 24, 2025 – Jan 8, 2026",0,"2025-10-24","2026-01-08"],
+  [2025,"Si la vida fuera así","If Life Were Like This","Galería Cinabrio","León, Spain","ES","May 3 – Jun 13",0,"2025-05-03","2025-06-13"],
+  [2024,"El sentido de ser uno mismo","The Sense of Being Oneself","El Portón Rojo","San José, Costa Rica","CR","Jun 28 – Aug 6"],
+  [2024,"El sentido de ser uno mismo","The Sense of Being Oneself","Cartago Municipal Museum","Cartago, Costa Rica","CR","Apr 14 – Jun 16"],
+  [2024,"Arte soy entre las artes","I'm Art Among the Arts","John F. Kennedy Library","Hialeah, Florida","US","Jan 27 – Feb 10"],
+  [2023,"Versos sencillos","Simple Verses","Archbishop John C. Favalora Archive & Museum","Miami Gardens, Florida","US","Jun 3 – Sep 8"],
+  [2022,"Without Rules","","The Wirtz Gallery, First National Bank of South Miami","Miami, Florida","US","Aug 1 – 31",0,0,0,"Carmen Verdura"],
+  [2021,"Compositum Musicae Novae, Season VIII · Artist Series II","","Coral Gables Museum","Coral Gables, Florida","US","May 1"],
+  [2020,"And the Word Became Flesh","","POP UP Museum","Moscow, Russia","RU","Oct 14 – Nov 14"],
+  [2020,"Imágenes","Images","Juan Manuel Cedeño Gallery of Visual Arts","Panama City, Panama","PA","Mar 4 – 16"],
+  [2019,"And the Word Became Flesh","","Archbishop John C. Favalora Archive & Museum","Miami Gardens, Florida","US","Sep 10, 2019 – Jan 10, 2020"],
+  [2018,"Images Within","","The Wirtz Gallery, First National Bank of South Miami","Miami, Florida","US","Oct 2 – 30",0,0,0,"Marilyn Valiente"],
+  [2018,"Pas en avant","","Miami Hispanic Cultural Arts Center","Miami, Florida","US","Oct 2 – 30"],
+  [2017,"Steps at Night","","Art Emporium Gallery of Miami","Miami, Florida","US","Nov 3 – 26"],
+  [2017,"Borrowed Instants: A Journey Through the Lens","","Rev. Jorge Sardiñas Gallery, St. Thomas University","Miami Gardens, Florida","US","Apr 6 – Jun 22"],
+  [2016,"Ad Libitum","","Art Emporium Gallery of Miami","Miami, Florida","US","Sep 9 – 30"],
+  [2015,"Ecclesiasticus","","Ave Maria University","Ave Maria, Florida","US","Sep 7 – Nov 15"],
+  [2014,"Ecclesiasticus","","Rev. Jorge Sardiñas Gallery, St. Thomas University","Miami Gardens, Florida","US","Oct 16, 2014 – Jan 12, 2015"],
+  [2014,"Basic: A Geometric Abstraction Approach","","Miami Dade College West Gallery","Doral, Florida","US","Jan 31 – Apr 30"],
+  [2013,"Eclectic Trip","","VALMAR Art and Framing Showroom","Miami, Florida","US","Jan 19 – Feb 13"],
+  [2012,"Volumes and Shapes","","Accent Alternative Art Spaces","Miami, Florida","US","May 19 – Jun 15",0,0,0,"Pedro Hernández"],
+  [2012,"Pleasing the Soul","","The Wirtz Gallery, First National Bank of South Miami","Miami, Florida","US","Apr 2 – May 31",0,0,0,"María Teresa D'Azucena"],
+  [2011,"Hidden Visions","","The Wirtz Gallery, First National Bank of South Miami","Miami, Florida","US","Jun 1 – Jul 31"],
+  [2010,"There Is an Appointed Time for Everything","","Cultural Fridays Art Gallery, Little Havana","Miami, Florida","US","Dec 3, 2010 – Jan 14, 2011"],
+  [2009,"Life Is Coming!","","Cultural Fridays Art Gallery, Little Havana","Miami, Florida","US","Dec 14, 2009 – Jan 29, 2010"]
+];
+
+var GROUP = [
+  [2026,"Exposición Internacional Arte por la Paz","International Art for Peace Exhibition","Juan Santamaría Historical and Cultural Museum","Alajuela, Costa Rica","CR","Sep 23, 2026 – Jan 25, 2027",0,"2026-09-23","2027-01-25"],
+  [2026,"Arquitecturas visuales","Visual Architectures","Le Petit Atelier","Lleida, Spain","ES","Jul 25 – Aug 25",0,"2026-07-25","2026-08-25"],
+  [2026,"American Abstractions 2026","","West Gallery, Miami Dade College West Campus","Doral, Florida","US","May 20 – Sep 4",0,"2026-05-20","2026-09-04"],
+  [2026,"Dynamix 2026","","Biafarin Gallery","Ontario, Canada","CA","Mar 28 – May 28",1,"2026-03-28","2026-05-28"],
+  [2026,"MHCAC Private Collection","","Miami Hispanic Cultural Arts Center","Miami, Florida","US","Mar 3 – 30",0,"2026-03-03","2026-03-30"],
+  [2026,"Life Is All About Perception","","Miami Beach Regional Library","Miami Beach, Florida","US","Jan 23 – Apr 10",0,"2026-01-23","2026-04-10"],
+  [2025,"ACA & Cinabrio Festival","","Galería Cinabrio","León, Spain","ES","Nov 29, 2025 – Jan 10, 2026",0,"2025-11-29","2026-01-10"],
+  [2025,"IV Art for Change","","New Gallery of the Comptroller General of the Republic","San José, Costa Rica","CR","Nov 28 – Dec 15",0,"2025-11-28","2025-12-15"],
+  [2025,"The Lost Center · 22nd Busan International Environment Art Festival","","BIEAF 2025","Busan, South Korea","KR","Sep 1, 2025 – Feb 28, 2026",1,"2025-09-01","2026-02-28"],
+  [2025,"Art & Poetry: Echoes in Abstraction","","Hibiscus Gallery, Pinecrest Gardens","Pinecrest, Florida","US","Mar 15 – May 31",0,"2025-03-15","2025-05-31"],
+  [2025,"Hidden Realities in Human Feelings","","Museum of Contemporary Art of the Americas (MOCAA)","Miami, Florida","US","Feb 21 – Mar 7",0,"2025-02-21","2025-03-07"],
+  [2024,"Creative Convergence: The Art of Unexpected Encounters","","The Art Link Gallery","Miami, Florida","US","Dec 1 – 15"],
+  [2024,"Paisajes líricos","Lyrical Landscapes","Galería Cinabrio","León, Spain","ES","Nov 19 – Dec 14"],
+  [2024,"Diversidad","Diversity","Artefactus Cultural Center","Miami, Florida","US","Oct 18 – Nov 24"],
+  [2024,"Finissage","","Espacio Cultural Abierto","Madrid, Spain","ES","Oct 1 – 8"],
+  [2024,"Old Future · 21st Busan International Environment Art Festival","","BIEAF 2024","Busan, South Korea","KR","Sep 1, 2024 – Feb 28, 2025"],
+  [2024,"Dale!","","North Miami Beach Library","North Miami Beach, Florida","US","Sep 13 – Oct 19"],
+  [2024,"Hispanic Heritage Art Exhibit 2024","","Doral Cultural Arts Center","Doral, Florida","US","Sep 12 – Oct 10"],
+  [2024,"Trotzdem!","Despite It!","Kunstatelier-Galerie Kontraste","Erwitte, Germany","DE","Sep 21, 2024 – Jan 12, 2025"],
+  [2024,"Encontro Povos Irmãos · Porto '24","Meeting of Brotherly Peoples","Galeria Atelier Geraldes da Silva","Porto, Portugal","PT","Sep 7 – 13"],
+  [2024,"Summer Soirée","","InterContinental Hotel","Doral, Florida","US","Aug 15 – Oct 29"],
+  [2024,"Arte e Sole · Roma '24","","Galleria Il Laboratorio Trastevere","Rome, Italy","IT","Aug 12 – 19"],
+  [2024,"Olympiade d'Art","","Parc Floral de Paris, Pavillon 18","Paris, France","FR","Jun 7 – 16"],
+  [2024,"Arteria XXI Contemporary Art Fair","","Arteria XXI","Monzón, Spain","ES","Apr 20 – 21"],
+  [2024,"Confidencias apócrifas","Apocryphal Confidences","Cartago Municipal Museum","Cartago, Costa Rica","CR","Apr 14 – Jul 7"],
+  [2024,"Ad Astra per Aspera","To the Stars Through Difficulties","Scuola Grande San Teodoro","Venice, Italy","IT","Feb 10 – 17"],
+  [2024,"Candlelights","","Artefactus Cultural Center","Miami, Florida","US","Feb 9 – 26"],
+  [2023,"Paisajes líricos","Lyrical Landscapes","Art Concept Alternative","Santander, Spain","ES","Nov 10 – Dec 1"],
+  [2023,"Discovery · Art in Motion Miami","","North Miami Beach Library","North Miami Beach, Florida","US","Nov 17 – Dec 14"],
+  [2023,"International FIAG Art Festival","","Chang Kil-hwan Art Museum (Fantapia Museum)","Gangneung, South Korea","KR","Oct 5 – 31"],
+  [2023,"Abstract Zone 2023","","Exhibizone","Ontario, Canada","CA","Aug 5 – Oct 5",1],
+  [2023,"Curves","","Exhibizone","Ontario, Canada","CA","Jul 20 – Sep 20",1],
+  [2023,"Komuna Inspiro","","Rev. Jorge Sardiñas Gallery, St. Thomas University","Miami Gardens, Florida","US","Jun 17 – Sep 23"],
+  [2022,"Con acento","","North Miami Beach Library","North Miami Beach, Florida","US","Sep 19 – Oct 14"],
+  [2022,"Hispanic Heritage Doral Art Exhibit 2022","","Doral Government Center","Doral, Florida","US","Sep 16 – Oct 7"],
+  [2022,"Reflexiones: solo hay una Tierra","Reflections: There Is Only One Earth","Centro Cultural Español (CCE)","Miami, Florida","US","Jul 13 – 25",1],
+  [2022,"Abstracciones latinoamericanas","Latin American Abstractions","Embassy of Panama in Costa Rica","San José, Costa Rica","CR","Jun 3 – 17"],
+  [2022,"A World Without Poverty","","International online exhibition","Tehran, Iran","IR","Jan 19 – Mar 25",1],
+  [2021,"Realidades del alma","Realities of the Soul","Centro de Estudios Brasileños","San José, Costa Rica","CR","Oct 20 – Dec 13"],
+  [2021,"Peace Again","","Haegeumgang Theme Museum","Geoje, South Korea","KR","Sep 1 – Oct 25"],
+  [2021,"2021 Korea Art Fair","","Korea Art Fair","Seoul, South Korea","KR","Aug 5 – 8"],
+  [2021,"Mundo abstracto","Abstract World","Galería Talentum","San José, Costa Rica","CR","Jul 1 – 31"],
+  [2021,"Instantes significantes (photography)","Meaningful Instants","Riverside Pizzería & Gastropub","San José, Costa Rica","CR","Jun 29 – Jul 31"],
+  [2021,"Age + Action · NCOA Art Showcase","","2021 Virtual Conference","Arlington, Virginia","US","Jun 7 – Sep 7",1],
+  [2021,"Purely Abstract","","Las Laguna Art Gallery","Laguna Beach, California","US","May 6 – 29",1],
+  [2020,"Art for Change: Esperanza y vida","Hope and Life","Espacio Galería Antígono (virtual 3D)","San José, Costa Rica","CR","From Dec 29",1],
+  [2020,"I'm Bordered","","Art Deco History Building","Miami, Florida","US","Jun 25 – Aug 1"],
+  [2020,"Sentir el hacer","Feeling the Making","Juan Manuel Cedeño Gallery of Visual Arts, Ministry of Culture","Panama City, Panama","PA","Mar 4 – 16"],
+  [2019,"Re/Construction","","Renaissance Moscow Monarch Hotel","Moscow, Russia","RU","Nov 28, 2019 – Jan 10, 2020"],
+  [2019,"Gold and Spices","","The Centre Gallery, Miami Dade College Wolfson Campus","Miami, Florida","US","Oct 1 – 21"],
+  [2019,"Abstract Passport","","Library, Miami Dade College Wolfson Campus","Miami, Florida","US","From Oct 1"],
+  [2019,"Heart and Soul","","Miami Hispanic Cultural Arts Center","Miami, Florida","US","Sep 13 – 27"],
+  [2019,"Roma 2019","","Il Laboratorio Gallery","Rome, Italy","IT","Aug 5 – 17"],
+  [2019,"Paris 2019","","Galerie Artes","Paris, France","FR","Jul 5 – 18"],
+  [2019,"Encuentros","Encounters","Museum Galerie Rosmolen-Universart","Zeddam, Netherlands","NL","Jun 6 – 12"],
+  [2019,"Socios temporales II","","Prado Goyart Gallery","Madrid, Spain","ES","May 17 – 31"],
+  [2019,"Art Festival XV Años Goyart","","Arteria BCN Gallery","Barcelona, Spain","ES","May 4 – 10"],
+  [2019,"The Fine Art of Photography · 9th Annual Competition & Exhibition","","Plymouth Center for the Arts","Plymouth, Massachusetts","US","May 4 – Jun 15"],
+  [2019,"Sotto Voce","","Unilatina International College","Miramar, Florida","US","Apr 12 – Sep 5"],
+  [2018,"10 Years of Exhibits at the Canizaro Library: A Retrospective","","Ave Maria University","Ave Maria, Florida","US","Oct 7 – Dec 28"],
+  [2018,"Shared Visions","","Miami-Dade Public Library System, Main Library","Miami, Florida","US","Jun 9 – Oct 9"],
+  [2018,"Pinceladas de libertad · Volver a la esencia","Brushstrokes of Freedom","Politécnico Colombiano Jaime Isaza Cadavid","Rionegro, Colombia","CO","Jun 1 – Aug 3"],
+  [2018,"Latin American Contemporary Art","","Ulsan Cultural Art Center","Ulsan, South Korea","KR","May 17 – Jun 3"],
+  [2018,"Saluton (photography)","","Art Emporium Gallery of Miami","Miami, Florida","US","May 12 – 31"],
+  [2018,"Cultivated Under the Sun","","Hammocks District Police Station","Miami, Florida","US","Mar 2 – Sep 3"],
+  [2018,"Latin Art Comes to Yangpyeong","","Yangpyeong Art Museum","Yangpyeong, South Korea","KR","Mar 1 – Apr 8"],
+  [2018,"Black and White: 2018 (photography)","","Black Box Gallery","Portland, Oregon","US","Feb 1 – 20"],
+  [2018,"Exposición especial de Reyes","","Eka & Moor Art Gallery","Madrid, Spain","ES","Jan 2 – 22"],
+  [2017,"Spectrum Miami Art Show","","Spectrum Miami","Miami, Florida","US","Dec 6 – 10"],
+  [2017,"Contemplations","","Archbishop John C. Favalora Archive & Museum","Miami Gardens, Florida","US","Nov 7 – Dec 11"],
+  [2017,"Capture Doral (photography)","","Doral Government Center","Doral, Florida","US","Feb 23 – Mar 10"],
+  [2017,"Pure and Beyond","","Coral Gables Museum","Coral Gables, Florida","US","Feb 3 – 12"],
+  [2016,"Five Ways to Look at the Soul of Cuba","","Unilatina International College","Miramar, Florida","US","Nov 18, 2016 – Mar 4, 2017"],
+  [2016,"Hispanic Heritage Doral","","Doral Government Center","Doral, Florida","US","Sep 16 – 30"],
+  [2016,"Imágenes y pinceladas de América","","Centro Socio-Cultural Montecarmelo","Madrid, Spain","ES","Sep 3 – 30"],
+  [2016,"Un muro per la pace","A Wall for Peace","Circolo Culturale Scorzè, Villa Orzini","Venice, Italy","IT","Jun 4 – 30"],
+  [2016,"Is There in Truth No Beauty? (photography)","","Futurama","Miami, Florida","US","Mar 8 – 31"],
+  [2015,"Spectrum Miami Art Show","","Spectrum Miami","Miami, Florida","US","Dec 2 – 6"],
+  [2015,"Made in Miami (photography)","","Del Castillo Art Studio","Hialeah, Florida","US","Nov 28 – Dec 30"],
+  [2015,"Ars Longa, Vita Brevis","","Rev. Jorge Sardiñas Gallery, St. Thomas University","Miami Gardens, Florida","US","Oct 14, 2015 – Jan 27, 2016"],
+  [2015,"Colores y líneas para construir la paz","Colors and Lines to Build Peace","Museo de Arte Contemporáneo del Huila (MACH)","Neiva, Colombia","CO","Apr 30 – May 31"],
+  [2015,"International Collective Dallas 2015","","TVAA Gallery","Dallas, Texas","US","Apr 3 – 30"],
+  [2015,"Encounter: Latin & Korea Modern Art","","Busan Exhibition & Convention Center","Busan, South Korea","KR","Mar 21 – 30"],
+  [2015,"The Mural for Peace","","Alliance Française","Dubai, United Arab Emirates","AE","Mar 16 – 20"],
+  [2015,"The Mural for Peace","","Institute of Hispanic Culture of Houston","Houston, Texas","US","Feb 21 – Mar 7"],
+  [2015,"12 Lenses (photography)","","Futurama","Miami, Florida","US","Feb 1 – 28"],
+  [2014,"Ibero-American Art Fair","","Hangaram Art Museum","Seoul, South Korea","KR","Dec 11 – 16"],
+  [2014,"Spectrum Miami Art Show","","Midtown Miami","Miami, Florida","US","Dec 3 – 7"],
+  [2014,"Generations","","White's Art Gallery","Miami, Florida","US","Nov 20 – Dec 17"],
+  [2014,"NestGen (ecological art)","","Florida International University","Miami, Florida","US","Nov 15 – Dec 8"],
+  [2014,"Cosmic Connections","","Miami Dade College West Campus","Doral, Florida","US","Nov 13 – 16"],
+  [2014,"Special Fall Exhibition","","White's Art Gallery","Miami, Florida","US","Sep 20 – Nov 12"],
+  [2014,"Latin Views 2014","","Branford House Mansion, University of Connecticut at Avery Point","Groton, Connecticut","US","Sep 19 – Oct 22"],
+  [2014,"Journey in Contemporary Latin American Art: From Havana to Lima","","National Assembly of the Republic of Korea","Seoul, South Korea","KR","Aug 4 – Sep 1"],
+  [2014,"Acquiro 2 (photography)","","Cuban American Phototheque Foundation","Miami, Florida","US","Jul 19 – Aug 16"],
+  [2014,"Summertime Blues","","VALMAR Art and Framing Showroom","Miami, Florida","US","Jun 21 – Sep 17"],
+  [2014,"Mariel 1980–2004","","Molina Art Gallery","Miami, Florida","US","Jun 13 – 20"],
+  [2014,"Capture Coral Gables (photography)","","Coral Gables Museum","Coral Gables, Florida","US","Jun 6 – Aug 22"],
+  [2014,"III Encuentro Internacional de Arte","","Villa de Guillena","Seville, Spain","ES","May 10 – 31"],
+  [2014,"Synergy: Artists in Collaboration","","Miami Dade College Kendall Campus Gallery","Miami, Florida","US","May 8 – Sep 5"],
+  [2014,"Earth and Water, Our Planet, Our Life","","Florida International University & PIAG Museum","Miami, Florida","US","Apr 22 – May 2"],
+  [2014,"Maniacally Abstract","","Galería Arte Venezolano en Miami","Miami, Florida","US","Apr 19 – May 14"],
+  [2014,"Imágenes y pinceladas de América · II Salón Internacional","","Centro Cultural Augusto B. Leguía","Lima, Peru","PE","Apr 16 – 27"],
+  [2014,"Artistes contemporains américains (book presentation)","","Galerie Artes","Paris, France","FR","Mar 17 – 27"],
+  [2014,"Forms' Syncretism","","Koubek Center, Miami Dade College","Miami, Florida","US","Feb 22 – Mar 15"],
+  [2014,"Feeling Cuba","","Provenance Center Gallery","New London, Connecticut","US","Jan 17 – Feb 16"],
+  [2013,"V Salón Internacional de Arte","","Museo de Arte Pedro Ángel González","Isla Margarita, Venezuela","VE","Dec 21, 2013 – Jan 30, 2014"],
+  [2013,"The Wall","","MANO Fine Art Project Space","Miami, Florida","US","Dec 21 – Feb 1"],
+  [2013,"Imágenes y pinceles de América","","Museo de Arte Contemporáneo del MERCOSUR","Buenos Aires, Argentina","AR","Dec 4 – 20"],
+  [2013,"Ibero-American Art Fair","","Hangaram Art Museum","Seoul, South Korea","KR","Oct 30 – Nov 3"],
+  [2013,"Art of the Caribbean: Identity & Culture","","Provenance Center","New London, Connecticut","US","Oct 18 – Nov 30"],
+  [2013,"In Search of Benimy","","Miami Hispanic Cultural Arts Center","Miami, Florida","US","Oct 4 – 25"],
+  [2013,"Hispanic Art Expressions","","Multiple venues","Florida","US","Sep 20 – Oct 25"],
+  [2013,"Nuestros acentos (photography)","Our Accents","ArtSpace Gallery, Koubek Center, Miami Dade College","Miami, Florida","US","Sep 18 – Oct 31"],
+  [2013,"Capture Coral Gables (photography)","","Coral Gables Museum","Coral Gables, Florida","US","Jul 6 – Aug 31"],
+  [2013,"Artistes del Món / Artistas del Mundo","Artists of the World","BCM Art Gallery","Barcelona, Spain","ES","Jun 20 – Jul 7"],
+  [2013,"IBAEM 2013: Coexistence of Traditional and Modern Values in Contemporary Art","","Miami Iron Side","Miami, Florida","US","Jun 6 – 13"],
+  [2013,"Muestra Internacional de Arte de Gijón","","Sala Aristas","Gijón, Spain","ES","Mar 4 – Apr 4"],
+  [2012,"Ibero-American Contemporary Art","","Ara Art Center","Seoul, South Korea","KR","Dec 20, 2012 – Feb 20, 2013"],
+  [2012,"Ibero-American Art Fair","","Hangaram Art Museum","Seoul, South Korea","KR","Nov 15 – 19"],
+  [2012,"7 Plus One","","Nina Torres Fine Art","Miami, Florida","US","Oct 6 – 27"],
+  [2012,"14th Annual Abstraction Juried International Exhibition","","Upstream People Gallery","Omaha, Nebraska","US","Oct 1 – 31",1],
+  [2012,"Hispanic Heritage Month 2012","","Multiple venues","Florida","US","Sep 28 – Oct 26"],
+  [2012,"Latin Views 2012","","Branford House Mansion, University of Connecticut at Avery Point","Groton, Connecticut","US","Sep 15 – Oct 26"],
+  [2012,"Lines","","Cremata Gallery","Miami, Florida","US","Aug 10 – Sep 8"],
+  [2012,"Fragments of Thought","","MANO Fine Art Project Space","Miami, Florida","US","Jul 21 – Aug 12"],
+  [2012,"The 2012 Summer Show and Celebration","","Wynwood Exhibition Center","Miami, Florida","US","Jul 11 – 24"],
+  [2012,"Latin Who Is? What Is?","","Provenance Center","New London, Connecticut","US","Jul 10 – Aug 22"],
+  [2012,"Real Abstractions","","West Gallery, Miami Dade College West Campus","Doral, Florida","US","Feb 24 – Apr 27"],
+  [2012,"Contemporary Art from the Latin World","","Charles E. Shain Library, Connecticut College","New London, Connecticut","US","Jan 23 – Mar 9"],
+  [2011,"4th Art Exhibition at Ana G. Méndez University System","","Ana G. Méndez University, South Florida Campus","Miramar, Florida","US","Oct 14, 2011 – Jan 27, 2012"],
+  [2011,"13th Annual Abstraction Juried International Exhibition","","Upstream People Gallery","Omaha, Nebraska","US","Oct 1 – 31",1],
+  [2011,"Hispanic Heritage Art Exhibit '11","","Miami-Dade Government Center","Miami, Florida","US","Oct 3 – 31"],
+  [2011,"Hispanic Heritage Month 2011","","Multiple venues","Florida","US","Sep 15 – Oct 28"],
+  [2011,"Horizontes de sentido","Horizons of Meaning","Museum of the Americas","Doral, Florida","US","Sep 9 – 30"],
+  [2011,"InterAmerican Art Institute Fair and Exhibition","","Miami Dade College InterAmerican Campus","Miami, Florida","US","Sep 8 – 21"],
+  [2011,"Mid-Summer Exhibition 2011","","Alexey von Schlippe Gallery of Art, University of Connecticut","Groton, Connecticut","US","Jul 22 – Sep 4"],
+  [2011,"Cuban Mosaic 2011","","Miami-Dade Government Center","Miami, Florida","US","May 2 – 27"],
+  [2010,"Sin","","Audrey Love Gallery, Bakehouse Art Complex","Miami, Florida","US","Nov 29, 2010 – Jan 14, 2011"],
+  [2010,"Roots","","InterAmerican Art Gallery, Miami Dade College","Miami, Florida","US","Oct 1 – 27"],
+  [2010,"Hispanic Heritage Art Exhibit '10","","Miami-Dade Government Center","Miami, Florida","US","Oct 1 – 29"],
+  [2010,"Miami Abstractions 2010","","Cultural Fridays Art Gallery, Little Havana","Miami, Florida","US","Sep 24 – Oct 15"],
+  [2010,"Latin Views 2010","","Branford House Mansion, University of Connecticut at Avery Point","Groton, Connecticut","US","Sep 10 – Oct 22"],
+  [2010,"RUTA 2010","","Bakehouse Art Complex","Miami, Florida","US","Sep 10 – Oct 1"],
+  [2010,"California Award 2010","","Latino Art Museum","Ontario, California","US","Jun 2 – 26"],
+  [2010,"Women Fighters for Democracy","","Big Five Club","Miami, Florida","US","May 12"],
+  [2010,"Cuban Mosaic 2010","","Miami-Dade Government Center","Miami, Florida","US","May 1 – 31"],
+  [2010,"Landscapes and Figures","","InterAmerican Art Gallery, Miami Dade College","Miami, Florida","US","Apr 29 – May 18"],
+  [2010,"ArteAméricas 2010: The Art Fair of the Americas","","Miami Beach Convention Center","Miami Beach, Florida","US","Mar 26 – 29"],
+  [2010,"Metamorphosis","","InterAmerican Art Gallery, Miami Dade College","Miami, Florida","US","Mar 1 – 31"],
+  [2009,"Master Mystery Art Show","","Ritz-Carlton","Miami Beach, Florida","US","Dec 3"],
+  [2009,"Abstractomicina","","Cremata Gallery","Miami, Florida","US","Nov 30, 2009 – Jan 30, 2010"],
+  [2009,"Hispanic-American Experiences and Reflections","","Lou Rawls Center for the Performing Arts, Florida Memorial University","Miami Gardens, Florida","US","Oct 28"],
+  [2009,"Hispanic Heritage Art Exhibit '09","","Miami-Dade Government Center","Miami, Florida","US","Oct 6 – 30"],
+  [2009,"Hispanic Art Expressions","","Multiple venues","Florida","US","Oct 2 – Nov 6"],
+  [2009,"Universal Language of Art","","Tower Theater, Miami Dade College","Miami, Florida","US","Sep 17 – Oct 8"],
+  [2009,"Small Works, Big Ideas","","DaVinci's Gallery","Coral Gables, Florida","US","Sep 3 – Oct 31"],
+  [2009,"Arte Latinoamericano y del Caribe (12th annual)","","Broward College","Pembroke Pines, Florida","US","Sep 3 – Oct 23"],
+  [2009,"Asociación de Mujeres Cubanas Universitarias","","Big Five Club","Miami, Florida","US","Jul 15"],
+  [2009,"Mosaic","","Alliance Française de Miami","Miami, Florida","US","Jun 5 – 26"],
+  [2009,"Cuban Mosaic 2009","","Miami-Dade Government Center","Miami, Florida","US","May 1 – 31"],
+  [2009,"Emerging Artists Annual Student Exhibition 2009","","InterAmerican Art Gallery, Miami Dade College","Miami, Florida","US","Apr 22 – May 29"],
+  [2009,"Life Is Art · Miami Featured Artist Fair","","Seminole Building, Wynwood Arts District","Miami, Florida","US","Mar 7"],
+  [2009,"Artexpo New York 2009","","Jacob K. Javits Convention Center","New York, New York","US","Feb 26 – Mar 2"],
+  [2008,"Master Mystery Art Show","","Ritz-Carlton","Miami Beach, Florida","US","December"],
+  [2008,"Evolution, Love and Light","","Carls Furniture and Design Studio","Miami, Florida","US","Nov 21, 2008 – Mar 31, 2009"],
+  [2008,"Aires de verano","Summer Airs","Tower Theater, Miami Dade College","Miami, Florida","US","Oct 15 – Nov 11"],
+  [2008,"Hispanic Heritage Art Exhibit '08","","Miami-Dade Government Center","Miami, Florida","US","Oct 13 – 31"],
+  [2008,"Asociación de Mujeres Cubanas Universitarias","","Big Five Club","Miami, Florida","US","Jul 23"],
+  [2008,"Cuban Mosaic 2008","","Miami-Dade Government Center","Miami, Florida","US","May 1 – 31"]
+];
+
+var COUNTRY = {US:["United States","Estados Unidos"],ES:["Spain","España"],CR:["Costa Rica","Costa Rica"],KR:["South Korea","Corea del Sur"],
+  IT:["Italy","Italia"],FR:["France","Francia"],RU:["Russia","Rusia"],PA:["Panama","Panamá"],DE:["Germany","Alemania"],PT:["Portugal","Portugal"],
+  CO:["Colombia","Colombia"],NL:["Netherlands","Países Bajos"],AE:["United Arab Emirates","Emiratos Árabes Unidos"],PE:["Peru","Perú"],
+  AR:["Argentina","Argentina"],VE:["Venezuela","Venezuela"],CA:["Canada","Canadá"],IR:["Iran","Irán"]};
+
+var COLLECTIONS = [
+  ["Museum of Contemporary Art of the Americas","Miami, Florida"],
+  ["Ministry of Culture of the Republic of Korea","Seoul, South Korea"],
+  ["Haegeumgang Theme Museum","Geoje, South Korea"],
+  ["Instituto Nacional de Cultura (INAC), Ministry of Culture","Panama City, Panama"],
+  ["Museo de Arte Contemporáneo del Huila (MACH)","Neiva, Colombia"],
+  ["Museum of the Universidad Nacional de Ingeniería (UNI)","Lima, Peru"],
+  ["Banco de la República, Biblioteca Darío Echandía","Ibagué, Colombia"],
+  ["Centro Socio-Cultural Montecarmelo","Madrid, Spain"],
+  ["Florida International University Honors College","Miami, Florida"],
+  ["Baylor College of Medicine","Houston, Texas"],
+  ["Temple University","Philadelphia, Pennsylvania"],
+  ["University of Connecticut, Avery Point","Groton, Connecticut"],
+  ["Ave Maria University","Ave Maria, Florida"],
+  ["St. Thomas University","Miami Gardens, Florida"],
+  ["Miami Dade College, West Campus","Doral, Florida"],
+  ["Miami-Dade Public Library System","Miami, Florida"],
+  ["Coral Gables City Hall","Coral Gables, Florida"],
+  ["Museum of the Americas","Doral, Florida"],
+  ["Miami Hispanic Cultural Arts Center","Miami, Florida"],
+  ["Cuban American Phototheque Foundation","Miami, Florida"],
+  ["Latin Network for the Visual Arts","Gales Ferry, Connecticut"]
+];
+
+var AWARDS = [
+  ["2023","International Best Artists Award","Premio International Best Artists","2023 FIAG International Art Festival, Chang Kil-hwan Museum of Art, Republic of Korea","Festival Internacional de Arte FIAG 2023, Museo de Arte Chang Kil-hwan, República de Corea"],
+  ["2013","Honorable Prize (Premio de Honor)","Premio de Honor","Artistes del Món, BCM Art Gallery, Barcelona","Artistes del Món, BCM Art Gallery, Barcelona"],
+  ["2013","Honorable Mention (Mención de Honor)","Mención de Honor","Muestra Internacional de Arte de Gijón, Sala Aristas, Gijón","Muestra Internacional de Arte de Gijón, Sala Aristas, Gijón"],
+  ["2011","Special Recognition","Reconocimiento especial","13th Annual Abstraction Juried International Exhibition, Omaha, Nebraska","13.ª Exposición Internacional Anual de Abstracción con jurado, Omaha, Nebraska"]
+];
+var RECOG = [
+  ["2018","Certificate of recognition for contribution to the community and Spanish culture","Certificado de reconocimiento por su contribución a la comunidad y a la cultura española","Real Liga Naval Española, Miami","Real Liga Naval Española, Miami"],
+  ["2018","“El Arcángel Dorado” prize","Premio «El Arcángel Dorado»","PFA TV Productions, Miami","PFA TV Productions, Miami"],
+  ["2017","Diploma for his contribution to Caritate magazine as photographer, painter and interviewer","Diploma por su contribución a la revista Caritate como fotógrafo, pintor y entrevistador","APOGEO Foundation & Caritate, Miami","Fundación APOGEO y Caritate, Miami"],
+  ["","Member, Fiantopia International Art Group (FIAG)","Miembro del Fiantopia International Art Group (FIAG)","Republic of Korea","República de Corea"]
+];
+
+/* Quotes. lang = language of the original */
+var QUOTES = [
+  {who:"Raisa Clavijo", where:{en:"ArtDistricts, Miami",es:"ArtDistricts, Miami"}, lang:"en",
+   en:"His training in the fields of mathematics and computer programming inevitably inspires his work, attaining harmonies that seem to honor an invisible logic, a kind of melody that throbs in the colors and in the wave-like structures that populate his works. In his oeuvre we see the convergence of the rationality of the mathematician and the profound spiritual richness that makes the creative act cathartic.",
+   es:"Su formación en matemáticas y programación inspira inevitablemente su obra, que alcanza armonías que parecen honrar una lógica invisible, una suerte de melodía que palpita en los colores y en las estructuras ondulantes que pueblan sus obras. En ella vemos converger la racionalidad del matemático y la profunda riqueza espiritual que hace catártico el acto creador."},
+  {who:"Irene Antillón", where:{en:"AICA (International Association of Art Critics), Costa Rica",es:"AICA (Asociación Internacional de Críticos de Arte), Costa Rica"}, lang:"es",
+   es:"…el artista nos transporta del microcosmos al macrocosmos con formas orgánicas que sugieren el principio, el génesis, el origen de la vida y del planeta… donde el artista busca representarse a sí mismo y su sentir hacia la magnificencia de la creación de Dios.",
+   en:"…the artist carries us from the microcosm to the macrocosm with organic forms that suggest the beginning, the genesis, the origin of life and of the planet… where the artist seeks to represent himself and his feeling toward the magnificence of God's creation."},
+  {who:"Anelys Alvarez, MA", where:{en:"Curator and writer, Miami",es:"Curadora y escritora, Miami"}, lang:"en",
+   en:"In his dreamlike scenery / landscape / visions, time and space transcend the logic they are usually ruled by. A mathematician by formal education, and thus a connoisseur of the relativity of both concepts, the artist recreates a timeless world in which the elements float suspended and space is seen through chromatic gradations.",
+   es:"En sus escenarios / paisajes / visiones de ensueño, el tiempo y el espacio trascienden la lógica que suele regirlos. Matemático de formación y, por tanto, conocedor de la relatividad de ambos conceptos, el artista recrea un mundo atemporal en el que los elementos flotan suspendidos y el espacio se percibe a través de gradaciones cromáticas."},
+  {who:"Franca Simonelli", where:{en:"Artist, Italy",es:"Artista, Italia"}, lang:"it",
+   it:"Complimenti vivissimi per le tue opere, dai colori che fanno pensare alle galassie del firmamento infinito!",
+   en:"Warmest congratulations on your works, with colors that bring to mind the galaxies of the infinite firmament!",
+   es:"¡Mis más sinceras felicitaciones por tus obras, de colores que hacen pensar en las galaxias del firmamento infinito!"},
+  {who:"Maria Espinoza, PhD", where:{en:"Sub-Urbano, Miami",es:"Sub-Urbano, Miami"}, lang:"es",
+   es:"El resultado es una pintura de cautivadora visualidad compuesta por los desafíos de las inagotables tentativas por capturar una realidad efímera en constante transformación.",
+   en:"The result is a painting of captivating visual power, built from the challenge of endless attempts to capture an ephemeral reality in constant transformation."},
+  {who:"Norma Mederos, PhD", where:{en:"Specialist in aesthetics and art",es:"Especialista en estética y arte"}, lang:"en",
+   en:"Painting and photography merge into a coherent proposal, where reason and emotion coexist. Rodríguez's work thus affirms the power of art as a space for reflection and spiritual openness.",
+   es:"La pintura y la fotografía se funden en una propuesta coherente, donde la razón y la emoción coexisten. La obra de Rodríguez afirma así el poder del arte como espacio de reflexión y apertura espiritual."},
+  {who:"Milagros Gonzalez", where:{en:"La Patilla USA",es:"La Patilla USA"}, lang:"en",
+   en:"The subtlety of the images produced by this artist can approach a particular universe, underlying that reminds us that, despite everything, the time of life as art, is cyclical, and that everything has its time and place.",
+   es:"La sutileza de las imágenes de este artista se asoma a un universo particular que nos recuerda que, a pesar de todo, el tiempo de la vida, como el arte, es cíclico, y que todo tiene su tiempo y su lugar."}
+];
+
+var ARTICLES = [
+  ["The Huffington Post","Emilio Héctor Rodríguez… Un pintor de realidad abstracta","Diana Montaño","Dec 26, 2012"],
+  ["El Nuevo Herald","Cosmopolitismo y espiritualidad en la muestra de pintor miamense en St. Thomas University","Elena Iglesias","Dec 14, 2014"],
+  ["Art OnCuba","Ad Libitum, en cubano, “como quiera”","Adis Rodríguez Castro","Sep 2016"],
+  ["ArtDistricts","7 Plus One: The Path of Abstraction","Raisa Clavijo","Oct–Nov 2015"],
+  ["Florida Catholic","Abstract Art, Concrete Truth","Jim Davis","Oct 2019"],
+  ["Baquiana","In Conversation with Cuban-American Artist Emilio Héctor Rodríguez","Patricio E. Palacios","Jan–Jun 2019"],
+  ["Nagari Magazine","Conversación con el artista cubano Emilio Héctor Rodríguez","","Dec 2021 – Jan 2022"],
+  ["La Patilla USA","Emilio Héctor Rodríguez: La pintura como vocación. La vida como prueba","Milagros González","Jul 17, 2012"],
+  ["Baquiana","An Art Exhibition Inspired by the Simple Verses of José Martí","Editorial board","Jul 2023"]
+];
+
+/* Full bibliography, newest first: [year, title, details] */
+var BIBLIO = [
+  ["2023","Komuna Inspiro (catalog)","Archbishop John C. Favalora Archive and Museum, Miami Gardens, Jun 2023"],
+  ["2023","Versos sencillos / Simple Verses (catalog)","Archbishop John C. Favalora Archive and Museum, Miami Gardens, Jun 2023"],
+  ["2023","Una exposición de arte inspirada en los Versos sencillos de José Martí","Editorial board, Baquiana Revista Literaria, Jul 2023"],
+  ["2023","An Art Exhibition Inspired by the Simple Verses of José Martí","Editorial board, Baquiana Revista Literaria, Jul 2023"],
+  ["2021","Conversación con el artista cubano Emilio Héctor Rodríguez","Nagari Magazine, Miami, Dec 2021 – Jan 2022"],
+  ["2020","И слово стало плотью (And the Word Became Flesh)","POP UP Museum, Moscow, Oct 2020"],
+  ["2020","Imágenes (catalog)","Ministry of Culture of Panama, Panama City, Mar 2020"],
+  ["2019","Abstract Art, Concrete Truth","Jim Davis, Florida Catholic, Archdiocese of Miami, Oct 2019"],
+  ["2019","Gold and Spices (catalog)","Miami Dade College, Oct 2019"],
+  ["2019","Abstract Passports (catalog)","Miami Dade College, Oct 2019"],
+  ["2019","And the Word Became Flesh (catalog)","Archbishop John C. Favalora Archive and Museum, Sep 2019"],
+  ["2019","Sotto Voce (catalog)","Unilatina International College, Miramar, Apr 2019"],
+  ["2019","Conversando con el artista plástico cubanoamericano Emilio Héctor Rodríguez","Patricio E. Palacios, Baquiana Revista Literaria, Year XX, no. 109–110, Jan–Jun 2019"],
+  ["2019","In Conversation with Cuban-American Artist Emilio Héctor Rodríguez","Patricio E. Palacios, Baquiana Revista Literaria, Year XX, no. 109–110, Jan–Jun 2019"],
+  ["2018","Shared Visions (catalog)","Miami-Dade Public Library System & Miami-Dade County, Jun 2018"],
+  ["2018","Latin American Contemporary Art (catalog), pp. 44–46","Ulsan Cultural Art Center, Ulsan, South Korea, May 2018"],
+  ["2018","Latin Art Comes to Yangpyeong (catalog), pp. 58–59","Yangpyeong Art Museum, South Korea, Mar 2018"],
+  ["2017","Steps at Night (Pasos en la noche)","Caritate, Arteraciones, pp. 16–17, Miami, Dec 2017"],
+  ["2017","Contemplations (catalog), pp. 38–45","Archbishop John C. Favalora Archive & Museum, Nov 2017"],
+  ["2017","7 Plus One Exhibits at the Coral Gables Museum","Raisa Clavijo, ArtDistricts no. 45, pp. 62–63"],
+  ["2017","Pure and Beyond (catalog)","Coral Gables Museum, Feb 2017"],
+  ["2016","Emilio Héctor Rodríguez: Matemáticas, espiritualidad y arte","Caritate, Arteraciones, pp. 10–11, Oct 2016"],
+  ["2016","Ad Libitum, en cubano, “como quiera”","Adis Rodríguez Castro, Art OnCuba, Havana, Sep 2016"],
+  ["2016","Ad Libitum (catalog)","Art Emporium Gallery, Miami, Sep 2016"],
+  ["2016","Abstracción en la Galería Sardiñas","Adis Rodríguez Castro, Art OnCuba, Havana, Jan 2016"],
+  ["2016","Ars Longa Vita Brevis: Adueñense del arte","Emilio Héctor Rodríguez, Caritate, pp. 31–32, Jan–Feb 2016"],
+  ["2015","7 Plus One: The Path of Abstraction","Raisa Clavijo, ArtDistricts no. 38, pp. 36–37, Oct–Nov 2015"],
+  ["2015","Ecclesiasticus: Emilio Héctor Rodríguez Paintings","Canizaro Library, Ave Maria University, Oct 9, 2015"],
+  ["2014","Ibero-American Art Fair Seoul 2014 (catalog)","Bellarte, Seoul, Dec 2014"],
+  ["2014","Cosmopolitismo y espiritualidad en la muestra de pintor miamense en St. Thomas University","Elena Iglesias, El Nuevo Herald, Dec 14, 2014"],
+  ["2014","NestGen and FIU, a Synergistic Meld","Irene Sperber, ArtDistricts no. 33, p. 58, Dec 2014 – Jan 2015"],
+  ["2014","The NestGen Project en FIU","Anelys Alvarez Muñoz, MA, Nagari vol. 12, Dec 2014"],
+  ["2014","The Latin Network for the Visual Arts (LNVA)","Emilio Héctor Rodríguez, Nagari vol. 10, Oct 2014"],
+  ["2014","Latin Views 2014 (catalog)","Latin Network for the Visual Arts, Groton, Sep 2014"],
+  ["2014","El Día Internacional de la Tierra: un evento artístico presentado por el FIU Honors College","Emilio Héctor Rodríguez, Nagari, Jun 2014"],
+  ["2014","Synergy: Artists in Collaboration (catalog)","Miami Dade College, May 2014"],
+  ["2014","Unos 45 artistas peruanos y extranjeros exponen obras en Surco","El Comercio, El Dominical, Lima, Apr 2014"],
+  ["2014","7 Plus One Art Project: El sincretismo del arte","Emilio Héctor Rodríguez, Nagari vol. 4, Apr 2014"],
+  ["2014","Forms' Syncretism (catalog)","Koubek Center, Miami Dade College, Feb 2014"],
+  ["2014","Gallery at West Inaugurates Exhibition by Miami-based Artist Emilio Héctor Rodríguez","Jesús Manuel Rojas Torres, What's Up Miami, Jan 30, 2014"],
+  ["2014","Basic: An Abstract Geometric Approach (bi-fold catalog)","Miami Dade College Galleries of Art & Design, Jan 2014"],
+  ["2013","Ibero-American Art Fair Seoul 2013 (catalog), p. 46","Bellarte, Seoul, Oct 2013"],
+  ["2013","In Search of Benimy (catalog)","Miami Hispanic Cultural Arts Center, Oct 2013"],
+  ["2013","IBAEM 2013, International Biennale Artists Exhibition Miami (catalog), p. 34","Miami, Jun 2013"],
+  ["2013","Cuban Artist Emilio Héctor Rodríguez at IBAEM 2013","Jesús Manuel Rojas Torres, What's Up Miami, May 27, 2013"],
+  ["2012","Emilio Héctor Rodríguez… Un pintor de realidad abstracta","Diana Montaño, The Huffington Post, Dec 26, 2012"],
+  ["2012","Ibero-American Art Fair Seoul 2012 (catalog), p. 82","Bellarte, Seoul, Nov 2012"],
+  ["2012","Entrevista al pintor Emilio Héctor Rodríguez","Maria Espinoza, PhD, Sub-Urbano, Nov 1, 2012"],
+  ["2012","Hispanic Art Expressions 2012 (catalog)","Miami-Dade County Office of Community Advocacy, Sep 2012"],
+  ["2012","Latin Views 2012 (catalog)","Latin Network for the Visual Arts, Groton, Sep 2012"],
+  ["2012","Lines: Contemporary Geometric Abstractions (catalog)","Cremata Gallery, Aug 2012"],
+  ["2012","Our Star This Month: Emilio Héctor Rodríguez","Dena Rabadi, Blue Line, Dubai, Jul 2012"],
+  ["2012","Emilio Héctor Rodríguez: La pintura como vocación. La vida como prueba","Milagros González, La Patilla USA, Jul 17, 2012"],
+  ["2012","Un talentoso artista espirituano y sus éxitos","Nadya Rodríguez, El Fénix del Yayabo, Jul 2012"],
+  ["2012","Volumes and Shapes (bi-fold catalog)","Accent Art Space, Apr 2012"],
+  ["2012","Pleasing the Soul (bi-fold catalog)","The Wirtz Gallery, First National Bank of South Miami, Apr 2012"],
+  ["2012","Real Abstractions en el Miami Dade College West Campus","Milagros González, La Patilla USA, Feb 26, 2012"],
+  ["2012","Real Abstractions (catalog)","Anelys Alvarez, MA, Miami Dade College, Feb 2012"],
+  ["2011","Hispanic Art Expressions 2011 (catalog)","Miami-Dade County Office of Community Advocacy, Sep 2011"],
+  ["2011","Horizontes de sentido (catalog)","Museum of the Americas, Doral, Sep 2011"],
+  ["2011","Hidden Visions (catalog)","Anelys Alvarez, MA, The Wirtz Gallery, Jun 2011"],
+  ["2010","There Is an Appointed Time for Everything (catalog)","Cultural Fridays Art Gallery, Dec 2010"],
+  ["2010","Miami Abstractions 2010 (tri-fold catalog)","Carlos M. Luis, Cultural Fridays Art Gallery, Sep 2010"],
+  ["2010","Latin Views 2010 (catalog)","Latin Network for the Visual Arts, Groton, Sep 2010"],
+  ["2010","California Award 2010 (tri-fold catalog)","Latino Art Museum, Ontario, California, Jun 2010"],
+  ["2009","Abstractomicina (catalog)","Aldo Menéndez, Cremata Gallery, Nov 2009"],
+  ["2009","Experiencias y reflexiones hispanoamericanas a través de las artes visuales","Libre (newspaper), Miami, Nov 4, 2009"],
+  ["2009","Hispanic Art Expressions 2009 (catalog)","Miami-Dade County Office of Community Advocacy, Oct 2009"],
+  ["2009","Universal Language of Art: Miami-Dade Celebrates the Art of Its Sister Cities (catalog)","Miami Dade College & Miami-Dade County, Sep 2009"],
+  ["2009","Contemporary Latin American Art XII (tri-fold catalog)","Broward Community College, Sep 2009"]
+];
+
+var PROJECT_VENUES = ["Miami Dade College","Koubek Center","Miami Hispanic Cultural Arts Center","St. Thomas University","Coral Gables Museum","Nina Torres Fine Art"];
+/* ===== SETTINGS ===== */
+var WHATSAPP_NUMBER = "13055057416";   // digits only, with country code. Confirm it has WhatsApp.
+var SHOW_CONCEPT_RIBBON = false;         // set to false when the site goes live
+
+/* ===== STRINGS ===== */
+var ES = {
+  "ribbon":"Propuesta de rediseño · aún no publicada",
+  "nav.work":"Obra","nav.artist":"El artista","nav.ex":"Exposiciones","nav.press":"Prensa","nav.contact":"Contacto","nav.menu":"Menú",
+  "hero.kicker":"Pintura abstracta · Fotografía artística · Miami",
+  "hero.lead":"Formado en matemáticas y ciencias de la computación en la Universidad de La Habana, pinta abstracción en Miami desde 2007. Sus lienzos son, en sus palabras, <strong>el vértice donde convergen las matemáticas, la espiritualidad y el arte</strong>.",
+  "hero.cta1":"Ver la obra","hero.cta2":"Escribir por WhatsApp",
+  "hero.med":"Acrílico sobre lienzo · 36 × 48 pulg.",
+  "hero.coll":"Colección permanente, Florida International University Honors College",
+  "work.kicker":"La obra","work.h":"Pinturas seleccionadas",
+  "work.p":"Acrílico y técnica mixta sobre lienzo. Abre cualquier obra para ver todos sus detalles y medidas en pulgadas y centímetros, o pregunta por ella en WhatsApp.",
+  "work.imgnote":"Esta vista previa no puede cargar las fotos de emilio-hector.com, así que cada obra aparece como un marco vacío con sus proporciones reales. En un navegador normal, las pinturas se ven.",
+  "work.grid":"Cuadrícula","work.wall":"A escala",
+  "work.scale1":"Cada lienzo a su tamaño relativo real, colgado con el centro a 1,45 m (57 pulgadas), la altura estándar en los museos.",
+  "work.scale2":"Figura de 1,70 m como referencia. Desliza hacia los lados para ver toda la pared.",
+  "photo.h":"Fotografía",
+  "photo.p1":"Además de pintar, Emilio Héctor trabaja la fotografía artística. En 2014 la Cuban American Phototheque Foundation lo invitó a ser miembro en reconocimiento a su obra fotográfica.",
+  "photo.p2":"Sus fotografías se han expuesto en el Coral Gables Museum, el Plymouth Center for the Arts de Massachusetts y Black Box Gallery en Portland, y en la exposición individual <i>Borrowed Instants: A Journey Through the Lens</i> en St. Thomas University (2017).",
+  "photo.cta":"Pedir el portafolio de fotografía",
+  "artist.kicker":"El artista","artist.h":"Un matemático que pinta","artist.p":"Nacido en Sancti Spíritus, Cuba, en 1950. En Miami desde 1982.","artist.photo":"Foto: Alberto Romeu",
+  "bio.1":"Emilio Héctor Rodríguez nació en 1950 en la villa colonial de Sancti Spíritus, Cuba, y creció en La Habana, donde las visitas de niño a los museos de la ciudad se convirtieron en un talento precoz para el dibujo y la pintura. En 1969–70 estudió con el pintor cubano Jesús Antonio Valdovino Díaz y luego ingresó en la Universidad de La Habana para estudiar Matemática Pura; se graduó en Ciencias de la Computación en 1976.",
+  "bio.2":"Salió de Cuba en 1981, vivió un año en París y se estableció en Miami en 1982, donde trabajó como analista y programador de computadoras. En 2005 comenzó a pintar en acrílico con Dominica Alcántara en el Latin Quarter Cultural Center. Desde 2007 la abstracción es su búsqueda central, que ha profundizado en los talleres de Baruj Salinas y Yovani Bauta en Miami Dade College.",
+  "bio.3":"En 2010, para conmemorar un siglo de la primera obra abstracta de Kandinsky, reunió a un grupo de artistas abstractos que se convirtió en el 7 Plus One Art Project, que aún dirige como fundador y director artístico. Su obra forma parte de colecciones públicas y privadas en Estados Unidos, América Latina, Europa y Asia.",
+  "st.h":"Declaración del artista","st.kicker":"Declaración del artista",
+  "st.q":"«Mi pintura representa el vértice donde las Matemáticas, la espiritualidad y las artes convergen de una vez por todas para satisfacer mi deseo interior de integrar mis ideas por medio de colores y formas.»",
+  "st.more":"Leer la declaración completa",
+  "p.since":"Desde 2010","p.kicker":"Fundador y director artístico",
+  "p.body":"Nacido de una exposición de 2010 que celebró un siglo de la primera obra abstracta de Kandinsky, 7 Plus One reúne a artistas abstractos en exposiciones en instituciones culturales y académicas del sur de la Florida.",
+  "p.cta":"Proponer una exposición",
+  "ex.kicker":"Exposiciones","ex.h":"De Miami a Seúl",
+  "ca.kicker":"Colecciones y reconocimientos","ca.h":"En museos, universidades y ministerios","ca.coll":"Colecciones públicas",
+  "ca.private":"También en colecciones privadas en Londres, Madrid, Nueva York, Chicago, Vero Beach y Miami.","ca.awards":"Premios","ca.recog":"Reconocimientos",
+  "press.kicker":"Prensa y crítica","press.h":"Lo que ha escrito la crítica","press.p":"Críticos y escritores de Miami, Venezuela, Costa Rica e Italia sobre su obra.","press.feat":"Artículos y entrevistas",
+  "c.kicker":"Contacto","c.h":"Coleccionar, encargar, exponer","c.p":"Los mensajes llegan directamente al estudio por WhatsApp, en español o en inglés. Cada botón abre un mensaje ya escrito para ti.",
+  "c.buy.h":"Adquirir una obra","c.buy.p":"Pregunta por disponibilidad, precio, envío o por ver una pintura en persona en Miami.","c.buy.b":"Preguntar por una obra",
+  "c.com.h":"Encargo","c.com.p":"Acepta encargos. Cuéntale la pared, el tamaño y la sensación que tienes en mente.","c.com.b":"Empezar un encargo",
+  "c.ex.h":"Exponer","c.ex.p":"Para galerías, museos, bibliotecas y curadores: exposiciones individuales, colectivas y proyectos de 7 Plus One.","c.ex.b":"Proponer una exposición",
+  "c.list.h":"Lista de coleccionistas","c.list.p":"Recibe un mensaje por WhatsApp cuando haya obras nuevas o una nueva exposición. Nada más.",
+  "c.list.label":"Tu número de WhatsApp","c.list.ph":"Tu WhatsApp, p. ej. 305 555 1234","c.list.b":"Agregarme",
+  "c.copy":"Copiar","c.studio":"Estudio",
+  "c.close":"«Hace mucho tiempo, de niño, el arte me ayudó a madurar. Ahora, ya mayor, el arte me está ayudando a rejuvenecer.»",
+  "f.rights":"Todos los derechos reservados.","f.note":"Imágenes de las obras © el artista.","m.work":"Ver la obra"
+};
+
+var T = {
+  en:{all:"All", onview:"On view now", upcoming:"Opening soon", recent:"Most recent solo exhibition", through:"Through", opens:"Opens",
+      fSolo:"solo and two-person exhibitions", fGroup:"group exhibitions", fCountries:"countries", fColl:"public collections",
+      ask:"Ask about this work", askSim:"Ask about similar works", lbAsk:"Ask about this work on WhatsApp", lbAskSim:"Ask about similar works on WhatsApp",
+      series:"Series", medium:"Medium", size:"Size", coll:"Collection", verse:"Verse", inColl:"This work is in a collection. Ask about available works from the same series.",
+      of:"of", prev:"Previous work", next:"Next work", close:"Close",
+      solo:"Solo", group:"Group", duo:"two-person, with ", online:"online", now:"On view",
+      exSub:"{s} solo and two-person exhibitions and {g} group exhibitions since 2008, in {c} countries.",
+      exIn:"Exhibited in", plusOnline:"Plus online exhibitions hosted in {x}.",
+      more:"Show all {n} group exhibitions", less:"Show fewer",
+      biblio:"Full bibliography: {n} catalogues, articles and interviews",
+      translated:"Translated from {l}", showOrig:"Show original", hideOrig:"Hide original",
+      langs:{es:"Spanish",it:"Italian",en:"English"},
+      copied:"Copied", needNum:"Enter a phone number with at least 10 digits.",
+      opened:"WhatsApp should open with your request ready to send. If it doesn't, message +1 305 505 7416 directly.",
+      vx:["Mathematics","Spirituality","Art","Vertex"],
+      epigraph:"<i>“What is essential in art is the control spirit has over matter.”</i> Jacques Maritain",
+      ft:"ft", sizeUnit:"in",
+      wa:{general:"Hello Emilio Héctor, I visited your website and I'd like to ask about your work.",
+          piece:"Hello Emilio Héctor, I'm interested in “{t}” ({m}, {d} in). Is it available?",
+          sim:"Hello Emilio Héctor, I saw “{t}” on your website. Do you have available works like it?",
+          buy:"Hello Emilio Héctor, I'd like to ask about acquiring one of your paintings.",
+          commission:"Hello Emilio Héctor, I'm interested in commissioning a painting. The space: … Approximate size: … Colors or mood: …",
+          curate:"Hello Emilio Héctor, I'm writing on behalf of [gallery / institution] about a possible exhibition.",
+          photo:"Hello Emilio Héctor, I'd like to see your photography portfolio.",
+          list:"Hello Emilio Héctor, please add me to your collectors list. My WhatsApp is {n}."}},
+  es:{all:"Todas", onview:"En exhibición ahora", upcoming:"Próxima exposición", recent:"Exposición individual más reciente", through:"Hasta el", opens:"Inaugura el",
+      fSolo:"exposiciones individuales y a dúo", fGroup:"exposiciones colectivas", fCountries:"países", fColl:"colecciones públicas",
+      ask:"Preguntar por esta obra", askSim:"Preguntar por obras similares", lbAsk:"Preguntar por esta obra en WhatsApp", lbAskSim:"Preguntar por obras similares en WhatsApp",
+      series:"Serie", medium:"Técnica", size:"Medidas", coll:"Colección", verse:"Versículo", inColl:"Esta obra pertenece a una colección. Pregunta por obras disponibles de la misma serie.",
+      of:"de", prev:"Obra anterior", next:"Obra siguiente", close:"Cerrar",
+      solo:"Individuales", group:"Colectivas", duo:"a dúo con ", online:"en línea", now:"En exhibición",
+      exSub:"{s} exposiciones individuales y a dúo y {g} colectivas desde 2008, en {c} países.",
+      exIn:"Ha expuesto en", plusOnline:"Además, exposiciones en línea organizadas desde {x}.",
+      more:"Ver las {n} exposiciones colectivas", less:"Ver menos",
+      biblio:"Bibliografía completa: {n} catálogos, artículos y entrevistas",
+      translated:"Traducido del {l}", showOrig:"Ver original", hideOrig:"Ocultar original",
+      langs:{es:"español",it:"italiano",en:"inglés"},
+      copied:"Copiado", needNum:"Escribe un número con al menos 10 dígitos.",
+      opened:"WhatsApp debería abrirse con tu mensaje listo para enviar. Si no se abre, escribe directamente al +1 305 505 7416.",
+      vx:["Matemáticas","Espiritualidad","Arte","Vértice"],
+      epigraph:"<i>«Lo esencial en el arte es el dominio que el espíritu ejerce sobre la materia.»</i> Jacques Maritain",
+      ft:"m", sizeUnit:"pulg.",
+      wa:{general:"Hola, Emilio Héctor. Visité su página web y quisiera consultarle sobre su obra.",
+          piece:"Hola, Emilio Héctor. Me interesa la obra «{t}» ({m}, {d} pulg.). ¿Está disponible?",
+          sim:"Hola, Emilio Héctor. Vi la obra «{t}» en su página. ¿Tiene obras disponibles similares?",
+          buy:"Hola, Emilio Héctor. Quisiera consultarle sobre la adquisición de una de sus pinturas.",
+          commission:"Hola, Emilio Héctor. Me interesa encargarle una pintura. El espacio: … Tamaño aproximado: … Colores o ambiente: …",
+          curate:"Hola, Emilio Héctor. Le escribo en nombre de [galería / institución] sobre una posible exposición.",
+          photo:"Hola, Emilio Héctor. Me gustaría ver su portafolio de fotografía.",
+          list:"Hola, Emilio Héctor. Por favor, agrégueme a su lista de coleccionistas. Mi WhatsApp es {n}."}}
+};
+
+/* ===== HELPERS ===== */
+var LANG = "en";
+var $ = function(s, r){ return (r||document).querySelector(s); };
+var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+function t(k){ return T[LANG][k]; }
+function fill(s, o){ return s.replace(/\{(\w)\}/g, function(_, k){ return o[k]; }); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function waLink(text){ return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(text); }
+function cm(i){ return (Math.round(i * 25.4) / 10).toLocaleString(LANG === "es" ? "es" : "en", {minimumFractionDigits:1, maximumFractionDigits:1}); }
+function dimsText(w){ return w.d[0] + " × " + w.d[1] + " " + t("sizeUnit") + " · " + cm(w.d[0]) + " × " + cm(w.d[1]) + " cm"; }
+function imgUrl(f, px){ return IMG_BASE + f + "/:/rs=w:" + px; }
+
+var MONTHS_ES = {Jan:"ene",Feb:"feb",Mar:"mar",Apr:"abr",May:"may",Jun:"jun",Jul:"jul",Aug:"ago",Sep:"sept",Oct:"oct",Nov:"nov",Dec:"dic"};
+function dateText(s){
+  if (LANG !== "es") return s;
+  return s
+    .replace(/^From /, "Desde ").replace(/^December$/, "diciembre")
+    .replace(/([A-Z][a-z]{2}) (\d{1,2}) – (\d{1,2})$/, function(_, m, a, b){ return a + " – " + b + " " + MONTHS_ES[m]; })
+    .replace(/([A-Z][a-z]{2}) (\d{1,2})\b(, (\d{4}))?/g, function(_, m, d, __, y){ return d + " " + (MONTHS_ES[m] || m) + (y ? " " + y : ""); })
+    .replace(/\b([A-Z][a-z]{2})\b(?= \d{4}|–)/g, function(m){ return MONTHS_ES[m] || m; })
+    .replace(/\(catalog\)/g, "(catálogo)").replace(/\(bi-fold catalog\)/g, "(catálogo díptico)").replace(/\(tri-fold catalog\)/g, "(catálogo tríptico)");
+}
+function placeText(city, k){
+  var c = COUNTRY[k];
+  if (!c || k === "US") return city;
+  var en = c[0];
+  if (city.slice(-en.length) === en) return city.slice(0, -en.length) + (LANG === "es" ? c[1] : en);
+  return city;
+}
+function parseISO(s){ var p = s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+function fmtDate(s){
+  return parseISO(s).toLocaleDateString(LANG === "es" ? "es-ES" : "en-US", {month:"short", day:"numeric", year:"numeric"});
+}
+
+/* ===== IMAGES (graceful when blocked) ===== */
+var imgStats = {ok:0, fail:0};
+function loadImg(img, file, px){
+  img.dataset.try = "0";
+  img.onload = function(){ img.classList.add("ok"); imgStats.ok++; var ph = img.parentNode && img.parentNode.querySelector(".ph"); if (ph) ph.hidden = true; };
+  img.onerror = function(){
+    if (img.dataset.try === "0"){ img.dataset.try = "1"; img.src = IMG_BASE + file; return; }
+    img.hidden = true; imgStats.fail++; checkImgs();
+  };
+  img.src = imgUrl(file, px);
+}
+function checkImgs(){ if (imgStats.fail >= 3 && imgStats.ok === 0) document.body.classList.add("noimgs"); }
+
+/* Placeholder sized to the canvas's true proportions inside a cell of aspect cellR (w/h) */
+function phHTML(w, cellR){
+  var r = w.d[0] / w.d[1], W, H;
+  if (r >= cellR){ W = 84; H = 84 * cellR / r; } else { H = 84; W = 84 * r / cellR; }
+  return '<span class="ph" style="width:' + W.toFixed(1) + '%;height:' + H.toFixed(1) + '%"><span><i>' + esc(w.t) + '</i><small>' + w.d[0] + ' × ' + w.d[1] + '</small></span></span>';
+}
+
+/* ===== RENDER: FACTS + ON VIEW ===== */
+var physical = {}, onlineOnly = {};
+SOLO.concat(GROUP).forEach(function(e){ if (!e[7]) physical[e[5]] = 1; });
+SOLO.concat(GROUP).forEach(function(e){ if (e[7] && !physical[e[5]]) onlineOnly[e[5]] = 1; });
+var NCOUNTRIES = Object.keys(physical).length;
+
+function renderFacts(){
+  $("#facts").innerHTML = [
+    [SOLO.length, t("fSolo")], [GROUP.length, t("fGroup")], [NCOUNTRIES, t("fCountries")], [COLLECTIONS.length, t("fColl")]
+  ].map(function(f){ return '<li><b>' + f[0] + '</b><span>' + f[1] + '</span></li>'; }).join("");
+}
+
+function renderOnView(){
+  var today = new Date(); today.setHours(0,0,0,0);
+  var all = SOLO.map(function(e){ return {e:e, solo:1}; }).concat(GROUP.map(function(e){ return {e:e, solo:0}; })).filter(function(x){ return x.e[8]; });
+  var cur = all.filter(function(x){ return parseISO(x.e[8]) <= today && parseISO(x.e[9]) >= today && !x.e[7]; });
+  cur.sort(function(a, b){ return b.solo - a.solo; });
+  var up = all.filter(function(x){ return parseISO(x.e[8]) > today; }).sort(function(a, b){ return parseISO(a.e[8]) - parseISO(b.e[8]); });
+  var pick, label, when;
+  if (cur.length){ pick = cur[0]; label = t("onview"); when = t("through") + " " + fmtDate(pick.e[9]); }
+  else if (up.length){ pick = up[0]; label = t("upcoming"); when = t("opens") + " " + fmtDate(pick.e[8]); }
+  else { pick = {e:SOLO[0]}; label = t("recent"); when = dateText(SOLO[0][6]) + ", " + SOLO[0][0]; }
+  var e = pick.e;
+  $("#onview").innerHTML = '<span class="dot" aria-hidden="true"></span><span class="kicker k">' + label + '</span>' +
+    '<span class="t">' + esc(e[1]) + (LANG === "en" && e[2] ? ' <span style="font-style:normal;font-family:var(--f-body);font-size:.8em;color:var(--muted)">(' + esc(e[2]) + ')</span>' : '') + '</span>' +
+    '<span class="v">' + esc(e[3]) + ', ' + esc(placeText(e[4], e[5])) + ' · ' + when + '</span>';
+  return e;
+}
+
+/* ===== RENDER: WORK GRID ===== */
+var FILTER = "all", VISIBLE = WORKS.slice();
+function renderChips(){
+  var counts = {all:WORKS.length};
+  WORKS.forEach(function(w){ counts[w.s] = (counts[w.s] || 0) + 1; });
+  var keys = ["all","genesis","eccl","small"];
+  $("#chips").innerHTML = keys.map(function(k){
+    var label = k === "all" ? t("all") : SERIES[k][LANG];
+    return '<button type="button" class="chip" data-f="' + k + '" aria-pressed="' + (FILTER === k) + '">' + label + '<span class="n">' + counts[k] + '</span></button>';
+  }).join("");
+  $$("#chips .chip").forEach(function(b){ b.onclick = function(){ setFilter(b.dataset.f); }; });
+  $("#series-note").innerHTML = FILTER === "all" ? "" : SERIES[FILTER].note[LANG];
+}
+function setFilter(f){
+  FILTER = f;
+  VISIBLE = WORKS.filter(function(w){ return f === "all" || w.s === f; });
+  $$("#grid .work").forEach(function(el){ el.hidden = !(f === "all" || el.dataset.s === f); });
+  renderChips();
+  if (!$("#wallview").hidden) renderWall();
+}
+function renderGrid(){
+  $("#grid").innerHTML = WORKS.map(function(w){
+    return '<article class="work" data-s="' + w.s + '" data-id="' + w.id + '">' +
+      '<button class="cell" type="button" data-open="' + w.id + '" aria-label="' + esc(w.t) + '">' + phHTML(w, 1) + '<img alt="' + esc(w.t + ", " + MEDIUM[w.m].en) + '" loading="lazy" data-f="' + w.f + '"></button>' +
+      '<div class="label"><span class="ti">' + esc(w.t) + '</span><span class="lm">' + MEDIUM[w.m][LANG] + '</span><span class="mono ld" style="font-size:13px">' + dimsText(w) + '</span>' +
+      (w.coll ? '<span class="coll lc">' + w.coll[LANG] + '</span>' : '') + '</div>' +
+      '<a class="ask" href="' + waLink(waPiece(w)) + '" target="_blank" rel="noopener">' + (w.coll ? t("askSim") : t("ask")) + ' →</a>' +
+      '</article>';
+  }).join("");
+  $$("#grid img").forEach(function(img){ loadImg(img, img.dataset.f, 900); });
+  setFilter(FILTER);
+}
+function relabelGrid(){
+  $$("#grid .work").forEach(function(el){
+    var w = byId(el.dataset.id);
+    $(".lm", el).textContent = MEDIUM[w.m][LANG];
+    $(".ld", el).textContent = dimsText(w);
+    if (w.coll) $(".lc", el).textContent = w.coll[LANG];
+    var a = $(".ask", el); a.href = waLink(waPiece(w)); a.textContent = (w.coll ? t("askSim") : t("ask")) + " →";
+  });
+}
+function byId(id){ for (var i = 0; i < WORKS.length; i++) if (WORKS[i].id === id) return WORKS[i]; }
+function waPiece(w){
+  return fill(w.coll ? t("wa").sim : t("wa").piece, {t:w.t, m:MEDIUM[w.m][LANG].toLowerCase(), d:w.d[0] + " × " + w.d[1]});
+}
+
+/* ===== RENDER: TO-SCALE WALL ===== */
+var ORIENT = {}; // id -> [w,h] corrected from photo
+function wdims(w){ return ORIENT[w.id] || [w.d[0], w.d[1]]; }
+function renderWall(){
+  var s = window.innerWidth < 700 ? 3.4 : 5.2;          // px per inch
+  var H = 92, CL = 57, GAP = 14, SER = 30, x = 8;        // inches
+  var html = '', last = null;
+  html += '<div class="person" style="left:' + (x*s) + 'px;width:' + (20*s) + 'px;height:' + (67*s) + 'px"><svg viewBox="0 0 20 67" preserveAspectRatio="none" aria-hidden="true"><circle cx="10" cy="5" r="4.4" fill="currentColor" opacity=".35"/><path d="M4 13 Q10 10 16 13 L17.5 38 L14.5 38 L13.5 66.5 L10.6 66.5 L10 42 L9.4 66.5 L6.5 66.5 L5.5 38 L2.5 38 Z" fill="currentColor" opacity=".35"/></svg></div>';
+  x += 20 + GAP + 6;
+  VISIBLE.forEach(function(w){
+    if (last && last !== w.s) x += SER - GAP;
+    var d = wdims(w), pw = d[0], ph = d[1];
+    var top = (H - CL - ph/2) * s;
+    html += '<button class="piece" type="button" data-open="' + w.id + '" style="left:' + (x*s) + 'px;top:' + top + 'px;width:' + (pw*s) + 'px;height:' + (ph*s) + 'px" aria-label="' + esc(w.t) + '">' +
+      '<img alt="" data-f="' + w.f + '"><span class="nm">' + esc(w.t) + '</span><span class="tag">' + esc(w.t) + ' · ' + w.d[0] + '×' + w.d[1] + '</span></button>';
+    x += pw + GAP; last = w.s;
+  });
+  var total = x + 10;
+  html += '<div class="cl" style="top:' + ((H - CL) * s) + 'px"><span>57″ · 1,45 m</span></div><div class="floor"></div>';
+  if (LANG === "es"){
+    for (var m = 0; m * 39.37 <= total; m += 0.5){ html += '<div class="tick' + (m === 0 ? ' t0' : '') + '" style="left:' + (m*39.37*s) + 'px">' + (m % 1 === 0 ? '<span>' + m + ' m</span>' : '') + '</div>'; }
+  } else {
+    for (var f = 0; f * 12 <= total; f++){ html += '<div class="tick' + (f === 0 ? ' t0' : '') + '" style="left:' + (f*12*s) + 'px">' + (f % 2 === 0 ? '<span>' + f + ' ft</span>' : '') + '</div>'; }
+  }
+  var wall = $("#wall");
+  wall.style.width = (total * s) + "px";
+  wall.style.height = (H * s) + "px";
+  wall.style.marginBottom = "34px";
+  wall.innerHTML = html;
+  $$("#wall img").forEach(function(img){ loadImg(img, img.dataset.f, 600); });
+}
+
+/* Learn real orientation from the photos, so the wall is right even if dimensions are listed height-first */
+function learnOrientation(){
+  WORKS.forEach(function(w){
+    var probe = new Image();
+    probe.onload = function(){
+      var photoLandscape = probe.naturalWidth > probe.naturalHeight * 1.05;
+      var photoPortrait = probe.naturalHeight > probe.naturalWidth * 1.05;
+      var a = w.d[0], b = w.d[1];
+      if (a === b) return;
+      var big = Math.max(a,b), small = Math.min(a,b);
+      if (photoLandscape) ORIENT[w.id] = [big, small];
+      else if (photoPortrait) ORIENT[w.id] = [small, big];
+      if (!$("#wallview").hidden) renderWall();
+    };
+    probe.src = imgUrl(w.f, 300);
+  });
+}
+
+/* ===== LIGHTBOX ===== */
+var lb = $("#lb"), CUR = 0;
+function openWork(id){
+  var list = VISIBLE.some(function(w){ return w.id === id; }) ? VISIBLE : WORKS;
+  LIST = list; CUR = list.map(function(w){ return w.id; }).indexOf(id);
+  showWork();
+  if (typeof lb.showModal === "function"){ if (!lb.open) lb.showModal(); } else { lb.setAttribute("open", ""); }
+}
+var LIST = WORKS;
+function showWork(){
+  var w = LIST[CUR];
+  var box = $("#lb-img");
+  var d = wdims(w);
+  box.innerHTML = '<span class="ph" style="aspect-ratio:' + d[0] + '/' + d[1] + '"><span><i>' + esc(w.t) + '</i><small>' + w.d[0] + ' × ' + w.d[1] + '</small></span></span><img alt="' + esc(w.t) + '">';
+  var ph = $(".ph", box);
+  var img = $("img", box);
+  img.onload = function(){ img.classList.add("ok"); ph.hidden = true; };
+  img.onerror = function(){ if (!img.dataset.t){ img.dataset.t = 1; img.src = IMG_BASE + w.f; } else { img.hidden = true; } };
+  img.src = imgUrl(w.f, 1800);
+  $("#lb-series").textContent = SERIES[w.s][LANG];
+  $("#lb-title").textContent = w.t;
+  var dl = '<dt>' + t("medium") + '</dt><dd>' + MEDIUM[w.m][LANG] + '</dd><dt>' + t("size") + '</dt><dd class="mono">' + dimsText(w) + '</dd>';
+  if (w.coll) dl += '<dt>' + t("coll") + '</dt><dd>' + w.coll[LANG] + '</dd>';
+  if (w.verse) dl += '<dt>' + t("verse") + '</dt><dd><i>' + w.verse[LANG] + '</i></dd>';
+  $("#lb-dl").innerHTML = dl;
+  $("#lb-note").textContent = w.coll ? t("inColl") : "";
+  $("#lb-note").hidden = !w.coll;
+  var ask = $("#lb-ask"); ask.href = waLink(waPiece(w)); ask.textContent = w.coll ? t("lbAskSim") : t("lbAsk");
+  $("#lb-count").textContent = (CUR + 1) + " " + t("of") + " " + LIST.length;
+  $("#lb-prev").setAttribute("aria-label", t("prev")); $("#lb-next").setAttribute("aria-label", t("next")); $("#lb-close").setAttribute("aria-label", t("close"));
+}
+function step(n){ CUR = (CUR + n + LIST.length) % LIST.length; showWork(); }
+$("#lb-prev").onclick = function(){ step(-1); };
+$("#lb-next").onclick = function(){ step(1); };
+$("#lb-close").onclick = function(){ lb.close ? lb.close() : lb.removeAttribute("open"); };
+lb.addEventListener("click", function(e){ if (e.target === lb) lb.close(); });
+document.addEventListener("keydown", function(e){
+  if (!lb.open) return;
+  if (e.key === "ArrowRight") step(1);
+  if (e.key === "ArrowLeft") step(-1);
+});
+document.addEventListener("click", function(e){
+  var o = e.target.closest && e.target.closest("[data-open]");
+  if (o){ e.preventDefault(); openWork(o.dataset.open); }
+});
+
+/* ===== RENDER: ARTIST ===== */
+function renderTimeline(){
+  $("#timeline").innerHTML = TIMELINE.map(function(r){ return '<li><span class="y">' + r[0] + '</span><span>' + (LANG === "es" ? r[2] : r[1]) + '</span></li>'; }).join("");
+}
+function renderStatement(){
+  $("#st-full").innerHTML = STATEMENT[LANG].map(function(p){ return '<p>' + p + '</p>'; }).join("");
+  $("#epigraph").innerHTML = t("epigraph");
+  var v = t("vx"); ["a","b","c","d"].forEach(function(k, i){ $("#vx-" + k).textContent = v[i]; });
+  $("#venues").innerHTML = PROJECT_VENUES.map(function(v){ return '<span>' + v + '</span>'; }).join("");
+}
+
+/* ===== RENDER: EXHIBITIONS ===== */
+var EXTYPE = "solo", EXALL = false;
+function exRow(e, today){
+  var now = e[8] && parseISO(e[8]) <= today && parseISO(e[9]) >= today;
+  var duo = e[10] ? ' <span class="tag">' + t("duo") + esc(e[10]) + '</span>' : '';
+  var onl = e[7] ? ' <span class="tag">' + t("online") + '</span>' : '';
+  var nowt = now ? ' <span class="tag now">' + t("now") + '</span>' : '';
+  var tr = (LANG === "en" && e[2]) ? ' <span class="tr">(' + esc(e[2]) + ')</span>' : '';
+  var venue = e[3] ? esc(e[3]) + ', ' : '';
+  return '<li><span class="et">' + esc(e[1]) + tr + duo + onl + nowt + '</span><span class="ev">' + venue + esc(placeText(e[4], e[5])) + '</span><span class="ed">' + esc(dateText(e[6])) + '</span></li>';
+}
+function renderEx(){
+  var today = new Date(); today.setHours(0,0,0,0);
+  var list = EXTYPE === "solo" ? SOLO : GROUP;
+  var cut = 2023;
+  if (EXTYPE === "group" && !EXALL) list = list.filter(function(e){ return e[0] >= cut; });
+  var years = [];
+  list.forEach(function(e){ if (years.indexOf(e[0]) < 0) years.push(e[0]); });
+  $("#exlist").innerHTML = years.map(function(y){
+    return '<div class="ex-year"><h3>' + y + '</h3><ul>' + list.filter(function(e){ return e[0] === y; }).map(function(e){ return exRow(e, today); }).join("") + '</ul></div>';
+  }).join("");
+  $("#ex-solo").textContent = t("solo") + " (" + SOLO.length + ")";
+  $("#ex-group").textContent = t("group") + " (" + GROUP.length + ")";
+  $("#ex-solo").setAttribute("aria-pressed", EXTYPE === "solo");
+  $("#ex-group").setAttribute("aria-pressed", EXTYPE === "group");
+  var more = $("#ex-more");
+  more.hidden = EXTYPE !== "group";
+  more.textContent = EXALL ? t("less") : fill(t("more"), {n:GROUP.length});
+  $("#ex-sub").textContent = fill(t("exSub"), {s:SOLO.length, g:GROUP.length, c:NCOUNTRIES});
+  var order = ["US","ES","CR","KR","IT","FR","CO","RU","PA","DE","PT","NL","AE","PE","AR","VE"];
+  var names = order.filter(function(k){ return physical[k]; }).map(function(k){ return COUNTRY[k][LANG === "es" ? 1 : 0]; });
+  var ol = Object.keys(onlineOnly).map(function(k){ return COUNTRY[k][LANG === "es" ? 1 : 0]; });
+  $("#countries").innerHTML = '<b>' + t("exIn") + ':</b> ' + names.join(" · ") + (ol.length ? '. ' + fill(t("plusOnline"), {x:ol.join(LANG === "es" ? " e " : " and ")}) : '.');
+}
+$("#ex-solo").onclick = function(){ EXTYPE = "solo"; renderEx(); };
+$("#ex-group").onclick = function(){ EXTYPE = "group"; EXALL = false; renderEx(); };
+$("#ex-more").onclick = function(){ EXALL = !EXALL; renderEx(); if (!EXALL) $("#exhibitions").scrollIntoView(); };
+
+/* ===== RENDER: COLLECTIONS, AWARDS ===== */
+function renderCA(){
+  var guess = {"Seoul, South Korea":"KR","Geoje, South Korea":"KR","Panama City, Panama":"PA","Neiva, Colombia":"CO","Lima, Peru":"PE","Ibagué, Colombia":"CO","Madrid, Spain":"ES"};
+  $("#collections").innerHTML = COLLECTIONS.map(function(c){ return '<li>' + esc(c[0]) + '<span>' + esc(placeText(c[1], guess[c[1]] || "US")) + '</span></li>'; }).join("");
+  var row = function(a){ return '<li><span class="y">' + a[0] + '</span><div>' + (LANG === "es" ? a[2] : a[1]) + '<small>' + (LANG === "es" ? a[4] : a[3]) + '</small></div></li>'; };
+  $("#awards").innerHTML = AWARDS.map(row).join("");
+  $("#recog").innerHTML = RECOG.map(row).join("");
+}
+
+/* ===== RENDER: PRESS ===== */
+function renderPress(){
+  $("#quotes").innerHTML = QUOTES.map(function(q, i){
+    var same = q.lang === LANG;
+    var body = same ? q[q.lang] : q[LANG];
+    var oq = q.lang === "en" ? ["“","”"] : ["«","»"];
+    var orig = same ? '' : '<div class="orig">' + fill(t("translated"), {l:T[LANG].langs[q.lang]}) + ' · <button type="button" data-q="' + i + '" aria-expanded="false">' + t("showOrig") + '</button><p hidden lang="' + q.lang + '">' + oq[0] + q[q.lang] + oq[1] + '</p></div>';
+    return '<figure class="q"><blockquote' + (same ? ' lang="' + q.lang + '"' : '') + '>' + body + '</blockquote><figcaption class="who"><b>' + esc(q.who) + '</b><span>' + q.where[LANG] + '</span></figcaption>' + orig + '</figure>';
+  }).join("");
+  $$("#quotes [data-q]").forEach(function(b){
+    b.onclick = function(){ var p = b.nextElementSibling; p.hidden = !p.hidden; b.setAttribute("aria-expanded", !p.hidden); b.textContent = p.hidden ? t("showOrig") : t("hideOrig"); };
+  });
+  $("#articles").innerHTML = ARTICLES.map(function(a){
+    return '<li><span class="ot">' + esc(a[0]) + '</span><span class="at">' + esc(a[1]) + '</span><span class="am">' + (a[2] ? esc(LANG === "es" && a[2] === "Editorial board" ? "Consejo de redacción" : a[2]) + ' · ' : '') + esc(dateText(a[3])) + '</span></li>';
+  }).join("");
+  $("#biblio-sum").textContent = fill(t("biblio"), {n:BIBLIO.length});
+  $("#biblio").innerHTML = BIBLIO.map(function(b){ return '<li><span class="by">' + b[0] + '</span><b>' + esc(dateText(b[1])) + '</b>. ' + esc(dateText(b[2])) + '</li>'; }).join("");
+}
+
+/* ===== WHATSAPP LINKS ===== */
+function refreshWa(){
+  var wa = t("wa");
+  $$(".wa-general").forEach(function(a){ a.href = waLink(wa.general); });
+  $$(".wa-buy").forEach(function(a){ a.href = waLink(wa.buy); });
+  $$(".wa-commission").forEach(function(a){ a.href = waLink(wa.commission); });
+  $$(".wa-curate").forEach(function(a){ a.href = waLink(wa.curate); });
+  $$(".wa-photo").forEach(function(a){ a.href = waLink(wa.photo); });
+}
+
+/* ===== LANGUAGE ===== */
+var EN_CACHE = {};
+function setLang(l){
+  LANG = l === "es" ? "es" : "en";
+  document.documentElement.lang = LANG;
+  $$("[data-i18n]").forEach(function(el){
+    var k = el.dataset.i18n;
+    if (!(k in EN_CACHE)) EN_CACHE[k] = el.innerHTML;
+    el.innerHTML = LANG === "es" && ES[k] ? ES[k] : EN_CACHE[k];
+  });
+  $$("[data-i18n-ph]").forEach(function(el){
+    var k = el.dataset.i18nPh;
+    if (!(("ph:" + k) in EN_CACHE)) EN_CACHE["ph:" + k] = el.placeholder;
+    el.placeholder = LANG === "es" && ES[k] ? ES[k] : EN_CACHE["ph:" + k];
+  });
+  $("#lang-en").setAttribute("aria-pressed", LANG === "en");
+  $("#lang-es").setAttribute("aria-pressed", LANG === "es");
+  try { localStorage.setItem("eh-lang", LANG); } catch(e){}
+  renderFacts(); renderOnView(); renderChips(); relabelGrid(); renderTimeline(); renderStatement(); renderEx(); renderCA(); renderPress(); refreshWa();
+  if (!$("#wallview").hidden) renderWall();
+  if (lb.open) showWork();
+}
+$("#lang-en").onclick = function(){ setLang("en"); };
+$("#lang-es").onclick = function(){ setLang("es"); };
+
+/* ===== VIEW TOGGLE ===== */
+$("#view-grid").onclick = function(){ $("#grid").hidden = false; $("#wallview").hidden = true; this.setAttribute("aria-pressed", true); $("#view-wall").setAttribute("aria-pressed", false); };
+$("#view-wall").onclick = function(){ $("#grid").hidden = true; $("#wallview").hidden = false; this.setAttribute("aria-pressed", true); $("#view-grid").setAttribute("aria-pressed", false); renderWall(); };
+var rT; window.addEventListener("resize", function(){ clearTimeout(rT); rT = setTimeout(function(){ if (!$("#wallview").hidden) renderWall(); }, 150); });
+
+/* ===== NAV, COPY, COLLECTORS ===== */
+$("#burger").onclick = function(){ var o = $("#navlinks").classList.toggle("open"); this.setAttribute("aria-expanded", o); };
+$$("#navlinks a").forEach(function(a){ a.addEventListener("click", function(){ $("#navlinks").classList.remove("open"); $("#burger").setAttribute("aria-expanded", false); }); });
+$$(".copy").forEach(function(b){
+  b.onclick = function(){
+    var v = b.dataset.copy, done = function(){ var o = b.textContent; b.textContent = t("copied"); setTimeout(function(){ b.textContent = o; }, 1400); };
+    try { navigator.clipboard.writeText(v).then(done, function(){ selectNear(b); }); } catch(e){ selectNear(b); }
+  };
+});
+function selectNear(b){ var a = b.previousElementSibling; var r = document.createRange(); r.selectNodeContents(a); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+$("#collect-form").addEventListener("submit", function(e){
+  e.preventDefault();
+  var raw = $("#collect-wa").value.trim(), digits = raw.replace(/\D/g, "");
+  var msg = $("#collect-msg");
+  if (digits.length < 10){ msg.textContent = t("needNum"); $("#collect-wa").focus(); return; }
+  var url = waLink(fill(t("wa").list, {n:raw}));
+  var w = null; try { w = window.open(url, "_blank", "noopener"); } catch(err){}
+  if (!w){ try { location.href = url; } catch(err){} }
+  msg.textContent = t("opened");
+});
+
+/* Hide the phone CTA bar while the hero buttons are on screen */
+(function(){
+  var bar = $(".mbar"), row = $(".hero .cta-row");
+  if (!("IntersectionObserver" in window) || !bar || !row) return;
+  new IntersectionObserver(function(es){ bar.classList.toggle("away", es[0].isIntersecting); }).observe(row);
+})();
+
+/* ===== BOOT ===== */
+if (!SHOW_CONCEPT_RIBBON) $("#ribbon").hidden = true;
+$("#yr").textContent = new Date().getFullYear();
+(function(){
+  var heroImg = $(".hero-art img"), g3 = byId("genesis-3");
+  heroImg.insertAdjacentHTML("beforebegin", phHTML(g3, 0.8));
+  loadImg(heroImg, heroImg.dataset.src, 1400);
+  var p = $(".portrait img"); p.onload = function(){ p.classList.add("ok"); }; p.onerror = function(){ if (!p.dataset.t){ p.dataset.t = 1; p.src = IMG_BASE + "EHR.jpg"; } else { p.hidden = true; p.parentNode.insertAdjacentHTML("beforeend", '<span class="ph"><span><i>Emilio Héctor Rodríguez</i></span></span>'); } };
+  p.src = imgUrl("EHR.jpg", 900);
+})();
+renderGrid();
+learnOrientation();
+var start = "en";
+try { var saved = localStorage.getItem("eh-lang"); if (saved) start = saved; else if ((navigator.language || "").toLowerCase().indexOf("es") === 0) start = "es"; } catch(e){ if ((navigator.language || "").toLowerCase().indexOf("es") === 0) start = "es"; }
+setLang(start);
+</script>
+</body></html>

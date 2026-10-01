@@ -43,3 +43,10 @@
   for = "/data/*.json"
   [headers.values]
     Cache-Control = "public, max-age=60"
+
+# Client redesign concepts: shareable by link, but kept out of search results
+# so they never compete with the client's real site.
+[[headers]]
+  for = "/concepts/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
