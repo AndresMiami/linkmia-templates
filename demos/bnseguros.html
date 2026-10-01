@@ -1697,6 +1697,10 @@
             address: v => (/^\d+$/.test(v) ? check.zip(v) : v.length >= 5 ? '' : 'Escribe la dirección completa o un ZIP de 5 dígitos.')
         };
 
+        // VINs never use I, O or Q (too easy to confuse with 1 and 0), so a typed
+        // O or Q is a zero and an I is a one: fix it as they type.
+        const vinChars = v => v.toUpperCase().replace(/[OQ]/g, '0').replace(/I/g, '1').replace(/[^A-Z0-9]/g, '');
+
         const YES_NO = [{ value: 'si', label: 'Sí' }, { value: 'no', label: 'No' }];
         const currentInsurance = a => (a.seguroActual === 'si'
             ? ((a.aseguradora || '').trim() ? `Sí, con ${a.aseguradora.trim()}` : 'Sí')
@@ -1745,7 +1749,7 @@
                         fields: [
                             {
                                 name: 'vin', kind: 'text', label: 'VIN', hint: '¿Lo tienes a mano? Escríbelo y completamos el año, la marca y el modelo por ti.',
-                                validate: check.vin, transform: v => v.toUpperCase().replace(/[^A-Z0-9]/g, ''),
+                                validate: check.vin, transform: vinChars,
                                 maxlength: 17, autocapitalize: 'characters', autocomplete: 'off', spellcheck: 'false', placeholder: 'Ej. 1HGCM82633A004352', sum: 'VIN',
                                 help: {
                                     label: '¿Dónde lo encuentro?', title: '¿Dónde está el VIN?',
