@@ -5,6 +5,7 @@ const { chromium, ok, newPhone, settle, txt, state, decode, summary, shotPath, D
   const primary = '.q-foot .q-primary';
   const title = () => txt(p, '#q-title');
   await p.tap('.app-cta[data-form="auto"]'); await settle(p);
+  await p.fill('#q-intro-zip', '33125');
   await p.tap(primary); await settle(p);
   await p.tap('#q-anio'); await settle(p);
   await p.tap('.sheet-row:has-text("2019")'); await settle(p);
@@ -57,6 +58,7 @@ const { chromium, ok, newPhone, settle, txt, state, decode, summary, shotPath, D
   ok(await txt(p, primary) === 'Empezar', 'after sending, the draft is cleared');
 
   console.log('START OVER');
+  await p.fill('#q-intro-zip', '33125');
   await p.tap(primary); await settle(p);
   await p.tap('#q-anio'); await settle(p); await p.tap('.sheet-row:has-text("2020")'); await settle(p);
   await p.tap('.make-tile:has-text("Kia")'); await settle(p); await p.tap('.sheet-row:has-text("Soul")'); await settle(p);
