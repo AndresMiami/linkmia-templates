@@ -245,6 +245,29 @@
             text-decoration: underline;
         }
 
+        .custom-badge {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 6px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--admin-primary);
+            color: var(--admin-primary);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .page-card-actions a.btn {
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .page-card-actions .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
         .status-dot {
             width: 10px;
             height: 10px;
@@ -1883,7 +1906,8 @@
             }
 
             grid.innerHTML = pagesData.pages.map((page, index) => {
-                const fullUrl = `https://link.linkmia.com/p/${page.slug}`;
+                const custom = isCustomPage(page);
+                const fullUrl = publicUrl(page);
                 const shortCode = page.shortCode || generateShortCode();
                 const shortUrl = `link.linkmia.com/s/${shortCode}`;
                 const stats = analyticsData[page.slug] || { views: 0, clicks: 0 };
@@ -1892,9 +1916,9 @@
                 <div class="page-card">
                     <div class="page-card-header">
                         <div>
-                            <h3>${page.name}</h3>
+                            <h3>${page.name}${custom ? ' <span class="custom-badge" title="Built in code, not with the page editor">Custom</span>' : ''}</h3>
                             <a class="url" href="${fullUrl}" target="_blank">
-                                link.linkmia.com/p/${page.slug}
+                                ${fullUrl.replace('https://', '')}
                             </a>
                             <div class="short-link">
                                 <span class="short-link-url">${shortUrl}</span>
@@ -1916,9 +1940,13 @@
                         </div>
                     </div>
                     <div class="page-card-actions">
-                        <button class="btn btn-secondary btn-sm" onclick="editPage(${index})">Edit</button>
+                        ${custom
+                            ? `<a class="btn btn-secondary btn-sm" href="${fullUrl}" target="_blank" title="Custom page: changes are made in code">Open</a>`
+                            : `<button class="btn btn-secondary btn-sm" onclick="editPage(${index})">Edit</button>`}
                         <button class="btn btn-secondary btn-sm" onclick="showQRCode('${page.slug}', '${page.name}')">QR</button>
-                        <button class="btn btn-danger btn-sm" onclick="deletePage(${index})">Delete</button>
+                        ${custom
+                            ? `<button class="btn btn-danger btn-sm" disabled title="Custom pages are removed in code">Delete</button>`
+                            : `<button class="btn btn-danger btn-sm" onclick="deletePage(${index})">Delete</button>`}
                     </div>
                 </div>
             `}).join('');
@@ -2456,6 +2484,10 @@
         }
 
         async function deletePage(index) {
+            if (isCustomPage(pagesData.pages[index])) {
+                showToast('Custom pages are removed in code, not here', 'error');
+                return;
+            }
             if (!confirm('Delete this page?')) return;
             pagesData.pages.splice(index, 1);
             await saveToGitHub();
@@ -2531,6 +2563,12 @@
         // EDIT PAGE (called from grid)
         // ============================================
         function editPage(index) {
+            // The page editor rebuilds a page from its form fields, which would
+            // wipe a custom page's own settings (type, url).
+            if (isCustomPage(pagesData.pages[index])) {
+                showToast('Custom pages are edited in code, not here', 'error');
+                return;
+            }
             openEditor(index);
         }
 
@@ -2555,7 +2593,7 @@
         // ============================================
         function showQRCode(slug, name) {
             currentQRSlug = slug;
-            const url = `https://link.linkmia.com/p/${slug}`;
+            const url = publicUrl(pagesData.pages.find(p => p.slug === slug) || { slug });
 
             document.getElementById('qr-modal-title').textContent = name;
             document.getElementById('qr-url').textContent = url;
@@ -2591,6 +2629,21 @@
             link.href = canvas.toDataURL('image/png');
             link.click();
             showToast('QR code downloaded!', 'success');
+        }
+
+        // ============================================
+        // PAGE URLS
+        // ============================================
+        // Custom pages are built in code (e.g. the Best National quiz) and live at
+        // their own path; editor-built pages live at /p/<slug>.
+        function isCustomPage(page) {
+            return !!(page && page.type === 'custom' && page.url);
+        }
+
+        function publicUrl(page) {
+            return isCustomPage(page)
+                ? `https://link.linkmia.com${page.url}`
+                : `https://link.linkmia.com/p/${page.slug}`;
         }
 
         // ============================================
