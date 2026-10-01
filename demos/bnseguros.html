@@ -1220,6 +1220,7 @@
             animation: slideUp 0.3s ease both;
             padding-bottom: env(safe-area-inset-bottom);
         }
+        .sheet.is-full { height: 90vh; height: 90dvh; }
         .sheet-head {
             flex: none;
             display: grid;
@@ -1330,6 +1331,31 @@
         .sheet-row.muted { color: var(--text-muted); }
         .make-tile:focus-visible, .sheet-row:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
         .sheet-empty { color: var(--text-muted); text-align: center; padding: 16px 0; font-size: 14px; }
+        .sheet-section .count { font-weight: 500; letter-spacing: 0; text-transform: none; opacity: 0.8; }
+
+        /* models loading: placeholder rows in the list's own rhythm, so the real
+           list replaces them without the sheet jumping */
+        .sheet-skeleton { list-style: none; margin: 0; padding: 0; }
+        .sheet-skeleton li {
+            display: flex;
+            align-items: center;
+            min-height: 52px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .sheet-skeleton li::before {
+            content: '';
+            height: 14px;
+            width: var(--w, 50%);
+            border-radius: 7px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.06) 100%) 0 0 / 200% 100%;
+            animation: skeletonShine 1.2s ease-in-out infinite;
+        }
+        .sheet-fade-in { animation: sheetListIn 0.22s ease both; }
+        @keyframes skeletonShine { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+        @keyframes sheetListIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) {
+            .sheet-skeleton li::before, .sheet-fade-in { animation: none; }
+        }
         .sheet-other { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
         .sheet-other .q-input { width: 100%; }
         .sheet-text { margin-bottom: 20px; font-size: 15px; line-height: 1.55; }
@@ -2046,44 +2072,82 @@
                 .finally(() => clearTimeout(timer));
         }
 
+        // Best sellers per brand: the "Populares" shortcut on long model lists
+        // (only those NHTSA confirms for the chosen year are shown).
+        const POPULAR_MODELS = {
+            'Chevrolet': ['Silverado 1500', 'Equinox', 'Malibu', 'Tahoe', 'Traverse', 'Trax'],
+            'Ford': ['F-150', 'Explorer', 'Escape', 'Mustang', 'Bronco', 'Ranger'],
+            'GMC': ['Sierra 1500', 'Yukon', 'Acadia', 'Terrain', 'Canyon'],
+            'Honda': ['Civic', 'CR-V', 'Accord', 'Pilot', 'HR-V', 'Odyssey'],
+            'Hyundai': ['Elantra', 'Tucson', 'Santa Fe', 'Sonata', 'Palisade', 'Kona'],
+            'Jeep': ['Grand Cherokee', 'Wrangler', 'Cherokee', 'Compass', 'Gladiator'],
+            'Kia': ['Forte', 'Sportage', 'Sorento', 'Telluride', 'K5', 'Soul'],
+            'Mercedes-Benz': ['C-Class', 'GLC', 'E-Class', 'GLE', 'S-Class', 'Sprinter'],
+            'Nissan': ['Rogue', 'Altima', 'Sentra', 'Pathfinder', 'Frontier', 'Kicks'],
+            'Ram': ['1500', '2500', 'ProMaster'],
+            'Toyota': ['Camry', 'Corolla', 'RAV4', 'Tacoma', 'Highlander', 'Tundra']
+        };
+
         // Vehicle catalog for the pickers (common US makes/models; "Otro" covers the rest).
         const POPULAR_MAKES = ['Toyota', 'Honda', 'Nissan', 'Hyundai', 'Kia', 'Ford', 'Chevrolet', 'Jeep', 'Tesla', 'BMW', 'Mercedes-Benz', 'Lexus'];
         const VEHICLES = {
-            'Acura': ['ILX', 'Integra', 'MDX', 'RDX', 'TLX', 'TSX', 'ZDX'],
-            'Alfa Romeo': ['Giulia', 'Stelvio', 'Tonale'],
-            'Audi': ['A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'e-tron', 'Q3', 'Q4 e-tron', 'Q5', 'Q7', 'Q8'],
-            'BMW': ['2 Series', '3 Series', '4 Series', '5 Series', '7 Series', 'i4', 'iX', 'X1', 'X3', 'X5', 'X7'],
-            'Buick': ['Enclave', 'Encore', 'Encore GX', 'Envision', 'LaCrosse'],
-            'Cadillac': ['CT4', 'CT5', 'Escalade', 'Lyriq', 'XT4', 'XT5', 'XT6'],
-            'Chevrolet': ['Blazer', 'Camaro', 'Colorado', 'Corvette', 'Cruze', 'Equinox', 'Malibu', 'Silverado 1500', 'Spark', 'Suburban', 'Tahoe', 'Trailblazer', 'Traverse', 'Trax'],
-            'Chrysler': ['300', 'Pacifica', 'Voyager'],
-            'Dodge': ['Challenger', 'Charger', 'Durango', 'Grand Caravan', 'Hornet', 'Journey'],
-            'Fiat': ['500', '500X'],
-            'Ford': ['Bronco', 'Bronco Sport', 'Edge', 'Escape', 'Expedition', 'Explorer', 'F-150', 'Fusion', 'Maverick', 'Mustang', 'Mustang Mach-E', 'Ranger', 'Transit'],
-            'Genesis': ['G70', 'G80', 'G90', 'GV70', 'GV80'],
-            'GMC': ['Acadia', 'Canyon', 'Sierra 1500', 'Terrain', 'Yukon'],
-            'Honda': ['Accord', 'Civic', 'CR-V', 'Fit', 'HR-V', 'Odyssey', 'Passport', 'Pilot', 'Ridgeline'],
-            'Hyundai': ['Accent', 'Elantra', 'Ioniq 5', 'Kona', 'Palisade', 'Santa Cruz', 'Santa Fe', 'Sonata', 'Tucson', 'Venue'],
-            'Infiniti': ['Q50', 'Q60', 'QX50', 'QX55', 'QX60', 'QX80'],
-            'Jaguar': ['E-Pace', 'F-Pace', 'F-Type', 'I-Pace', 'XF'],
-            'Jeep': ['Cherokee', 'Compass', 'Gladiator', 'Grand Cherokee', 'Renegade', 'Wagoneer', 'Wrangler'],
-            'Kia': ['Carnival', 'EV6', 'Forte', 'K5', 'Niro', 'Optima', 'Rio', 'Seltos', 'Sorento', 'Soul', 'Sportage', 'Telluride'],
-            'Land Rover': ['Defender', 'Discovery', 'Discovery Sport', 'Range Rover', 'Range Rover Evoque', 'Range Rover Sport', 'Range Rover Velar'],
-            'Lexus': ['ES', 'GX', 'IS', 'LX', 'NX', 'RX', 'RZ', 'TX', 'UX'],
-            'Lincoln': ['Aviator', 'Corsair', 'MKZ', 'Nautilus', 'Navigator'],
-            'Maserati': ['Ghibli', 'Grecale', 'Levante', 'Quattroporte'],
-            'Mazda': ['CX-30', 'CX-5', 'CX-50', 'CX-9', 'CX-90', 'Mazda3', 'Mazda6', 'MX-5 Miata'],
-            'Mercedes-Benz': ['A-Class', 'C-Class', 'CLA', 'E-Class', 'EQS', 'G-Class', 'GLA', 'GLB', 'GLC', 'GLE', 'GLS', 'S-Class', 'Sprinter'],
-            'MINI': ['Clubman', 'Countryman', 'Hardtop'],
-            'Mitsubishi': ['Eclipse Cross', 'Mirage', 'Outlander', 'Outlander Sport'],
-            'Nissan': ['Altima', 'Armada', 'Frontier', 'Kicks', 'Leaf', 'Maxima', 'Murano', 'Pathfinder', 'Rogue', 'Sentra', 'Titan', 'Versa'],
-            'Porsche': ['911', 'Cayenne', 'Macan', 'Panamera', 'Taycan'],
-            'Ram': ['1500', '2500', 'ProMaster'],
-            'Subaru': ['Ascent', 'Crosstrek', 'Forester', 'Impreza', 'Legacy', 'Outback', 'WRX'],
+            'Acura': ['CL', 'ILX', 'Integra', 'MDX', 'RDX', 'RL', 'RLX', 'RSX', 'TL', 'TLX', 'TSX', 'ZDX'],
+            'Alfa Romeo': ['4C', 'Giulia', 'Stelvio', 'Tonale'],
+            'Aston Martin': ['DB11', 'DB12', 'DBX', 'Vantage'],
+            'Audi': ['A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'e-tron', 'e-tron GT', 'Q3', 'Q4 e-tron', 'Q5', 'Q7', 'Q8', 'Q8 e-tron', 'R8', 'RS 5', 'S4', 'S5', 'TT'],
+            'Bentley': ['Bentayga', 'Continental GT', 'Flying Spur'],
+            'BMW': ['1 Series', '2 Series', '3 Series', '4 Series', '5 Series', '6 Series', '7 Series', '8 Series', 'i3', 'i4', 'i5', 'i7', 'iX', 'M3', 'M4', 'M5', 'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'Z4'],
+            'Buick': ['Cascada', 'Enclave', 'Encore', 'Encore GX', 'Envision', 'Envista', 'LaCrosse', 'LeSabre', 'Lucerne', 'Regal', 'Rendezvous', 'Verano'],
+            'Cadillac': ['ATS', 'CT4', 'CT5', 'CT6', 'CTS', 'DTS', 'Escalade', 'Escalade ESV', 'Lyriq', 'Optiq', 'SRX', 'STS', 'XT4', 'XT5', 'XT6', 'XTS'],
+            'Chevrolet': ['Avalanche', 'Aveo', 'Blazer', 'Blazer EV', 'Bolt EUV', 'Bolt EV', 'Camaro', 'Colorado', 'Corvette', 'Cruze', 'Equinox', 'Equinox EV', 'Express', 'HHR', 'Impala', 'Malibu', 'Monte Carlo', 'Silverado 1500', 'Silverado 2500HD', 'Silverado 3500HD', 'Sonic', 'Spark', 'Suburban', 'Tahoe', 'Trailblazer', 'Traverse', 'Trax', 'Uplander', 'Volt'],
+            'Chrysler': ['200', '300', 'Aspen', 'Pacifica', 'PT Cruiser', 'Sebring', 'Town & Country', 'Voyager'],
+            'Dodge': ['Avenger', 'Caliber', 'Challenger', 'Charger', 'Dakota', 'Dart', 'Durango', 'Grand Caravan', 'Hornet', 'Journey', 'Magnum', 'Neon', 'Nitro', 'Ram 1500', 'Viper'],
+            'Ferrari': ['296', '812', 'F8', 'Portofino', 'Purosangue', 'Roma', 'SF90'],
+            'Fiat': ['124 Spider', '500', '500e', '500L', '500X'],
+            'Ford': ['Bronco', 'Bronco Sport', 'C-Max', 'E-Series', 'EcoSport', 'Edge', 'Escape', 'Excursion', 'Expedition', 'Explorer', 'Explorer Sport Trac', 'F-150', 'F-150 Lightning', 'F-250', 'F-350', 'Fiesta', 'Five Hundred', 'Flex', 'Focus', 'Freestyle', 'Fusion', 'Maverick', 'Mustang', 'Mustang Mach-E', 'Ranger', 'Taurus', 'Transit', 'Transit Connect'],
+            'Genesis': ['G70', 'G80', 'G90', 'GV60', 'GV70', 'GV80'],
+            'GMC': ['Acadia', 'Canyon', 'Envoy', 'Hummer EV', 'Savana', 'Sierra 1500', 'Sierra 2500HD', 'Sierra 3500HD', 'Terrain', 'Yukon', 'Yukon XL'],
+            'Honda': ['Accord', 'Civic', 'CR-V', 'CR-Z', 'Element', 'Fit', 'HR-V', 'Insight', 'Odyssey', 'Passport', 'Pilot', 'Prologue', 'Ridgeline'],
+            'Hummer': ['H2', 'H3'],
+            'Hyundai': ['Accent', 'Azera', 'Elantra', 'Entourage', 'Equus', 'Genesis', 'Ioniq', 'Ioniq 5', 'Ioniq 6', 'Kona', 'Nexo', 'Palisade', 'Santa Cruz', 'Santa Fe', 'Sonata', 'Tiburon', 'Tucson', 'Veloster', 'Venue', 'Veracruz'],
+            'Infiniti': ['EX35', 'FX35', 'G35', 'G37', 'JX35', 'M35', 'Q50', 'Q60', 'Q70', 'QX30', 'QX50', 'QX55', 'QX56', 'QX60', 'QX80'],
+            'Isuzu': ['Ascender', 'i-Series', 'Rodeo', 'Trooper'],
+            'Jaguar': ['E-Pace', 'F-Pace', 'F-Type', 'I-Pace', 'S-Type', 'X-Type', 'XE', 'XF', 'XJ'],
+            'Jeep': ['Cherokee', 'Commander', 'Compass', 'Gladiator', 'Grand Cherokee', 'Grand Wagoneer', 'Liberty', 'Patriot', 'Renegade', 'Wagoneer', 'Wrangler'],
+            'Kia': ['Amanti', 'Borrego', 'Cadenza', 'Carnival', 'EV6', 'EV9', 'Forte', 'K5', 'K900', 'Niro', 'Optima', 'Rio', 'Rondo', 'Sedona', 'Seltos', 'Sorento', 'Soul', 'Spectra', 'Sportage', 'Stinger', 'Telluride'],
+            'Lamborghini': ['Huracán', 'Revuelto', 'Urus'],
+            'Land Rover': ['Defender', 'Discovery', 'Discovery Sport', 'LR2', 'LR3', 'LR4', 'Range Rover', 'Range Rover Evoque', 'Range Rover Sport', 'Range Rover Velar'],
+            'Lexus': ['CT', 'ES', 'GS', 'GX', 'HS', 'IS', 'LC', 'LS', 'LX', 'NX', 'RC', 'RX', 'RZ', 'SC', 'TX', 'UX'],
+            'Lincoln': ['Aviator', 'Continental', 'Corsair', 'MKC', 'MKS', 'MKT', 'MKX', 'MKZ', 'Nautilus', 'Navigator', 'Town Car'],
+            'Lotus': ['Eletre', 'Emira', 'Evora'],
+            'Lucid': ['Air', 'Gravity'],
+            'Maserati': ['Ghibli', 'GranTurismo', 'Grecale', 'Levante', 'MC20', 'Quattroporte'],
+            'Mazda': ['CX-3', 'CX-30', 'CX-5', 'CX-50', 'CX-7', 'CX-70', 'CX-9', 'CX-90', 'Mazda2', 'Mazda3', 'Mazda5', 'Mazda6', 'MX-5 Miata', 'RX-8', 'Tribute'],
+            'McLaren': ['720S', '750S', 'Artura', 'GT'],
+            'Mercedes-Benz': ['A-Class', 'AMG GT', 'C-Class', 'CLA', 'CLK', 'CLS', 'E-Class', 'EQB', 'EQE', 'EQS', 'G-Class', 'GL-Class', 'GLA', 'GLB', 'GLC', 'GLE', 'GLK', 'GLS', 'M-Class', 'Metris', 'S-Class', 'SL', 'SLK', 'Sprinter'],
+            'Mercury': ['Grand Marquis', 'Mariner', 'Milan', 'Mountaineer', 'Sable'],
+            'MINI': ['Clubman', 'Convertible', 'Countryman', 'Hardtop', 'Paceman'],
+            'Mitsubishi': ['Eclipse', 'Eclipse Cross', 'Endeavor', 'Galant', 'Lancer', 'Mirage', 'Outlander', 'Outlander Sport', 'Raider'],
+            'Nissan': ['350Z', '370Z', 'Altima', 'Ariya', 'Armada', 'Cube', 'Frontier', 'GT-R', 'Juke', 'Kicks', 'Leaf', 'Maxima', 'Murano', 'NV200', 'Pathfinder', 'Quest', 'Rogue', 'Rogue Sport', 'Sentra', 'Titan', 'Versa', 'Xterra', 'Z'],
+            'Oldsmobile': ['Alero', 'Aurora', 'Bravada', 'Intrigue', 'Silhouette'],
+            'Plymouth': ['Neon', 'Voyager'],
+            'Polestar': ['Polestar 2', 'Polestar 3', 'Polestar 4'],
+            'Pontiac': ['Aztek', 'G5', 'G6', 'G8', 'Grand Am', 'Grand Prix', 'Montana', 'Solstice', 'Sunfire', 'Torrent', 'Vibe'],
+            'Porsche': ['718 Boxster', '718 Cayman', '911', 'Cayenne', 'Macan', 'Panamera', 'Taycan'],
+            'Ram': ['1500', '2500', '3500', 'ProMaster', 'ProMaster City'],
+            'Rivian': ['R1S', 'R1T'],
+            'Rolls-Royce': ['Cullinan', 'Ghost', 'Phantom', 'Spectre'],
+            'Saab': ['9-3', '9-5'],
+            'Saturn': ['Aura', 'Ion', 'Outlook', 'Sky', 'Vue'],
+            'Scion': ['FR-S', 'iA', 'iM', 'iQ', 'tC', 'xB', 'xD'],
+            'Smart': ['Fortwo'],
+            'Subaru': ['Ascent', 'Baja', 'BRZ', 'Crosstrek', 'Forester', 'Impreza', 'Legacy', 'Outback', 'Solterra', 'Tribeca', 'WRX'],
+            'Suzuki': ['Forenza', 'Grand Vitara', 'Kizashi', 'SX4', 'XL-7'],
             'Tesla': ['Cybertruck', 'Model 3', 'Model S', 'Model X', 'Model Y'],
-            'Toyota': ['4Runner', 'C-HR', 'Camry', 'Corolla', 'Corolla Cross', 'Highlander', 'Prius', 'RAV4', 'Sequoia', 'Sienna', 'Tacoma', 'Tundra', 'Venza', 'Yaris'],
-            'Volkswagen': ['Atlas', 'Atlas Cross Sport', 'Golf', 'GTI', 'ID.4', 'Jetta', 'Passat', 'Taos', 'Tiguan'],
-            'Volvo': ['S60', 'S90', 'XC40', 'XC60', 'XC90']
+            'Toyota': ['4Runner', '86', 'Avalon', 'bZ4X', 'C-HR', 'Camry', 'Corolla', 'Corolla Cross', 'Crown', 'Echo', 'FJ Cruiser', 'GR86', 'Grand Highlander', 'Highlander', 'Land Cruiser', 'Matrix', 'Mirai', 'Prius', 'Prius C', 'Prius V', 'RAV4', 'Sequoia', 'Sienna', 'Solara', 'Supra', 'Tacoma', 'Tundra', 'Venza', 'Yaris'],
+            'VinFast': ['VF 8', 'VF 9'],
+            'Volkswagen': ['Arteon', 'Atlas', 'Atlas Cross Sport', 'Beetle', 'CC', 'Eos', 'Golf', 'GTI', 'ID.4', 'ID. Buzz', 'Jetta', 'Passat', 'Routan', 'Taos', 'Tiguan', 'Touareg'],
+            'Volvo': ['C30', 'C40', 'EX30', 'EX90', 'S40', 'S60', 'S80', 'S90', 'V60', 'V90', 'XC40', 'XC60', 'XC70', 'XC90']
         };
 
         const ICON = {
@@ -2948,7 +3012,7 @@
         }
 
         // ---- bottom sheets (pickers and help) ----
-        function openSheet({ onClose } = {}) {
+        function openSheet({ onClose, full } = {}) {
             let pushed = false;
             if (activeSheet) {                 // swap sheets: reuse the open one's history entry
                 pushed = activeSheet.isPushed();
@@ -2956,7 +3020,7 @@
             }
             const opener = document.activeElement;
             const backdrop = el('div', { class: 'sheet-backdrop' });
-            const sheet = el('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'sheet-title' });
+            const sheet = el('div', { class: 'sheet' + (full ? ' is-full' : ''), role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'sheet-title' });
             const head = el('div', { class: 'sheet-head' });
             const body = el('div', { class: 'sheet-body' });
             sheet.append(head, body);
@@ -3066,10 +3130,56 @@
             api.focusTitle();
         }
 
+        // ---- models for a make AND year, from NHTSA vPIC (free, no key), so an
+        //      older or brand-new car is in the list. Passenger cars, trucks and
+        //      SUVs/MPVs only (no motorcycles, trailers or buses). Cached per
+        //      make+year; slow or failed answers fall back to the built-in list. ----
+        const MODELS_TIMEOUT_MS = 4000;
+        const MODEL_TYPES = ['Car', 'Truck', 'Multipurpose'];
+        const NOT_A_CAR = /chassis|motor ?home|cutaway|stripped|glider|\bbus\b|trailer/i;
+        const modelsCache = new Map();
+        const normModel = m => String(m).toLowerCase().replace(/[^a-z0-9]/g, '');
+
+        function modelsKey(make, year) { return `bn-models-v1:${make}|${year}`; }
+        function fetchModels(make, year) {
+            if (!/^\d{4}$/.test(year || '')) return Promise.resolve(null);
+            const key = modelsKey(make, year);
+            if (modelsCache.has(key)) return modelsCache.get(key);
+            try {
+                const saved = JSON.parse(sessionStorage.getItem(key) || 'null');
+                if (Array.isArray(saved)) { const p = Promise.resolve(saved); modelsCache.set(key, p); return p; }
+            } catch (_) { /* private mode */ }
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), MODELS_TIMEOUT_MS);
+            const one = type => fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}/vehicletype/${type}?format=json`,
+                { signal: ctrl.signal, credentials: 'omit', referrerPolicy: 'no-referrer' })
+                .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+                .then(d => (Array.isArray(d && d.Results) ? d.Results : []));
+            const p = Promise.all(MODEL_TYPES.map(one))
+                .then(parts => {
+                    // our spelling when we know the model; NHTSA's otherwise; one row each
+                    const known = new Map((VEHICLES[make] || []).map(m => [normModel(m), m]));
+                    const seen = new Map();
+                    parts.flat().forEach(r => {
+                        const name = String(r.Model_Name || '').trim();
+                        if (!name || NOT_A_CAR.test(name)) return;
+                        const k = normModel(name);
+                        if (k && !seen.has(k)) seen.set(k, known.get(k) || name);
+                    });
+                    const list = [...seen.values()].sort((x, y) => x.localeCompare(y, 'es', { numeric: true, sensitivity: 'base' }));
+                    try { sessionStorage.setItem(key, JSON.stringify(list)); } catch (_) { /* private mode */ }
+                    return list;
+                })
+                .catch(() => { modelsCache.delete(key); return null; })   // the next visit may try again
+                .finally(() => clearTimeout(timer));
+            modelsCache.set(key, p);
+            return p;
+        }
+
         // Year -> make -> model in one sheet, like the CARFAX / State Farm pickers.
         function openVehicleSheet(start, onChange) {
             const a = QF.a;
-            const api = openSheet();
+            const api = openSheet({ full: true });    // one height for year, brand and model: no jumps
             const finish = (make, model) => { a.marca = make; a.modelo = model; onChange(); api.close(); };
 
             function yearView() {
@@ -3105,6 +3215,7 @@
                 POPULAR_MAKES.forEach(make => {
                     const t = el('button', { type: 'button', class: 'make-tile' },
                         el('span', { class: 'make-mono', 'aria-hidden': 'true', text: make[0] }), el('span', { text: make }));
+                    t.addEventListener('pointerdown', () => fetchModels(make, a.anio), { passive: true });
                     t.addEventListener('click', () => modelsView(make));
                     grid.appendChild(t);
                 });
@@ -3127,19 +3238,82 @@
                 api.focusTitle();
             }
 
+            // Models: the year's real list from NHTSA (built-in list while it loads
+            // fails), popular ones first, a search box when the list is long.
+            let modelsToken = 0;
             function modelsView(make) {
+                const token = ++modelsToken;
+                const year = /^\d{4}$/.test(a.anio || '') ? a.anio : '';
                 const body = api.setView(`Modelos ${make}`, { back: makesView });
-                const list = el('ul', { class: 'sheet-list' });
-                VEHICLES[make].forEach(model => list.appendChild(sheetRow(model, {
-                    selected: a.marca === make && a.modelo === model,
-                    onPick: () => finish(make, model)
-                })));
-                list.appendChild(sheetRow('Otro modelo', {
-                    muted: true,
-                    onPick: () => otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
-                        () => modelsView(make), ([model]) => finish(make, model))
-                }));
-                body.appendChild(list);
+                const builtIn = VEHICLES[make] || [];
+                if (!year) {                      // no year yet: the built-in list
+                    renderModels(null, false);
+                    api.focusTitle();
+                    return;
+                }
+                const pending = fetchModels(make, year);
+                let settled = false;
+                pending.then(() => { settled = true; });
+
+                const skeleton = el('ul', { class: 'sheet-skeleton', 'aria-hidden': 'true' },
+                    ...[46, 62, 38, 54, 44, 58, 36].map(w => { const li = el('li'); li.style.setProperty('--w', `${w}%`); return li; }));
+                const loading = el('p', { class: 'sheet-section', role: 'status', text: `Buscando modelos ${year}…` });
+
+                function renderModels(models, animate) {
+                    const fromNhtsa = !!year;
+                    if (token !== modelsToken || !body.isConnected) return;    // they moved on
+                    const wrap = el('div', { class: animate ? 'sheet-fade-in' : '' });
+                    const all = models && models.length ? models : builtIn;
+                    const live = fromNhtsa && models && models.length;
+                    const liveName = new Map(all.map(m => [normModel(m), m]));
+                    const popular = live && all.length > 15
+                        ? (POPULAR_MODELS[make] || []).map(m => liveName.get(normModel(m))).filter(Boolean) : [];
+                    const row = model => sheetRow(model, { selected: a.marca === make && a.modelo === model, onPick: () => finish(make, model) });
+                    const other = () => sheetRow('Otro modelo', {
+                        muted: true,
+                        onPick: () => otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
+                            () => modelsView(make), ([model]) => finish(make, model))
+                    });
+
+                    let input = null;
+                    if (all.length > 10) {
+                        const search = el('div', { class: 'sheet-search' });
+                        search.innerHTML = ICON.search;
+                        input = el('input', { type: 'search', placeholder: `Buscar modelo ${make}`, 'aria-label': `Buscar modelo ${make}`, autocomplete: 'off', enterkeyhint: 'search' });
+                        search.appendChild(input);
+                        wrap.appendChild(search);
+                    }
+                    const popLabel = el('p', { class: 'sheet-section', text: 'Populares' });
+                    const popList = el('ul', { class: 'sheet-list' }, ...popular.map(row));
+                    const allLabel = el('p', { class: 'sheet-section' });
+                    const list = el('ul', { class: 'sheet-list' });
+                    const empty = el('p', { class: 'sheet-empty', text: 'No encontramos ese modelo. Puedes escribirlo en «Otro modelo».' });
+                    function fill(q) {
+                        const needle = normModel(q);
+                        const hits = needle ? all.filter(m => normModel(m).includes(needle)) : all;
+                        list.replaceChildren(...hits.map(row), other());
+                        const showPop = !needle && popular.length;
+                        popLabel.hidden = popList.hidden = !showPop;
+                        allLabel.replaceChildren(document.createTextNode(needle ? 'Resultados'
+                            : live ? `Todos los modelos ${year}` : showPop ? 'Todos los modelos' : 'Modelos'));
+                        if (!needle && live) allLabel.appendChild(el('span', { class: 'count', text: ` · ${all.length}` }));
+                        empty.hidden = !!hits.length;
+                    }
+                    if (input) input.addEventListener('input', () => fill(input.value.trim()));
+                    wrap.append(popLabel, popList, allLabel, empty, list);
+                    fill('');
+                    body.replaceChildren(wrap);
+                    const sel = wrap.querySelector('.sheet-row.is-selected');
+                    if (sel && !animate) sel.scrollIntoView({ block: 'center' });
+                }
+
+                // A cached list renders at once; otherwise the skeleton holds the
+                // space for a moment (no flash when NHTSA is quick).
+                setTimeout(() => {
+                    if (settled || token !== modelsToken) return;
+                    body.replaceChildren(loading, skeleton);
+                }, 120);
+                pending.then(models => renderModels(models, true));
                 api.focusTitle();
             }
 
