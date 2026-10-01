@@ -7,6 +7,10 @@ const SHOT = n => shotPath('auto', n);
   const count = () => txt(p, '.q-count');
   const title = () => txt(p, '#q-title');
 
+  console.log('LANDING');
+  const ctas = await p.$$eval('.app-cta', n => n.map(a => [a.querySelector('.app-cta-eyebrow')?.textContent, a.querySelector('.app-cta-main')?.textContent, a.querySelector('.app-cta-hint')?.textContent || '']));
+  ok(JSON.stringify(ctas) === JSON.stringify([['Cotiza tu seguro de', 'Auto', ''], ['Cotiza tu seguro de', 'Casa', ''], ['Cotiza tu seguro de', 'Salud', 'Médico · Medicare · Vida']]), 'quote buttons: small line + big word (+ hint)', ctas);
+
   console.log('INTRO');
   await p.tap('.app-cta[data-form="auto"]'); await settle(p);
   ok(await p.isVisible('.q-flow'), 'flow opens full-screen');
@@ -28,6 +32,9 @@ const SHOT = n => shotPath('auto', n);
   console.log('STEP 1 vehículo');
   await p.tap(primary); await settle(p);
   ok(await txt(p, '.q-zip-pill') === '33130', 'ZIP pill on the first question', await txt(p, '.q-zip-pill'));
+  // regression: a landing-page style once unsized these chevrons, which ballooned the pickers
+  const geo = await p.evaluate(() => ({ chev: [...document.querySelectorAll('.q-picker .app-chevron')].map(n => Math.round(n.getBoundingClientRect().width)), pick: [...document.querySelectorAll('.q-picker')].map(n => Math.round(n.getBoundingClientRect().height)) }));
+  ok(geo.chev.length === 2 && geo.chev.every(w => w === 18) && geo.pick.every(h => h <= 64), 'pickers: 18px chevrons, normal height', geo);
   ok(await title() === '¿Qué auto quieres asegurar?', 'vehicle title');
   ok(await count() === 'Paso 1 de 9', 'progress Paso 1 de 9', await count());
   ok(await p.getAttribute(primary, 'class').then(c => c.includes('is-incomplete')), 'Continuar looks incomplete');
