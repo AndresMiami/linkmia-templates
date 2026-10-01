@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" width="1040" height="600">
+  <defs>
+    <linearGradient id="paint" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7a85"/>
+      <stop offset="0.22" stop-color="#ef2b3c"/>
+      <stop offset="0.55" stop-color="#c3101f"/>
+      <stop offset="0.8" stop-color="#8a0814"/>
+      <stop offset="1" stop-color="#5a040c"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="0.35" stop-color="#fff" stop-opacity="0.55"/>
+      <stop offset="0.6" stop-color="#fff" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5d7da8"/>
+      <stop offset="0.5" stop-color="#22324f"/>
+      <stop offset="1" stop-color="#0d1526"/>
+    </linearGradient>
+    <linearGradient id="glassRefl" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.55"/>
+      <stop offset="0.45" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="rim" cx="0.45" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.5" stop-color="#c9ced8"/>
+      <stop offset="1" stop-color="#6b7280"/>
+    </radialGradient>
+    <radialGradient id="tire" cx="0.5" cy="0.45" r="0.55">
+      <stop offset="0.7" stop-color="#2a2a2e"/>
+      <stop offset="1" stop-color="#0a0a0c"/>
+    </radialGradient>
+    <linearGradient id="lamp" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff7d6"/>
+      <stop offset="1" stop-color="#ffd76a"/>
+    </linearGradient>
+    <clipPath id="bodyClip"><path d="M38 196
+           C30 180 34 160 52 152
+           L120 138
+           C150 104 190 86 240 82
+           L300 82
+           C340 84 368 100 398 128
+           L462 140
+           C486 146 498 162 496 186
+           L494 204
+           C493 212 486 216 478 216
+           L436 216
+           A44 44 0 0 0 350 216
+           L178 216
+           A44 44 0 0 0 92 216
+           L52 216
+           C44 216 40 208 38 196 Z"/></clipPath>
+    <filter id="soft" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
+  </defs>
+  <!-- ground shadow -->
+  <ellipse cx="262" cy="248" rx="230" ry="18" fill="#000" opacity="0.55" filter="url(#soft)"/>
+  <!-- body -->
+  <path d="M38 196
+           C30 180 34 160 52 152
+           L120 138
+           C150 104 190 86 240 82
+           L300 82
+           C340 84 368 100 398 128
+           L462 140
+           C486 146 498 162 496 186
+           L494 204
+           C493 212 486 216 478 216
+           L436 216
+           A44 44 0 0 0 350 216
+           L178 216
+           A44 44 0 0 0 92 216
+           L52 216
+           C44 216 40 208 38 196 Z" fill="url(#paint)"/>
+  <!-- shoulder highlight -->
+  <path d="M60 158 L124 146 C160 140 330 138 410 146 L470 154 C460 150 420 142 400 140 C320 132 170 134 124 142 Z" fill="url(#sheen)" opacity="0.9"/>
+  <path d="M52 172 C140 162 360 160 492 170" stroke="#fff" stroke-opacity="0.35" stroke-width="2" fill="none"/>
+  <!-- lower body shade -->
+  <path d="M44 200 C120 196 400 196 494 198 L494 204 C493 212 486 216 478 216 L436 216 A44 44 0 0 0 350 216 L178 216 A44 44 0 0 0 92 216 L52 216 C46 216 42 210 44 200Z" fill="#000" opacity="0.25"/>
+  <!-- greenhouse -->
+  <path d="M138 138 C164 110 196 96 238 93 L296 93 C330 95 356 108 380 130 Z" fill="url(#glass)"/>
+  <path d="M138 138 C164 110 196 96 238 93 L296 93 C330 95 356 108 380 130 Z" fill="url(#glassRefl)"/>
+  <!-- B-pillar -->
+  <path d="M258 93 L264 93 L268 136 L260 136 Z" fill="#1a0a0d"/>
+  <!-- door seams + handles -->
+  <path d="M262 140 L262 206" stroke="#5a040c" stroke-width="2" opacity="0.7"/>
+  <path d="M370 136 C372 160 372 186 368 206" stroke="#5a040c" stroke-width="2" opacity="0.6" fill="none"/>
+  <rect x="214" y="152" width="22" height="5" rx="2.5" fill="#f3c6cb" opacity="0.8"/>
+  <rect x="318" y="152" width="22" height="5" rx="2.5" fill="#f3c6cb" opacity="0.8"/>
+  <!-- mirror -->
+  <path d="M372 126 C380 118 392 120 394 128 L382 134 Z" fill="#a50c1a"/>
+  <!-- headlight / taillight -->
+  <path d="M462 152 C478 154 490 160 494 170 L470 168 C466 162 462 158 462 152Z" fill="url(#lamp)"/>
+  <path d="M42 168 C44 160 50 156 60 156 L64 166 Z" fill="#ff3b3b"/>
+  <!-- wheel wells -->
+  <g clip-path="url(#bodyClip)">
+    <circle cx="135" cy="216" r="44" fill="#2a0408"/>
+    <circle cx="393" cy="216" r="44" fill="#2a0408"/>
+  </g>
+  <!-- side sill -->
+  <path d="M182 206 L346 206 L346 213 L182 213 Z" fill="#000" opacity="0.28"/>
+  <!-- front grille hint + lower intake -->
+  <path d="M478 190 C486 190 492 194 494 200 L478 200 Z" fill="#2a0408" opacity="0.8"/>
+  <!-- wheels -->
+  <g>
+    <circle cx="135" cy="216" r="38" fill="url(#tire)"/>
+    <circle cx="135" cy="216" r="24" fill="url(#rim)"/>
+    <g stroke="#7b8190" stroke-width="5" stroke-linecap="round">
+      <path d="M135 216 L135 196"/><path d="M135 216 L154 210"/><path d="M135 216 L147 232"/><path d="M135 216 L123 232"/><path d="M135 216 L116 210"/>
+    </g>
+    <circle cx="135" cy="216" r="6" fill="#e5e7eb"/>
+  </g>
+  <g>
+    <circle cx="393" cy="216" r="38" fill="url(#tire)"/>
+    <circle cx="393" cy="216" r="24" fill="url(#rim)"/>
+    <g stroke="#7b8190" stroke-width="5" stroke-linecap="round">
+      <path d="M393 216 L393 196"/><path d="M393 216 L412 210"/><path d="M393 216 L405 232"/><path d="M393 216 L381 232"/><path d="M393 216 L374 210"/>
+    </g>
+    <circle cx="393" cy="216" r="6" fill="#e5e7eb"/>
+  </g>
+</svg>
