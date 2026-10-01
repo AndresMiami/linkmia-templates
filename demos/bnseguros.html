@@ -1968,6 +1968,170 @@
                 ]
             },
 
+            salud: {
+                product: a => (a.para === 'hijos' ? 'seguro médico para mis hijos'
+                    : a.para === 'familia' ? 'seguro médico familiar'
+                    : a.para === 'pareja' ? 'seguro médico para mí y mi pareja'
+                    : a.para === 'yohijos' ? 'seguro médico para mí y mis hijos'
+                    : 'seguro médico'),
+                intro: {
+                    eyebrow: 'Seguro de salud',
+                    title: 'Cotiza tu seguro médico',
+                    have: ['La fecha de nacimiento de cada persona', 'El ingreso aproximado de tu hogar', 'Tu seguro actual, si tienes uno'],
+                    zip: true,
+                    zipLabel: '¿En qué ZIP vives?'
+                },
+                sections: [
+                    { id: 'hogar', title: 'Tu hogar', msg: 'Hogar' },
+                    { id: 'plan', title: 'Cobertura', msg: 'Cobertura' },
+                    { id: 'yo', title: 'Tus datos', msg: 'Mis datos' }
+                ],
+                context: a => {
+                    const who = { yo: 'Solo para mí', pareja: 'Para mí y mi pareja', familia: 'Para mi familia', yohijos: 'Para mí y mis hijos', hijos: 'Para mis hijos' }[a.para];
+                    return who ? { icon: 'heart', text: who + (a.hogar ? ` · Hogar de ${a.hogar === '6' ? '6 o más' : a.hogar}` : '') } : null;
+                },
+                bundle: null,                        // no cross-sell until we know what else they offer here
+                defaults: () => ({}),
+                steps: [
+                    {
+                        id: 'para', section: 'hogar',
+                        title: '¿Para quién es el seguro?',
+                        fields: [
+                            {
+                                name: 'para', kind: 'choice', hideLabel: true, label: 'Para quién', required: true, sum: 'Para quién',
+                                options: [
+                                    { value: 'yo', label: 'Solo para mí' },
+                                    { value: 'pareja', label: 'Para mí y mi pareja', desc: 'Esposo(a) o pareja' },
+                                    { value: 'familia', label: 'Para mi familia', desc: 'Mi pareja y mis hijos', msg: 'Familia (pareja e hijos)' },
+                                    { value: 'yohijos', label: 'Para mí y mis hijos' },
+                                    { value: 'hijos', label: 'Solo para mis hijos' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'personas', section: 'hogar', context: true,
+                        title: a => (a.para === 'hijos' ? 'Cuéntanos de tus hijos' : '¿Quiénes se aseguran?'),
+                        sub: 'La edad es lo que más cambia el precio de un plan médico.',
+                        note: a => {
+                            const d = a.para !== 'hijos' ? dobOf(a) : null;
+                            return d && d !== 'invalid' && ageOn(d, today()) >= 65
+                                ? 'Si tienes 65 años o más, normalmente te corresponde Medicare. También te ayudamos con Medicare.' : '';
+                        },
+                        fields: [
+                            { name: 'dob', kind: 'dob', label: 'Tu fecha de nacimiento', required: true, showIf: a => a.para !== 'hijos', sum: 'Fecha de nacimiento' },
+                            { name: 'parejaAnio', kind: 'year', label: 'Año de nacimiento de tu pareja', required: true, reqMsg: 'Elige el año.', showIf: a => a.para === 'pareja' || a.para === 'familia', icon: 'calendar', placeholder: 'Elige el año', min: THIS_YEAR - 100, max: THIS_YEAR - 16, sheetTitle: 'Año de nacimiento de tu pareja', sum: 'Pareja (año de nacimiento)' },
+                            {
+                                name: 'hijos', kind: 'choice', layout: 'chips', label: '¿Cuántos hijos se aseguran?', required: true, showIf: a => ['familia', 'yohijos', 'hijos'].includes(a.para), sum: 'Hijos que se aseguran',
+                                options: [{ value: '1', label: '1' }, { value: '2', label: '2' }, { value: '3', label: '3' }, { value: '4', label: '4' }, { value: '5', label: '5' }, { value: '6', label: '6 o más' }]
+                            },
+                            { name: 'tabaco', kind: 'choice', layout: 'pair', label: '¿Alguien que se asegura fuma o usa tabaco?', required: true, options: YES_NO, sum: 'Usa tabaco' }
+                        ]
+                    },
+                    {
+                        id: 'hogar', section: 'hogar', context: true,
+                        title: '¿Cuántas personas hay en tu hogar?',
+                        sub: 'Cuenta a todos los que van en tu declaración de impuestos, aunque no todos necesiten seguro.',
+                        help: {
+                            label: '¿Por qué preguntamos esto?', title: '¿Por qué preguntamos esto?',
+                            paras: ['El tamaño de tu hogar y tu ingreso deciden si calificas para el crédito fiscal del Marketplace (Obamacare), que baja tu pago mensual.']
+                        },
+                        fields: [
+                            {
+                                name: 'hogar', kind: 'choice', layout: 'chips', hideLabel: true, label: 'Personas en el hogar', required: true, sum: 'Personas en el hogar',
+                                options: [{ value: '1', label: '1' }, { value: '2', label: '2' }, { value: '3', label: '3' }, { value: '4', label: '4' }, { value: '5', label: '5' }, { value: '6', label: '6 o más', msg: '6 o más' }]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'ingreso', section: 'hogar', context: true,
+                        title: '¿Cuál es el ingreso anual de tu hogar?',
+                        sub: 'Un aproximado de este año está bien.',
+                        help: {
+                            label: '¿Para qué sirve?', title: '¿Para qué sirve el ingreso?',
+                            paras: ['Con tu ingreso y el tamaño de tu hogar vemos si calificas para ayuda del gobierno que baja lo que pagas cada mes.', 'Cuenta el ingreso de todos en tu declaración de impuestos, antes de impuestos. No te pedimos comprobantes ahora.']
+                        },
+                        fields: [
+                            {
+                                name: 'ingreso', kind: 'choice', hideLabel: true, label: 'Ingreso anual del hogar', required: true, sum: 'Ingreso anual del hogar',
+                                options: [
+                                    { value: 'lt20', label: 'Menos de $20,000' },
+                                    { value: '20-35', label: '$20,000 a $35,000' },
+                                    { value: '35-50', label: '$35,000 a $50,000' },
+                                    { value: '50-75', label: '$50,000 a $75,000' },
+                                    { value: '75-100', label: '$75,000 a $100,000' },
+                                    { value: 'gt100', label: 'Más de $100,000' },
+                                    { value: 'nd', label: 'Prefiero no decirlo', msg: 'Prefiero hablarlo con el agente' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'actual', section: 'plan', context: true,
+                        title: '¿Tienes seguro médico ahora?',
+                        fields: [
+                            {
+                                name: 'actual', kind: 'choice', hideLabel: true, label: 'Seguro actual', required: true, sum: 'Seguro actual',
+                                display: a => {
+                                    const o = { no: 'No tengo', trabajo: 'Por mi trabajo', marketplace: 'Obamacare / Marketplace', medicaid: 'Medicaid', otro: 'Otro' }[a.actual] || '';
+                                    const c = (a.aseguradoraSalud || '').trim();
+                                    return o && c && a.actual !== 'no' ? `${o}, con ${c}` : o;
+                                },
+                                options: [
+                                    { value: 'no', label: 'No tengo seguro' },
+                                    { value: 'trabajo', label: 'Sí, por mi trabajo' },
+                                    { value: 'marketplace', label: 'Sí, Obamacare / Marketplace' },
+                                    { value: 'medicaid', label: 'Sí, Medicaid' },
+                                    { value: 'otro', label: 'Sí, otro seguro' }
+                                ]
+                            },
+                            { name: 'aseguradoraSalud', kind: 'text', label: '¿Con qué compañía?', showIf: a => a.actual && a.actual !== 'no' && a.actual !== 'medicaid', list: 'q-carriers-health', autocomplete: 'off', autocapitalize: 'words', placeholder: 'Ej. Florida Blue, Ambetter', sumHidden: true }
+                        ]
+                    },
+                    {
+                        id: 'cuando', section: 'plan', context: true,
+                        title: '¿Cuándo necesitas el seguro?',
+                        help: {
+                            label: '¿Cuál debo elegir?', title: '¿Cuándo me puedo inscribir?',
+                            items: [
+                                ['Inscripción abierta:', 'una vez al año, a partir del 1 de noviembre, cualquiera puede inscribirse o cambiar de plan.'],
+                                ['Cambio de vida:', 'si perdiste tu seguro, te casaste, tuviste un bebé o te mudaste, normalmente puedes inscribirte en los 60 días siguientes, en cualquier época del año.'],
+                                ['Medicaid:', 'si calificas, puedes inscribirte en cualquier momento.']
+                            ]
+                        },
+                        fields: [
+                            {
+                                name: 'cuando', kind: 'choice', hideLabel: true, label: 'Cuándo', required: true, sum: 'Cuándo lo necesito',
+                                options: [
+                                    { value: 'pronto', label: 'Lo antes posible' },
+                                    { value: 'cambio', label: 'Tuve un cambio de vida', desc: 'Perdí mi seguro, me casé, tuve un bebé o me mudé' },
+                                    { value: 'abierta', label: 'Para el próximo año', desc: 'En la inscripción abierta, desde el 1 de noviembre', msg: 'Inscripción abierta (próximo año)' },
+                                    { value: 'comparando', label: 'Solo estoy comparando' }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'prioridades', section: 'plan', context: true,
+                        title: '¿Qué es lo más importante para ti?',
+                        sub: 'Puedes elegir más de una.',
+                        fields: [
+                            {
+                                name: 'prioridades', kind: 'multi', hideLabel: true, label: 'Lo más importante', required: true, sum: 'Lo más importante',
+                                options: [
+                                    { value: 'pago', label: 'Un pago mensual bajo' },
+                                    { value: 'deducible', label: 'Un deducible bajo', msg: 'Deducible bajo' },
+                                    { value: 'medicos', label: 'Mantener a mis médicos', msg: 'Mantener a mis médicos' },
+                                    { value: 'medicinas', label: 'Cubrir mis medicinas', msg: 'Mis medicinas' },
+                                    { value: 'dental', label: 'Dental y visión' }
+                                ]
+                            }
+                        ]
+                    },
+                    CONTACT_STEP
+                ]
+            },
+
             casa: {
                 product: a => (a.ocupacion === 'inquilino' ? 'seguro de inquilino (renters)'
                     : a.ocupacion === 'alquilo' ? 'seguro para una propiedad que alquilo'
@@ -2107,6 +2271,7 @@
 
         const CARRIERS = {
             'q-carriers-auto': ['GEICO', 'Progressive', 'State Farm', 'Allstate', 'Direct Auto', 'Infinity', 'USAA', 'Liberty Mutual', 'Travelers', 'Mercury'],
+            'q-carriers-health': ['Florida Blue', 'Ambetter', 'Oscar', 'AvMed', 'Aetna', 'Cigna', 'UnitedHealthcare', 'Molina', 'Simply Healthcare', 'Humana'],
             'q-carriers-home': ['Citizens', 'Universal', 'Heritage', 'Security First', 'American Integrity', 'Florida Peninsula', 'Slide', 'Tower Hill', 'State Farm', 'Allstate']
         };
 
@@ -2306,6 +2471,7 @@
             locate: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 2.6a1 1 0 0 0-1.06-.22l-17 6.5a1 1 0 0 0 .07 1.89l7.03 2.18 2.18 7.03a1 1 0 0 0 1.89.07l6.5-17a1 1 0 0 0-.21-1.05z"/></svg>',
             calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
             car: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3.5 16h17v2.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V18h-9v.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/><path d="M5 11h14"/><circle cx="8" cy="14" r=".6" fill="currentColor"/><circle cx="16" cy="14" r=".6" fill="currentColor"/></svg>',
+            heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>',
             home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>',
             clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
             shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
@@ -2454,6 +2620,13 @@
                 const value = displayValue(f, QF.a);
                 if (value) rows.push({ key: f.name, label: f.sum || f.label, value, step: step.id, rank: f.rank || 50 });
             }));
+            // a flow whose ZIP lives only in the pill still sends it (first section, first row)
+            const spec = QF.spec;
+            if (spec.intro.zip && secId === spec.sections[0].id && !check.zip(QF.a.zip || '')
+                && !spec.steps.some(s => s.fields.some(f => f.name === 'zip'))) {
+                const first = visibleSteps()[0];
+                rows.push({ key: 'zip', label: 'ZIP', value: QF.a.zip, step: first ? first.id : 'intro', rank: 0 });
+            }
             return rows.sort((x, y) => x.rank - y.rank);
         }
 
@@ -2466,7 +2639,7 @@
                     const rows = sectionRows(sec.id).filter(r => r.key !== 'nombre');
                     if (rows.length) lines.push('', `*${sec.msg}*`, ...rows.map(r => `• ${r.label}: ${r.value}`));
                 });
-                if (a.bundle) lines.push('', spec.bundle.msg);
+                if (a.bundle && spec.bundle) lines.push('', spec.bundle.msg);
             }
             if (mode === 'partial') lines.push('', 'No terminé el formulario; prefiero continuar por aquí.');
             if (mode === 'intro') lines.push('', 'Prefiero hacer la cotización por aquí.');
@@ -2741,7 +2914,7 @@
             }, () => { const b = QF.els.footInner.querySelector('.q-primary'); if (b) b.click(); });
             QF.introZip = z;
             return el('div', { class: 'q-intro-zip' },
-                el('label', { class: 'q-label', for: 'q-intro-zip', text: '¿En qué ZIP se guarda el auto?' }), z.box, z.err);
+                el('label', { class: 'q-label', for: 'q-intro-zip', text: QF.spec.intro.zipLabel || '¿En qué ZIP se guarda el auto?' }), z.box, z.err);
         }
         function introProgress() {
             if (!QF.spec.intro.zip) return;
@@ -2775,7 +2948,7 @@
             function edit() {
                 const input = el('input', {
                     class: 'q-zip-input', type: 'text', inputmode: 'numeric', pattern: '[0-9]*', maxlength: 5,
-                    autocomplete: 'postal-code', enterkeyhint: 'done', 'aria-label': 'ZIP donde se guarda el auto'
+                    autocomplete: 'postal-code', enterkeyhint: 'done', 'aria-label': 'Tu ZIP'
                 });
                 input.value = QF.a.zip || '';
                 const ok = el('button', { type: 'button', class: 'q-zip-ok', 'aria-label': 'Guardar ZIP' });
@@ -3176,7 +3349,7 @@
 
                 case 'choice': {
                     const group = el('div', {
-                        class: 'q-options' + (f.layout === 'pair' ? ' is-pair' : ''), role: 'radiogroup',
+                        class: 'q-options' + (f.layout === 'pair' ? ' is-pair' : f.layout === 'chips' ? ' is-chips' : ''), role: 'radiogroup',
                         'aria-labelledby': labelledBy, 'aria-describedby': describedBy, 'aria-required': f.required ? 'true' : null
                     });
                     f.options.forEach((o, k) => {
@@ -3362,6 +3535,7 @@
                 v.appendChild(card);
             });
 
+            if (spec.bundle) {
             const bundle = el('input', { type: 'checkbox', id: 'q-bundle' });
             bundle.checked = !!a.bundle;
             bundle.addEventListener('change', () => { a.bundle = bundle.checked; saveDraft(); });
@@ -3370,6 +3544,7 @@
             v.appendChild(el('div', { class: 'q-opt is-check q-bundle' }, bundle,
                 el('label', { for: 'q-bundle' }, mark, el('span', { class: 'q-opt-text' },
                     el('span', { class: 'q-opt-label', text: spec.bundle.label }), el('span', { class: 'q-opt-desc', text: spec.bundle.desc })))));
+            }
 
             const send = primaryButton([icon('whatsapp'), el('span', { text: 'Enviar por WhatsApp' })]);
             send.addEventListener('click', () => {
@@ -4110,6 +4285,13 @@
                     "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20casa",
                     "type": "primary",
                     "form": "casa"
+                },
+                {
+                    "text": "Cotiza tu Seguro de Salud",
+                    "emoji": "🩺",
+                    "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20de%20seguro%20m%C3%A9dico",
+                    "type": "primary",
+                    "form": "salud"
                 },
                 {
                     "text": "Llámanos",
