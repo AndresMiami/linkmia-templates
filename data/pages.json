@@ -132,6 +132,18 @@
       "isActive": true,
       "createdAt": "2026-09-28T00:00:00.000Z",
       "updatedAt": "2026-10-01T00:00:00.000Z"
+    },
+    {
+      "slug": "emilio-hector",
+      "shortCode": "emilio",
+      "name": "Emilio Héctor Rodríguez",
+      "tagline": "Website redesign concept",
+      "location": "Miami, FL",
+      "type": "custom",
+      "url": "/concepts/emilio-hector/",
+      "isActive": true,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "updatedAt": "2026-10-01T00:00:00.000Z"
     }
   ]
 }
