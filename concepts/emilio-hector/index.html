@@ -408,6 +408,30 @@ dialog.lb::backdrop{background:var(--scrim)}
 /* Preview notice when images are blocked */
 .imgnote{display:none;margin:0 0 20px;padding:10px 14px;border:1px dashed var(--rule);font-size:13px;color:var(--muted)}
 body.noimgs .imgnote{display:block}
+/* ===== Phone refinements (desktop layout unchanged) ===== */
+@media (max-width:900px){
+  /* the desktop .hero-art .label rule further up re-added an 8% indent on phones */
+  .hero-art .label{padding-left:0}
+}
+@media (max-width:640px){
+  /* "On view now" label beside its dot, exhibition details aligned under it */
+  .onview .k{grid-column:2;grid-row:1}
+  .onview .t,.onview .v{grid-column:2}
+  /* the work: two columns instead of one long single file */
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 14px}
+  .cell img,.cell .ph{max-width:92%;max-height:92%}
+  .ph i{font-size:var(--s-14)}
+  .work{gap:10px}
+  .work .label{padding-inline:4%;font-size:12.5px;line-height:1.4}
+  .work .label .ti{font-size:16px;line-height:1.25}
+  .work .label .ld{font-size:11.5px!important}
+  .work .ask{margin-left:4%;font-size:12.5px}
+  /* filters: one swipeable row */
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-inline:calc(-1 * var(--gutter));padding-inline:var(--gutter)}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none}
+  .timeline li{grid-template-columns:4.2em 1fr;gap:12px}
+}
 </style>
 </head>
 <body>
@@ -1135,7 +1159,7 @@ var BIBLIO = [
 var PROJECT_VENUES = ["Miami Dade College","Koubek Center","Miami Hispanic Cultural Arts Center","St. Thomas University","Coral Gables Museum","Nina Torres Fine Art"];
 /* ===== SETTINGS ===== */
 var WHATSAPP_NUMBER = "13055057416";   // digits only, with country code. Confirm it has WhatsApp.
-var SHOW_CONCEPT_RIBBON = true;         // set to false when the site goes live
+var SHOW_CONCEPT_RIBBON = false;         // set to false when the site goes live
 
 /* ===== STRINGS ===== */
 var ES = {
