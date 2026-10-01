@@ -1908,8 +1908,9 @@
             grid.innerHTML = pagesData.pages.map((page, index) => {
                 const custom = isCustomPage(page);
                 const fullUrl = publicUrl(page);
-                const shortCode = page.shortCode || generateShortCode();
-                const shortUrl = `link.linkmia.com/s/${shortCode}`;
+                // Only show a short link that is saved in pages.json: a code made
+                // up here would change on every load and /s/ could never find it.
+                const shortUrl = page.shortCode ? `link.linkmia.com/s/${page.shortCode}` : '';
                 const stats = analyticsData[page.slug] || { views: 0, clicks: 0 };
 
                 return `
@@ -1920,10 +1921,14 @@
                             <a class="url" href="${fullUrl}" target="_blank">
                                 ${fullUrl.replace('https://', '')}
                             </a>
+                            ${shortUrl ? `
                             <div class="short-link">
                                 <span class="short-link-url">${shortUrl}</span>
                                 <button class="copy-btn" onclick="copyToClipboard('https://${shortUrl}')" title="Copy short link">📋</button>
-                            </div>
+                            </div>` : `
+                            <div class="short-link" title="Saving the page in the editor creates its short link">
+                                <span class="short-link-url" style="opacity:.6">No short link yet</span>
+                            </div>`}
                         </div>
                         <span class="status-dot ${page.isActive !== false ? 'active' : 'inactive'}" title="${page.isActive !== false ? 'Active' : 'Inactive'}"></span>
                     </div>
