@@ -794,6 +794,12 @@
                     return;
                 }
 
+                // Custom pages (built in code) live at their own path.
+                if (page.type === 'custom' && page.url) {
+                    window.location.replace(page.url + window.location.search);
+                    return;
+                }
+
                 // Track page view (cookie-free)
                 trackPageView(slug);
 

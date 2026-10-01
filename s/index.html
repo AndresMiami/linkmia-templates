@@ -121,8 +121,10 @@
                 // Track the click (cookie-free using localStorage)
                 trackClick(page.slug);
 
-                // Redirect to the full page URL
-                window.location.href = `https://link.linkmia.com/p/${page.slug}`;
+                // Redirect to the full page URL (custom pages live at their own path)
+                window.location.href = (page.type === 'custom' && page.url)
+                    ? `https://link.linkmia.com${page.url}`
+                    : `https://link.linkmia.com/p/${page.slug}`;
 
             } catch (error) {
                 console.error('Redirect error:', error);
