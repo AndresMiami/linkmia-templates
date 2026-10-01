@@ -1677,10 +1677,8 @@
                         id: 'vehiculo', section: 'veh',
                         title: '¿Qué auto quieres asegurar?',
                         fields: [
-                            { name: 'anio', kind: 'year', vehicle: true, label: 'Año', required: true, reqMsg: 'Elige el año.', icon: 'calendar', placeholder: 'Elige el año', sumHidden: true },
-                            { name: 'vehiculo', kind: 'makeModel', label: 'Marca y modelo', required: true, icon: 'car', placeholder: 'Elige marca y modelo', sum: 'Auto', display: a => (a.marca && a.modelo ? [a.anio, a.marca, a.modelo].filter(Boolean).join(' ') : '') },
                             {
-                                name: 'vin', kind: 'text', label: 'VIN', hint: 'Acelera tu cotización. Tiene 17 letras y números.',
+                                name: 'vin', kind: 'text', label: 'VIN', hint: '¿Lo tienes a mano? Escríbelo y completamos el año, la marca y el modelo por ti.',
                                 validate: check.vin, transform: v => v.toUpperCase().replace(/[^A-Z0-9]/g, ''),
                                 maxlength: 17, autocapitalize: 'characters', autocomplete: 'off', spellcheck: 'false', placeholder: 'Ej. 1HGCM82633A004352', sum: 'VIN',
                                 help: {
@@ -1690,6 +1688,8 @@
                                 },
                                 decode: 'vin'
                             },
+                            { name: 'anio', kind: 'year', vehicle: true, label: 'Año', required: true, reqMsg: 'Elige el año.', icon: 'calendar', placeholder: 'Elige el año', sumHidden: true },
+                            { name: 'vehiculo', kind: 'makeModel', label: 'Marca y modelo', required: true, icon: 'car', placeholder: 'Elige marca y modelo', sum: 'Auto', rank: 1, display: a => (a.marca && a.modelo ? [a.anio, a.marca, a.modelo].filter(Boolean).join(' ') : '') },
                             // filled from the VIN; shown once a VIN lookup has found the car
                             {
                                 name: 'version', kind: 'text', label: 'Versión', showIf: a => !!(a._vinFill || (a.version || '').trim()),
@@ -2022,7 +2022,7 @@
                     const row = data && Array.isArray(data.Results) ? data.Results[0] : null;
                     const got = row ? vinVehicle(row) : null;
                     if (!got || !got.marca || !got.modelo) {
-                        setVinStatus(status, 'error', 'No encontramos un auto con ese VIN. Revísalo, o elige el año, la marca y el modelo arriba.');
+                        setVinStatus(status, 'error', 'No encontramos un auto con ese VIN. Revísalo, o elige el año, la marca y el modelo abajo.');
                         return;
                     }
                     const filled = applyVinFill(q.a, got);
