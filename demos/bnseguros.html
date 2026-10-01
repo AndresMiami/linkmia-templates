@@ -480,6 +480,14 @@
         .theme-app {
             --line: rgba(255, 255, 255, 0.12);             /* every outline and divider */
             --surface-control: rgba(255, 255, 255, 0.04);  /* every tappable box */
+            /* form fields: a deep inset well against the blue page (text boxes, selects,
+               pickers), raised cards for the choices, gold edge once answered */
+            --field-bg: #0d1235;
+            --field-bg-focus: #11173f;
+            --field-border: rgba(255, 255, 255, 0.22);
+            --field-inset: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+            --field-done: rgba(var(--primary-rgb), 0.5);
+            --card-raised: rgba(255, 255, 255, 0.075);
             --selected-bg: rgba(var(--primary-rgb), 0.12); /* brand tint */
             --r-control: 12px;
             --r-card: 16px;
@@ -655,6 +663,7 @@
             transition: all var(--ease);
         }
         .theme-app .app-option-icon { font-size: 22px; }
+        .theme-app .app-option-sub { font-size: 13px; font-weight: 500; color: var(--text-muted); font-variant-numeric: tabular-nums; }
         .theme-app .app-option:hover {
             border-color: rgba(var(--primary-rgb), 0.5);
             background: rgba(var(--primary-rgb), 0.08);
@@ -707,8 +716,10 @@
         .theme-app .app-avatar.has-logo img {
             position: relative;
             padding: 0;
-            filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35))
-                    drop-shadow(0 0 18px rgba(var(--primary-rgb), 0.28));
+            /* the image is already lit in 3D (bevelled gold on blue enamel); this lifts it off the card */
+            filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.5))
+                    drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4))
+                    drop-shadow(0 0 22px rgba(var(--primary-rgb), 0.22));
             animation: emblemIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
         /* the shine is masked to the logo's own lines, so only the gold glints */
@@ -717,7 +728,7 @@
             position: absolute;
             inset: 0;
             background: linear-gradient(115deg,
-                transparent 35%, rgba(255, 255, 255, 0.85) 50%, transparent 65%)
+                transparent 38%, rgba(255, 255, 255, 0.55) 50%, transparent 62%)
                 -200% 0 / 250% 100% no-repeat;
             -webkit-mask: var(--logo-url) center / contain no-repeat;
                     mask: var(--logo-url) center / contain no-repeat;
@@ -966,20 +977,23 @@
             width: 100%;
             min-height: 52px;
             padding: 12px 14px;
-            border: 1px solid var(--line);
+            border: 1px solid var(--field-border);
             border-radius: var(--r-control);
-            background: var(--surface-control);
+            background-color: var(--field-bg);
+            box-shadow: var(--field-inset);
             color: var(--text-color);
             font-family: inherit;
             font-size: 16px;          /* 16px+ keeps iOS from zooming on focus */
             outline: none;
-            transition: border-color var(--ease), background var(--ease);
+            transition: border-color var(--ease), background-color var(--ease), box-shadow var(--ease);
             -webkit-appearance: none;
             appearance: none;
         }
-        .q-input::placeholder { color: rgba(255, 255, 255, 0.38); }
+        .q-input::placeholder { color: rgba(255, 255, 255, 0.42); }
         .q-input[list]::-webkit-calendar-picker-indicator { display: none !important; }   /* type-ahead only, no ▼ */
-        .q-input:focus, .q-select:focus { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.07); }
+        .q-input:focus, .q-select:focus { border-color: var(--primary-color); background-color: var(--field-bg-focus); box-shadow: var(--field-inset), 0 0 0 3px rgba(var(--primary-rgb), 0.18); }
+        .q-input:not(:placeholder-shown):not(:focus):not([aria-invalid="true"]),
+        .q-select:not(.is-empty):not(:focus):not([aria-invalid="true"]) { border-color: var(--field-done); }
         .q-input[aria-invalid="true"], .q-select[aria-invalid="true"] { border-color: #FF453A; }
         .q-select {
             padding-right: 36px;
@@ -1005,11 +1019,12 @@
             gap: 14px;
             min-height: 60px;
             padding: 14px 16px;
-            border: 1px solid var(--line);
+            border: 1px solid rgba(255, 255, 255, 0.16);
             border-radius: var(--r-control);
-            background: var(--surface-control);
+            background: var(--card-raised);
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 2px 6px rgba(0, 0, 0, 0.18);
             cursor: pointer;
-            transition: border-color var(--ease), background var(--ease), transform var(--ease);
+            transition: border-color var(--ease), background var(--ease), transform var(--ease), box-shadow var(--ease);
             -webkit-tap-highlight-color: transparent;
         }
         .q-opt label:active { transform: scale(0.99); }
@@ -1036,7 +1051,7 @@
         .q-opt-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
         .q-opt-label { font-size: 16px; font-weight: 600; }
         .q-opt-desc { font-size: 13px; color: var(--text-muted); }
-        .q-opt input:checked + label { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.08); }
+        .q-opt input:checked + label { border-color: var(--primary-color); background: rgba(var(--primary-rgb), 0.12); box-shadow: 0 0 0 1px var(--primary-color), 0 6px 16px rgba(0, 0, 0, 0.25); }
         .q-opt input:checked + label .q-mark { border-color: var(--primary-color); }
         .q-opt input:checked + label .q-mark::after { transform: scale(1); }
         .q-opt input:focus-visible + label { outline: 2px solid var(--primary-color); outline-offset: 2px; }
@@ -1068,9 +1083,10 @@
             width: 100%;
             min-height: 60px;
             padding: 10px 14px;
-            border: 1px solid var(--line);
+            border: 1px solid var(--field-border);
             border-radius: var(--r-control);
-            background: var(--surface-control);
+            background: var(--field-bg);
+            box-shadow: var(--field-inset);
             color: var(--text-color);
             font-family: inherit;
             text-align: left;
@@ -1080,7 +1096,7 @@
         .q-picker:active { transform: scale(0.99); }
         .q-picker:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
         .q-picker[aria-invalid="true"] { border-color: #FF453A; }
-        .q-picker.is-set { border-color: rgba(var(--primary-rgb), 0.5); }
+        .q-picker.is-set { border-color: var(--field-done); }
         .q-picker-icon { flex: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
         .q-picker-icon svg { width: 24px; height: 24px; }
         .q-picker.is-set .q-picker-icon { color: var(--primary-color); }
@@ -1141,7 +1157,21 @@
         }
         .q-primary:active { transform: scale(0.98); }
         .q-primary svg { width: 20px; height: 20px; flex: none; }
-        .q-primary.is-incomplete { background: rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.55); box-shadow: none; }
+        /* progressive: an unfinished step's button fills with gold as its answers come in,
+           then lights up fully (with a small pop) once the step is complete */
+        .q-primary.is-incomplete {
+            background:
+                linear-gradient(90deg, #FFE266, var(--primary-color)) left bottom / var(--fill, 0%) 5px no-repeat,
+                rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.62);
+            box-shadow: none;
+            transition: --fill 0.45s ease, color var(--ease);
+        }
+        .q-primary.is-incomplete.has-progress { color: rgba(255, 255, 255, 0.85); }
+        .q-primary.is-ready { animation: readyPop 0.45s ease; }
+        @keyframes readyPop { 0% { transform: scale(0.97); } 55% { transform: scale(1.025); } 100% { transform: none; } }
+        @property --fill { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+        @media (prefers-reduced-motion: reduce) { .q-primary.is-ready { animation: none; } .q-primary.is-incomplete { transition: none; } }
         .q-primary:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; }
         .q-secondary {
             display: flex;
@@ -1258,6 +1288,22 @@
         .q-done-check svg { width: 36px; height: 36px; }
         .q-done-text { margin: 0 0 24px; font-size: 15px; color: var(--text-muted); }
         .q-done .q-alt { margin-top: 12px; }
+        /* the WhatsApp way out: WhatsApp green, so it reads as its own choice */
+        .q-alt.is-wa {
+            align-self: stretch;
+            min-height: 48px;
+            padding: 10px 16px;
+            border: 1.5px solid rgba(37, 211, 102, 0.75);
+            border-radius: var(--r-control);
+            background: rgba(37, 211, 102, 0.12);
+            color: #5BE58F;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .q-alt.is-wa svg { width: 20px; height: 20px; color: #25D366; fill: #25D366; }
+        .q-alt.is-wa:active { background: rgba(37, 211, 102, 0.22); }
+        .q-alt.is-wa:focus-visible { outline: 2px solid #25D366; outline-offset: 2px; }
         .q-recap { margin-top: 28px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-control); text-align: left; }
         .q-recap-label { display: block; font-size: 13px; color: var(--text-muted); }
         .q-recap-value { display: block; font-size: 15px; font-weight: 600; }
@@ -1336,9 +1382,10 @@
             width: 100%;
             min-height: 48px;
             padding: 12px 14px 12px 42px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--field-border);
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--field-bg);
+            box-shadow: var(--field-inset);
             color: var(--text-color);
             font-family: inherit;
             font-size: 16px;
@@ -2611,6 +2658,7 @@
             els.root.classList.remove('is-scrolled');
             els.footInner.replaceChildren(...out.foot);
             els.foot.hidden = !out.foot.length;
+            if (view === 'intro') introProgress();          // Empezar fills as the ZIP is typed
             if (QF.ctl) { refreshStep(); QF.ctl.ready = true; }
             saveDraft();
             requestAnimationFrame(() => {
@@ -2646,7 +2694,7 @@
             return b;
         }
         function altLink(text, onClick, withIcon) {
-            const b = el('button', { type: 'button', class: 'q-alt' }, withIcon ? icon('whatsapp') : null, el('span', { text }));
+            const b = el('button', { type: 'button', class: 'q-alt' + (withIcon ? ' is-wa' : '') }, withIcon ? icon('whatsapp') : null, el('span', { text }));
             b.addEventListener('click', onClick);
             return b;
         }
@@ -2688,11 +2736,17 @@
             const z = zipBox('q-intro-zip', QF.a.zip, v => {
                 QF.a.zip = v;
                 saveDraft();
+                introProgress();
                 if (!check.zip(v)) { z.err.textContent = ''; z.input.removeAttribute('aria-invalid'); }
             }, () => { const b = QF.els.footInner.querySelector('.q-primary'); if (b) b.click(); });
             QF.introZip = z;
             return el('div', { class: 'q-intro-zip' },
                 el('label', { class: 'q-label', for: 'q-intro-zip', text: '¿En qué ZIP se guarda el auto?' }), z.box, z.err);
+        }
+        function introProgress() {
+            if (!QF.spec.intro.zip) return;
+            const b = QF.els.footInner.querySelector('.q-primary');
+            setProgress(b, Math.min((QF.a.zip || '').length, 5) / 5);
         }
         function introZipOk() {
             if (!QF.spec.intro.zip) return true;
@@ -2994,7 +3048,28 @@
             if (appeared && ctl.ready) {
                 ctl.note.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
             }
-            ctl.primary.classList.toggle('is-incomplete', !stepDone(ctl.step));
+            setProgress(ctl.primary, stepFill(ctl));
+        }
+
+        // How much of this screen is answered: required fields done / required fields
+        // shown (a screen of optional fields only is ready at once; a typo holds it at 95%).
+        function stepFill(ctl) {
+            const req = ctl.fields.filter(r => r.f.required && fieldShown(r.f, QF.a));
+            const done = req.filter(r => !fieldError(r.f, QF.a)).length;
+            const frac = req.length ? done / req.length : 1;
+            return stepDone(ctl.step) ? 1 : Math.min(frac, 0.95);
+        }
+        function setProgress(btn, frac) {
+            if (!btn) return;
+            const was = !btn.classList.contains('is-incomplete');
+            const ready = frac >= 1;
+            btn.style.setProperty('--fill', `${Math.round(frac * 100)}%`);
+            btn.classList.toggle('has-progress', frac > 0 && frac < 1);
+            btn.classList.toggle('is-incomplete', !ready);
+            if (ready && !was && btn.dataset.progress) {          // just completed: a small pop
+                btn.classList.remove('is-ready'); void btn.offsetWidth; btn.classList.add('is-ready');
+            }
+            btn.dataset.progress = '1';
         }
 
         function onAnswer() {
@@ -3060,7 +3135,7 @@
                     const input = el('input', {
                         id, name: f.name, class: 'q-input', type: f.type || 'text',
                         inputmode: f.inputmode, autocomplete: f.autocomplete || 'off', autocapitalize: f.autocapitalize,
-                        spellcheck: f.spellcheck, placeholder: f.placeholder, maxlength: f.maxlength, pattern: f.pattern,
+                        spellcheck: f.spellcheck, placeholder: f.placeholder || ' ', maxlength: f.maxlength, pattern: f.pattern,
                         list: f.list, enterkeyhint: 'next', 'aria-describedby': describedBy,
                         'aria-required': f.required ? 'true' : null
                     });
@@ -3761,6 +3836,17 @@
                 text.className = primary ? 'app-cta-text' : '';
                 text.textContent = button.text;
                 a.appendChild(text);
+                if (!primary) {                          // say where it goes: the number, the site
+                    let sub = '';
+                    if (/^tel:/i.test(button.url || '')) {
+                        let d = button.url.replace(/\D/g, '');
+                        if (d.length === 11 && d[0] === '1') d = d.slice(1);
+                        sub = d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : button.url.slice(4);
+                    } else if (/^https?:/i.test(button.url || '')) {
+                        try { sub = new URL(button.url).hostname.replace(/^www\./, ''); } catch (_) { /* leave it out */ }
+                    }
+                    if (sub) a.appendChild(el('span', { class: 'app-option-sub', text: sub }));
+                }
                 if (primary) a.insertAdjacentHTML('beforeend', chevronSVG);
                 a.addEventListener('click', () => { if (slug) trackClick(slug); });
                 (primary ? actions : options).appendChild(a);
@@ -3989,7 +4075,7 @@
                 "style": "card",
                 "theme": "app",
                 "image": {
-                    "url": "/demos/bnseguros-logo.webp",
+                    "url": "/demos/bnseguros-logo-3d.webp",
                     "heroBackground": ""
                 },
                 "background": {
