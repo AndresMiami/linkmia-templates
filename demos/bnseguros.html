@@ -688,6 +688,82 @@
         /* logo in the circle: contain so wide logos are not cropped */
         .theme-app .app-avatar img { object-fit: contain; padding: 8px; }
 
+        /* brand emblem: a real logo gets a large, free-standing mark on a
+           soft gold halo (no circle frame), with a slow shine across it */
+        .theme-app .app-avatar.has-logo {
+            position: relative;
+            width: 168px;
+            height: 168px;
+            margin-bottom: 12px;
+            border: none;
+            background: radial-gradient(circle at 50% 50%,
+                rgba(var(--primary-rgb), 0.20) 0%,
+                rgba(var(--primary-rgb), 0.07) 42%,
+                rgba(var(--primary-rgb), 0) 70%);
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 52px;
+            overflow: visible;
+        }
+        .theme-app .app-avatar.has-logo img {
+            position: relative;
+            padding: 0;
+            filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35))
+                    drop-shadow(0 0 18px rgba(var(--primary-rgb), 0.28));
+            animation: emblemIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+        /* the shine is masked to the logo's own lines, so only the gold glints */
+        .theme-app .app-avatar.has-logo.is-loaded::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg,
+                transparent 35%, rgba(255, 255, 255, 0.85) 50%, transparent 65%)
+                -200% 0 / 250% 100% no-repeat;
+            -webkit-mask: var(--logo-url) center / contain no-repeat;
+                    mask: var(--logo-url) center / contain no-repeat;
+            animation: emblemShine 7s ease-in-out 1.2s infinite;
+            pointer-events: none;
+        }
+        @keyframes emblemIn {
+            from { opacity: 0; transform: scale(0.88); }
+            to { opacity: 1; transform: none; }
+        }
+        @keyframes emblemShine {
+            0% { background-position: -200% 0; }
+            30%, 100% { background-position: 200% 0; }
+        }
+
+        /* gold rule under the name: two hairlines meeting a small diamond,
+           echoing the logo's diamond frame */
+        .theme-app .app-identity.has-logo .app-tagline::after {
+            content: '';
+            display: block;
+            width: 132px;
+            height: 10px;
+            margin: 16px auto 0;
+            background:
+                linear-gradient(90deg, rgba(var(--primary-rgb), 0), rgba(var(--primary-rgb), 0.8)) left center / 58px 1px no-repeat,
+                linear-gradient(270deg, rgba(var(--primary-rgb), 0), rgba(var(--primary-rgb), 0.8)) right center / 58px 1px no-repeat;
+        }
+        .theme-app .app-identity.has-logo .app-tagline { position: relative; }
+        .theme-app .app-identity.has-logo .app-tagline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 2px;
+            width: 7px;
+            height: 7px;
+            border: 1px solid var(--primary-color);
+            transform: translateX(-50%) rotate(45deg);
+        }
+        .theme-app .app-identity.has-logo .app-name { letter-spacing: 0.01em; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .theme-app .app-avatar.has-logo img,
+            .theme-app .app-avatar.has-logo.is-loaded::after { animation: none; }
+            .theme-app .app-avatar.has-logo.is-loaded::after { display: none; }
+        }
+
         /* a CTA that opens the quote flow */
         .theme-app button.app-cta {
             width: 100%;
@@ -1031,6 +1107,9 @@
             overflow: hidden;
         }
         .q-brand-mark img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+        /* with a real logo: the mark itself, slightly larger, no circle */
+        .q-brand-mark:has(img) { width: 44px; height: 44px; border-color: transparent; background: none; overflow: visible; }
+        .q-brand-mark:has(img) img { padding: 0; }
         .q-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 4px 0 16px; font-size: 14px; color: var(--text-muted); }
         .q-meta span { display: inline-flex; align-items: center; gap: 6px; }
         .q-meta svg { width: 18px; height: 18px; color: var(--primary-color); }
@@ -2958,10 +3037,18 @@
             const logo = config.layout?.image?.url;
             avatar.textContent = initialsOf(config.name);
             if (logo) {
+                // Reserve the large emblem space now (no jump when it loads).
                 // Show initials until the logo loads; keep them if it never does.
+                avatar.classList.add('has-logo');
+                avatar.parentElement.classList.add('has-logo');
                 const img = new Image();
                 img.alt = '';
-                img.onload = () => { avatar.textContent = ''; avatar.appendChild(img); };
+                img.onload = () => {
+                    avatar.textContent = '';
+                    avatar.appendChild(img);
+                    avatar.style.setProperty('--logo-url', `url("${img.src}")`);
+                    avatar.classList.add('is-loaded');
+                };
                 img.src = logo;
             }
             document.getElementById('app-name').textContent = config.name;
@@ -3225,7 +3312,7 @@
                 "style": "card",
                 "theme": "app",
                 "image": {
-                    "url": "",
+                    "url": "/demos/bnseguros-logo.webp",
                     "heroBackground": ""
                 },
                 "background": {
