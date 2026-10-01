@@ -837,6 +837,82 @@
             font-weight: 500;
         }
         .q-context svg { width: 16px; height: 16px; flex: none; color: var(--primary-color); }
+
+        /* top of a question: the answer-so-far chip on the left, the ZIP on the right
+           (like the location pill in car-shopping apps) */
+        .q-toprow { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; }
+        .q-toprow .q-context { margin: 0; min-width: 0; }
+        .q-zip-wrap { flex: none; margin-left: auto; display: inline-flex; }
+        .q-zip-pill {
+            flex: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 36px;
+            padding: 6px 14px 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            background: var(--surface-control);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            cursor: pointer;
+            transition: border-color var(--ease), background var(--ease);
+        }
+        .q-zip-pill svg { width: 16px; height: 16px; color: var(--primary-color); }
+        .q-zip-pill:active { background: rgba(var(--primary-rgb), 0.10); }
+        .q-zip-pill:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .q-zip-pill .q-zip-edit svg { width: 13px; height: 13px; color: var(--text-muted); }
+        /* tapped: the pill itself becomes the ZIP box */
+        .q-zip-pill.is-editing { padding: 3px 3px 3px 12px; border-color: var(--primary-color); background: rgba(var(--primary-rgb), 0.08); cursor: text; }
+        .q-zip-pill.is-invalid { border-color: #FF8A80; animation: zipShake 0.3s ease; }
+        .q-zip-input {
+            width: 5.4ch;
+            padding: 0;
+            border: none;
+            background: none;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 16px;          /* 16px+: iOS does not zoom the page */
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            outline: none;
+        }
+        .q-zip-ok {
+            width: 30px;
+            height: 30px;
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--on-primary-color, #1b2150);
+            cursor: pointer;
+        }
+        .q-zip-ok svg { width: 14px; height: 14px; color: currentColor; }
+        @keyframes zipShake { 0%, 100% { transform: none; } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+        /* address suggestions under the address box */
+        .q-suggest { list-style: none; margin: 6px 0 0; padding: 4px 0; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--card-background); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35); overflow: hidden; }
+        .q-suggest[hidden] { display: none; }
+        .q-suggest-opt { display: flex; align-items: flex-start; gap: 10px; min-height: 52px; padding: 10px 14px; cursor: pointer; }
+        .q-suggest-opt svg { width: 18px; height: 18px; flex: none; margin-top: 2px; color: var(--primary-color); }
+        .q-suggest-opt.is-active, .q-suggest-opt:active { background: rgba(var(--primary-rgb), 0.10); }
+        .q-suggest-main { display: block; font-size: 15px; font-weight: 600; color: var(--text-color); }
+        .q-suggest-sub { display: block; font-size: 13px; color: var(--text-muted); }
+        .q-suggest-credit { padding: 6px 14px 4px; font-size: 11px; color: var(--text-muted); text-align: right; opacity: 0.8; }
+
+        /* the ZIP box on the first screen */
+        .q-intro-zip { margin: 0 0 20px; }
+        .q-intro-zip .q-label { display: block; margin-bottom: 8px; }
+        .q-zip-box { position: relative; }
+        .q-zip-box svg { position: absolute; left: 16px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: var(--primary-color); pointer-events: none; }
+        .q-zip-box .q-input { padding-left: 44px; font-size: 18px; font-weight: 600; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+        .q-intro-zip .q-error { margin-top: 6px; }
         .q-context span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .q-help {
             display: inline-flex;
@@ -916,7 +992,7 @@
         .q-select:invalid, .q-select.is-empty { color: rgba(255, 255, 255, 0.45); }
         .q-select option { color: #111; }
         input[type="date"].q-input { min-height: 52px; }
-        .q-dob { display: grid; grid-template-columns: 1fr 1.5fr 1.25fr; gap: 8px; }
+        .q-dob { display: grid; grid-template-columns: 1.5fr 1fr 1.25fr; gap: 8px; }
 
         /* option cards: radio (round mark) or checkbox (square mark) */
         .q-options { display: flex; flex-direction: column; gap: 10px; }
@@ -1220,6 +1296,7 @@
             animation: slideUp 0.3s ease both;
             padding-bottom: env(safe-area-inset-bottom);
         }
+        .sheet.is-full { height: 90vh; height: 90dvh; }
         .sheet-head {
             flex: none;
             display: grid;
@@ -1245,11 +1322,16 @@
         .sheet-btn svg { width: 20px; height: 20px; }
         .sheet-btn:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
         .sheet-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 0 16px 24px; }
+        /* the search bar stays pinned while the list scrolls under it */
         .sheet-search {
-            position: relative;
-            margin-bottom: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            margin: 0 -16px 12px;
+            padding: 2px 16px 10px;
+            background: var(--card-background);
         }
-        .sheet-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--text-muted); }
+        .sheet-search svg { position: absolute; left: 30px; top: calc(50% - 4px); transform: translateY(-50%); width: 18px; height: 18px; color: var(--text-muted); }
         .sheet-search input {
             width: 100%;
             min-height: 48px;
@@ -1280,8 +1362,8 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            min-height: 88px;
-            padding: 10px 6px;
+            min-height: 96px;
+            padding: 12px 6px 10px;
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.04);
@@ -1293,6 +1375,9 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+        /* real brand logos on the popular tiles (light versions for the dark tiles) */
+        .make-logo { width: 100%; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .make-logo img { max-width: 78%; max-height: 40px; object-fit: contain; }
         .make-mono {
             width: 36px;
             height: 36px;
@@ -1330,6 +1415,31 @@
         .sheet-row.muted { color: var(--text-muted); }
         .make-tile:focus-visible, .sheet-row:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
         .sheet-empty { color: var(--text-muted); text-align: center; padding: 16px 0; font-size: 14px; }
+        .sheet-section .count { font-weight: 500; letter-spacing: 0; text-transform: none; opacity: 0.8; }
+
+        /* models loading: placeholder rows in the list's own rhythm, so the real
+           list replaces them without the sheet jumping */
+        .sheet-skeleton { list-style: none; margin: 0; padding: 0; }
+        .sheet-skeleton li {
+            display: flex;
+            align-items: center;
+            min-height: 52px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .sheet-skeleton li::before {
+            content: '';
+            height: 14px;
+            width: var(--w, 50%);
+            border-radius: 7px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.06) 100%) 0 0 / 200% 100%;
+            animation: skeletonShine 1.2s ease-in-out infinite;
+        }
+        .sheet-fade-in { animation: sheetListIn 0.22s ease both; }
+        @keyframes skeletonShine { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+        @keyframes sheetListIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) {
+            .sheet-skeleton li::before, .sheet-fade-in { animation: none; }
+        }
         .sheet-other { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
         .sheet-other .q-input { width: 100%; }
         .sheet-text { margin-bottom: 20px; font-size: 15px; line-height: 1.55; }
@@ -1619,6 +1729,7 @@
         const check = {
             vin: v => (/^[A-HJ-NPR-Z0-9]{17}$/.test(v) ? '' : 'El VIN tiene 17 caracteres: letras y números, sin I, O ni Q.'),
             zip: v => (/^\d{5}$/.test(v) ? '' : 'Escribe un ZIP de 5 dígitos.'),
+            street: v => (v.replace(/\s+/g, ' ').length >= 5 && /\d/.test(v) && /\p{L}/u.test(v) ? '' : 'Escribe la calle y el número (ej. 123 SW 8th St).'),
             email: v => (EMAIL_RE.test(v) ? '' : 'Escribe un email válido.'),
             phone: v => {
                 const d = v.replace(/\D/g, '');
@@ -1631,6 +1742,10 @@
             },
             address: v => (/^\d+$/.test(v) ? check.zip(v) : v.length >= 5 ? '' : 'Escribe la dirección completa o un ZIP de 5 dígitos.')
         };
+
+        // VINs never use I, O or Q (too easy to confuse with 1 and 0), so a typed
+        // O or Q is a zero and an I is a one: fix it as they type.
+        const vinChars = v => v.toUpperCase().replace(/[OQ]/g, '0').replace(/I/g, '1').replace(/[^A-Z0-9]/g, '');
 
         const YES_NO = [{ value: 'si', label: 'Sí' }, { value: 'no', label: 'No' }];
         const currentInsurance = a => (a.seguroActual === 'si'
@@ -1658,7 +1773,8 @@
                 intro: {
                     eyebrow: 'Seguro de auto',
                     title: 'Cotiza tu seguro de auto',
-                    have: ['Año, marca y modelo del auto', 'Tu fecha de nacimiento y tu ZIP', 'El VIN, si lo tienes (opcional)']
+                    have: ['Año, marca y modelo del auto', 'Tu fecha de nacimiento', 'El VIN, si lo tienes (opcional)'],
+                    zip: true          // ask the ZIP first; it shows as a pill on every question
                 },
                 sections: [
                     { id: 'veh', title: 'Vehículo', msg: 'Vehículo' },
@@ -1679,7 +1795,7 @@
                         fields: [
                             {
                                 name: 'vin', kind: 'text', label: 'VIN', hint: '¿Lo tienes a mano? Escríbelo y completamos el año, la marca y el modelo por ti.',
-                                validate: check.vin, transform: v => v.toUpperCase().replace(/[^A-Z0-9]/g, ''),
+                                validate: check.vin, transform: vinChars,
                                 maxlength: 17, autocapitalize: 'characters', autocomplete: 'off', spellcheck: 'false', placeholder: 'Ej. 1HGCM82633A004352', sum: 'VIN',
                                 help: {
                                     label: '¿Dónde lo encuentro?', title: '¿Dónde está el VIN?',
@@ -1796,6 +1912,7 @@
                         sub: 'Esto nos ayuda a calcular un precio más exacto.',
                         fields: [
                             { name: 'dob', kind: 'dob', label: 'Fecha de nacimiento', required: true, sum: 'Fecha de nacimiento', rank: 2 },
+                            { name: 'direccionAuto', kind: 'text', label: 'Dirección donde se guarda el auto', hint: 'Empieza a escribir y elige tu dirección de la lista.', validate: check.street, suggest: 'address', autocomplete: 'address-line1', autocapitalize: 'words', placeholder: 'Calle y número', sum: 'Dirección', rank: 3 },
                             { name: 'zip', kind: 'text', label: 'ZIP donde se guarda el auto', hint: 'Donde el auto pasa la noche.', required: true, reqMsg: 'Escribe un ZIP de 5 dígitos.', validate: check.zip, transform: v => v.replace(/\D/g, ''), inputmode: 'numeric', pattern: '[0-9]*', maxlength: 5, autocomplete: 'postal-code', placeholder: 'Ej. 33125', sum: 'ZIP', rank: 3 },
                             { name: 'accidentes', kind: 'choice', layout: 'pair', label: '¿Accidentes o multas en los últimos 3 años?', required: true, options: YES_NO, sum: 'Accidentes o multas (3 años)', rank: 4 }
                         ]
@@ -2046,50 +2163,100 @@
                 .finally(() => clearTimeout(timer));
         }
 
+        // Best sellers per brand: the "Populares" shortcut on long model lists
+        // (only those NHTSA confirms for the chosen year are shown).
+        const POPULAR_MODELS = {
+            'Chevrolet': ['Silverado 1500', 'Equinox', 'Malibu', 'Tahoe', 'Traverse', 'Trax'],
+            'Ford': ['F-150', 'Explorer', 'Escape', 'Mustang', 'Bronco', 'Ranger'],
+            'GMC': ['Sierra 1500', 'Yukon', 'Acadia', 'Terrain', 'Canyon'],
+            'Honda': ['Civic', 'CR-V', 'Accord', 'Pilot', 'HR-V', 'Odyssey'],
+            'Hyundai': ['Elantra', 'Tucson', 'Santa Fe', 'Sonata', 'Palisade', 'Kona'],
+            'Jeep': ['Grand Cherokee', 'Wrangler', 'Cherokee', 'Compass', 'Gladiator'],
+            'Kia': ['Forte', 'Sportage', 'Sorento', 'Telluride', 'K5', 'Soul'],
+            'Mercedes-Benz': ['C-Class', 'GLC', 'E-Class', 'GLE', 'S-Class', 'Sprinter'],
+            'Nissan': ['Rogue', 'Altima', 'Sentra', 'Pathfinder', 'Frontier', 'Kicks'],
+            'Ram': ['1500', '2500', 'ProMaster'],
+            'Toyota': ['Camry', 'Corolla', 'RAV4', 'Tacoma', 'Highlander', 'Tundra']
+        };
+
+        // Brand logos for the popular tiles (light versions for the dark tiles;
+        // trademarks of their owners, used only to identify the brand).
+        const MAKE_LOGOS = {
+            'Toyota': 'toyota', 'Honda': 'honda', 'Nissan': 'nissan', 'Hyundai': 'hyundai', 'Kia': 'kia', 'Ford': 'ford',
+            'Chevrolet': 'chevrolet', 'Jeep': 'jeep', 'Tesla': 'tesla', 'BMW': 'bmw', 'Mercedes-Benz': 'mercedes-benz', 'Lexus': 'lexus'
+        };
+        const logoUrl = make => (MAKE_LOGOS[make] ? `/demos/logos/${MAKE_LOGOS[make]}.webp` : '');
+        function preloadLogos() { Object.keys(MAKE_LOGOS).forEach(m => { const i = new Image(); i.src = logoUrl(m); }); }
+
         // Vehicle catalog for the pickers (common US makes/models; "Otro" covers the rest).
         const POPULAR_MAKES = ['Toyota', 'Honda', 'Nissan', 'Hyundai', 'Kia', 'Ford', 'Chevrolet', 'Jeep', 'Tesla', 'BMW', 'Mercedes-Benz', 'Lexus'];
         const VEHICLES = {
-            'Acura': ['ILX', 'Integra', 'MDX', 'RDX', 'TLX', 'TSX', 'ZDX'],
-            'Alfa Romeo': ['Giulia', 'Stelvio', 'Tonale'],
-            'Audi': ['A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'e-tron', 'Q3', 'Q4 e-tron', 'Q5', 'Q7', 'Q8'],
-            'BMW': ['2 Series', '3 Series', '4 Series', '5 Series', '7 Series', 'i4', 'iX', 'X1', 'X3', 'X5', 'X7'],
-            'Buick': ['Enclave', 'Encore', 'Encore GX', 'Envision', 'LaCrosse'],
-            'Cadillac': ['CT4', 'CT5', 'Escalade', 'Lyriq', 'XT4', 'XT5', 'XT6'],
-            'Chevrolet': ['Blazer', 'Camaro', 'Colorado', 'Corvette', 'Cruze', 'Equinox', 'Malibu', 'Silverado 1500', 'Spark', 'Suburban', 'Tahoe', 'Trailblazer', 'Traverse', 'Trax'],
-            'Chrysler': ['300', 'Pacifica', 'Voyager'],
-            'Dodge': ['Challenger', 'Charger', 'Durango', 'Grand Caravan', 'Hornet', 'Journey'],
-            'Fiat': ['500', '500X'],
-            'Ford': ['Bronco', 'Bronco Sport', 'Edge', 'Escape', 'Expedition', 'Explorer', 'F-150', 'Fusion', 'Maverick', 'Mustang', 'Mustang Mach-E', 'Ranger', 'Transit'],
-            'Genesis': ['G70', 'G80', 'G90', 'GV70', 'GV80'],
-            'GMC': ['Acadia', 'Canyon', 'Sierra 1500', 'Terrain', 'Yukon'],
-            'Honda': ['Accord', 'Civic', 'CR-V', 'Fit', 'HR-V', 'Odyssey', 'Passport', 'Pilot', 'Ridgeline'],
-            'Hyundai': ['Accent', 'Elantra', 'Ioniq 5', 'Kona', 'Palisade', 'Santa Cruz', 'Santa Fe', 'Sonata', 'Tucson', 'Venue'],
-            'Infiniti': ['Q50', 'Q60', 'QX50', 'QX55', 'QX60', 'QX80'],
-            'Jaguar': ['E-Pace', 'F-Pace', 'F-Type', 'I-Pace', 'XF'],
-            'Jeep': ['Cherokee', 'Compass', 'Gladiator', 'Grand Cherokee', 'Renegade', 'Wagoneer', 'Wrangler'],
-            'Kia': ['Carnival', 'EV6', 'Forte', 'K5', 'Niro', 'Optima', 'Rio', 'Seltos', 'Sorento', 'Soul', 'Sportage', 'Telluride'],
-            'Land Rover': ['Defender', 'Discovery', 'Discovery Sport', 'Range Rover', 'Range Rover Evoque', 'Range Rover Sport', 'Range Rover Velar'],
-            'Lexus': ['ES', 'GX', 'IS', 'LX', 'NX', 'RX', 'RZ', 'TX', 'UX'],
-            'Lincoln': ['Aviator', 'Corsair', 'MKZ', 'Nautilus', 'Navigator'],
-            'Maserati': ['Ghibli', 'Grecale', 'Levante', 'Quattroporte'],
-            'Mazda': ['CX-30', 'CX-5', 'CX-50', 'CX-9', 'CX-90', 'Mazda3', 'Mazda6', 'MX-5 Miata'],
-            'Mercedes-Benz': ['A-Class', 'C-Class', 'CLA', 'E-Class', 'EQS', 'G-Class', 'GLA', 'GLB', 'GLC', 'GLE', 'GLS', 'S-Class', 'Sprinter'],
-            'MINI': ['Clubman', 'Countryman', 'Hardtop'],
-            'Mitsubishi': ['Eclipse Cross', 'Mirage', 'Outlander', 'Outlander Sport'],
-            'Nissan': ['Altima', 'Armada', 'Frontier', 'Kicks', 'Leaf', 'Maxima', 'Murano', 'Pathfinder', 'Rogue', 'Sentra', 'Titan', 'Versa'],
-            'Porsche': ['911', 'Cayenne', 'Macan', 'Panamera', 'Taycan'],
-            'Ram': ['1500', '2500', 'ProMaster'],
-            'Subaru': ['Ascent', 'Crosstrek', 'Forester', 'Impreza', 'Legacy', 'Outback', 'WRX'],
+            'Acura': ['CL', 'ILX', 'Integra', 'MDX', 'RDX', 'RL', 'RLX', 'RSX', 'TL', 'TLX', 'TSX', 'ZDX'],
+            'Alfa Romeo': ['4C', 'Giulia', 'Stelvio', 'Tonale'],
+            'Aston Martin': ['DB11', 'DB12', 'DBX', 'Vantage'],
+            'Audi': ['A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'e-tron', 'e-tron GT', 'Q3', 'Q4 e-tron', 'Q5', 'Q7', 'Q8', 'Q8 e-tron', 'R8', 'RS 5', 'S4', 'S5', 'TT'],
+            'Bentley': ['Bentayga', 'Continental GT', 'Flying Spur'],
+            'BMW': ['1 Series', '2 Series', '3 Series', '4 Series', '5 Series', '6 Series', '7 Series', '8 Series', 'i3', 'i4', 'i5', 'i7', 'iX', 'M3', 'M4', 'M5', 'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'Z4'],
+            'Buick': ['Cascada', 'Enclave', 'Encore', 'Encore GX', 'Envision', 'Envista', 'LaCrosse', 'LeSabre', 'Lucerne', 'Regal', 'Rendezvous', 'Verano'],
+            'Cadillac': ['ATS', 'CT4', 'CT5', 'CT6', 'CTS', 'DTS', 'Escalade', 'Escalade ESV', 'Lyriq', 'Optiq', 'SRX', 'STS', 'XT4', 'XT5', 'XT6', 'XTS'],
+            'Chevrolet': ['Avalanche', 'Aveo', 'Blazer', 'Blazer EV', 'Bolt EUV', 'Bolt EV', 'Camaro', 'Colorado', 'Corvette', 'Cruze', 'Equinox', 'Equinox EV', 'Express', 'HHR', 'Impala', 'Malibu', 'Monte Carlo', 'Silverado 1500', 'Silverado 2500HD', 'Silverado 3500HD', 'Sonic', 'Spark', 'Suburban', 'Tahoe', 'Trailblazer', 'Traverse', 'Trax', 'Uplander', 'Volt'],
+            'Chrysler': ['200', '300', 'Aspen', 'Pacifica', 'PT Cruiser', 'Sebring', 'Town & Country', 'Voyager'],
+            'Dodge': ['Avenger', 'Caliber', 'Challenger', 'Charger', 'Dakota', 'Dart', 'Durango', 'Grand Caravan', 'Hornet', 'Journey', 'Magnum', 'Neon', 'Nitro', 'Ram 1500', 'Viper'],
+            'Ferrari': ['296', '812', 'F8', 'Portofino', 'Purosangue', 'Roma', 'SF90'],
+            'Fiat': ['124 Spider', '500', '500e', '500L', '500X'],
+            'Ford': ['Bronco', 'Bronco Sport', 'C-Max', 'E-Series', 'EcoSport', 'Edge', 'Escape', 'Excursion', 'Expedition', 'Explorer', 'Explorer Sport Trac', 'F-150', 'F-150 Lightning', 'F-250', 'F-350', 'Fiesta', 'Five Hundred', 'Flex', 'Focus', 'Freestyle', 'Fusion', 'Maverick', 'Mustang', 'Mustang Mach-E', 'Ranger', 'Taurus', 'Transit', 'Transit Connect'],
+            'Genesis': ['G70', 'G80', 'G90', 'GV60', 'GV70', 'GV80'],
+            'GMC': ['Acadia', 'Canyon', 'Envoy', 'Hummer EV', 'Savana', 'Sierra 1500', 'Sierra 2500HD', 'Sierra 3500HD', 'Terrain', 'Yukon', 'Yukon XL'],
+            'Honda': ['Accord', 'Civic', 'CR-V', 'CR-Z', 'Element', 'Fit', 'HR-V', 'Insight', 'Odyssey', 'Passport', 'Pilot', 'Prologue', 'Ridgeline'],
+            'Hummer': ['H2', 'H3'],
+            'Hyundai': ['Accent', 'Azera', 'Elantra', 'Entourage', 'Equus', 'Genesis', 'Ioniq', 'Ioniq 5', 'Ioniq 6', 'Kona', 'Nexo', 'Palisade', 'Santa Cruz', 'Santa Fe', 'Sonata', 'Tiburon', 'Tucson', 'Veloster', 'Venue', 'Veracruz'],
+            'Infiniti': ['EX35', 'FX35', 'G35', 'G37', 'JX35', 'M35', 'Q50', 'Q60', 'Q70', 'QX30', 'QX50', 'QX55', 'QX56', 'QX60', 'QX80'],
+            'Isuzu': ['Ascender', 'i-Series', 'Rodeo', 'Trooper'],
+            'Jaguar': ['E-Pace', 'F-Pace', 'F-Type', 'I-Pace', 'S-Type', 'X-Type', 'XE', 'XF', 'XJ'],
+            'Jeep': ['Cherokee', 'Commander', 'Compass', 'Gladiator', 'Grand Cherokee', 'Grand Wagoneer', 'Liberty', 'Patriot', 'Renegade', 'Wagoneer', 'Wrangler'],
+            'Kia': ['Amanti', 'Borrego', 'Cadenza', 'Carnival', 'EV6', 'EV9', 'Forte', 'K5', 'K900', 'Niro', 'Optima', 'Rio', 'Rondo', 'Sedona', 'Seltos', 'Sorento', 'Soul', 'Spectra', 'Sportage', 'Stinger', 'Telluride'],
+            'Lamborghini': ['Huracán', 'Revuelto', 'Urus'],
+            'Land Rover': ['Defender', 'Discovery', 'Discovery Sport', 'LR2', 'LR3', 'LR4', 'Range Rover', 'Range Rover Evoque', 'Range Rover Sport', 'Range Rover Velar'],
+            'Lexus': ['CT', 'ES', 'GS', 'GX', 'HS', 'IS', 'LC', 'LS', 'LX', 'NX', 'RC', 'RX', 'RZ', 'SC', 'TX', 'UX'],
+            'Lincoln': ['Aviator', 'Continental', 'Corsair', 'MKC', 'MKS', 'MKT', 'MKX', 'MKZ', 'Nautilus', 'Navigator', 'Town Car'],
+            'Lotus': ['Eletre', 'Emira', 'Evora'],
+            'Lucid': ['Air', 'Gravity'],
+            'Maserati': ['Ghibli', 'GranTurismo', 'Grecale', 'Levante', 'MC20', 'Quattroporte'],
+            'Mazda': ['CX-3', 'CX-30', 'CX-5', 'CX-50', 'CX-7', 'CX-70', 'CX-9', 'CX-90', 'Mazda2', 'Mazda3', 'Mazda5', 'Mazda6', 'MX-5 Miata', 'RX-8', 'Tribute'],
+            'McLaren': ['720S', '750S', 'Artura', 'GT'],
+            'Mercedes-Benz': ['A-Class', 'AMG GT', 'C-Class', 'CLA', 'CLK', 'CLS', 'E-Class', 'EQB', 'EQE', 'EQS', 'G-Class', 'GL-Class', 'GLA', 'GLB', 'GLC', 'GLE', 'GLK', 'GLS', 'M-Class', 'Metris', 'S-Class', 'SL', 'SLK', 'Sprinter'],
+            'Mercury': ['Grand Marquis', 'Mariner', 'Milan', 'Mountaineer', 'Sable'],
+            'MINI': ['Clubman', 'Convertible', 'Countryman', 'Hardtop', 'Paceman'],
+            'Mitsubishi': ['Eclipse', 'Eclipse Cross', 'Endeavor', 'Galant', 'Lancer', 'Mirage', 'Outlander', 'Outlander Sport', 'Raider'],
+            'Nissan': ['350Z', '370Z', 'Altima', 'Ariya', 'Armada', 'Cube', 'Frontier', 'GT-R', 'Juke', 'Kicks', 'Leaf', 'Maxima', 'Murano', 'NV200', 'Pathfinder', 'Quest', 'Rogue', 'Rogue Sport', 'Sentra', 'Titan', 'Versa', 'Xterra', 'Z'],
+            'Oldsmobile': ['Alero', 'Aurora', 'Bravada', 'Intrigue', 'Silhouette'],
+            'Plymouth': ['Neon', 'Voyager'],
+            'Polestar': ['Polestar 2', 'Polestar 3', 'Polestar 4'],
+            'Pontiac': ['Aztek', 'G5', 'G6', 'G8', 'Grand Am', 'Grand Prix', 'Montana', 'Solstice', 'Sunfire', 'Torrent', 'Vibe'],
+            'Porsche': ['718 Boxster', '718 Cayman', '911', 'Cayenne', 'Macan', 'Panamera', 'Taycan'],
+            'Ram': ['1500', '2500', '3500', 'ProMaster', 'ProMaster City'],
+            'Rivian': ['R1S', 'R1T'],
+            'Rolls-Royce': ['Cullinan', 'Ghost', 'Phantom', 'Spectre'],
+            'Saab': ['9-3', '9-5'],
+            'Saturn': ['Aura', 'Ion', 'Outlook', 'Sky', 'Vue'],
+            'Scion': ['FR-S', 'iA', 'iM', 'iQ', 'tC', 'xB', 'xD'],
+            'Smart': ['Fortwo'],
+            'Subaru': ['Ascent', 'Baja', 'BRZ', 'Crosstrek', 'Forester', 'Impreza', 'Legacy', 'Outback', 'Solterra', 'Tribeca', 'WRX'],
+            'Suzuki': ['Forenza', 'Grand Vitara', 'Kizashi', 'SX4', 'XL-7'],
             'Tesla': ['Cybertruck', 'Model 3', 'Model S', 'Model X', 'Model Y'],
-            'Toyota': ['4Runner', 'C-HR', 'Camry', 'Corolla', 'Corolla Cross', 'Highlander', 'Prius', 'RAV4', 'Sequoia', 'Sienna', 'Tacoma', 'Tundra', 'Venza', 'Yaris'],
-            'Volkswagen': ['Atlas', 'Atlas Cross Sport', 'Golf', 'GTI', 'ID.4', 'Jetta', 'Passat', 'Taos', 'Tiguan'],
-            'Volvo': ['S60', 'S90', 'XC40', 'XC60', 'XC90']
+            'Toyota': ['4Runner', '86', 'Avalon', 'bZ4X', 'C-HR', 'Camry', 'Corolla', 'Corolla Cross', 'Crown', 'Echo', 'FJ Cruiser', 'GR86', 'Grand Highlander', 'Highlander', 'Land Cruiser', 'Matrix', 'Mirai', 'Prius', 'Prius C', 'Prius V', 'RAV4', 'Sequoia', 'Sienna', 'Solara', 'Supra', 'Tacoma', 'Tundra', 'Venza', 'Yaris'],
+            'VinFast': ['VF 8', 'VF 9'],
+            'Volkswagen': ['Arteon', 'Atlas', 'Atlas Cross Sport', 'Beetle', 'CC', 'Eos', 'Golf', 'GTI', 'ID.4', 'ID. Buzz', 'Jetta', 'Passat', 'Routan', 'Taos', 'Tiguan', 'Touareg'],
+            'Volvo': ['C30', 'C40', 'EX30', 'EX90', 'S40', 'S60', 'S80', 'S90', 'V60', 'V90', 'XC40', 'XC60', 'XC70', 'XC90']
         };
 
         const ICON = {
             close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
             back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
             search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+            edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+            pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+            locate: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 2.6a1 1 0 0 0-1.06-.22l-17 6.5a1 1 0 0 0 .07 1.89l7.03 2.18 2.18 7.03a1 1 0 0 0 1.89.07l6.5-17a1 1 0 0 0-.21-1.05z"/></svg>',
             calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
             car: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3.5 16h17v2.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V18h-9v.5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/><path d="M5 11h14"/><circle cx="8" cy="14" r=".6" fill="currentColor"/><circle cx="16" cy="14" r=".6" fill="currentColor"/></svg>',
             home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>',
@@ -2196,7 +2363,7 @@
                 }
                 case 'dob': {
                     const d = dobOf(a);
-                    if (!d) return f.required ? 'Elige día, mes y año.' : '';
+                    if (!d) return f.required ? 'Elige mes, día y año.' : '';
                     if (d === 'invalid') return 'Esa fecha no existe. Revisa el día.';
                     const age = ageOn(d, today());
                     if (age < 16) return 'Debes tener al menos 16 años.';
@@ -2380,6 +2547,7 @@
             scroll.addEventListener('scroll', () => root.classList.toggle('is-scrolled', scroll.scrollTop > 4), { passive: true });
             document.body.appendChild(root);
             pushModal(root, closeFlow);
+            if (kind === 'auto') preloadLogos();   // brand tiles show their logos at once
         }
 
         function openQuoteFlow(kind, opener) {
@@ -2498,6 +2666,236 @@
             return mark;
         }
 
+        // ---- ZIP first (auto): asked on the intro, shown as a pill on each question,
+        //      prefilled in "Cuéntanos sobre ti" (same answer, so editing either updates both) ----
+        function zipBox(id, value, onInput, onEnter) {
+            const input = el('input', {
+                id, class: 'q-input', type: 'text', inputmode: 'numeric', pattern: '[0-9]*', maxlength: 5,
+                autocomplete: 'postal-code', placeholder: 'Ej. 33125', enterkeyhint: 'go', 'aria-describedby': `${id}-err`
+            });
+            input.value = value || '';
+            input.addEventListener('input', () => {
+                const t = input.value.replace(/\D/g, '').slice(0, 5);
+                if (t !== input.value) input.value = t;
+                onInput(t);
+            });
+            input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); onEnter(); } });
+            const box = el('div', { class: 'q-zip-box' }, icon('locate'), input);
+            const err = el('p', { id: `${id}-err`, class: 'q-error', 'aria-live': 'polite' });
+            return { input, box, err };
+        }
+        function introZip() {
+            const z = zipBox('q-intro-zip', QF.a.zip, v => {
+                QF.a.zip = v;
+                saveDraft();
+                if (!check.zip(v)) { z.err.textContent = ''; z.input.removeAttribute('aria-invalid'); }
+            }, () => { const b = QF.els.footInner.querySelector('.q-primary'); if (b) b.click(); });
+            QF.introZip = z;
+            return el('div', { class: 'q-intro-zip' },
+                el('label', { class: 'q-label', for: 'q-intro-zip', text: '¿En qué ZIP se guarda el auto?' }), z.box, z.err);
+        }
+        function introZipOk() {
+            if (!QF.spec.intro.zip) return true;
+            const msg = check.zip(QF.a.zip || '');
+            if (!msg) return true;
+            const z = QF.introZip;
+            if (z) {
+                z.err.textContent = 'Escribe tu ZIP de 5 dígitos para empezar.';
+                z.input.setAttribute('aria-invalid', 'true');
+                z.input.focus();
+            }
+            return false;
+        }
+        // The ZIP pill: tap it and it becomes the ZIP box, right there (Enter, ✓ or
+        // tapping away saves; Escape or an incomplete ZIP puts the old one back).
+        function zipPill() {
+            const wrap = el('span', { class: 'q-zip-wrap' });
+            function show() {
+                const b = el('button', { type: 'button', class: 'q-zip-pill' },
+                    icon('locate'), el('span', { class: 'q-zip-value', text: QF.a.zip }), icon('edit', { class: 'q-zip-edit' }));
+                b.setAttribute('aria-label', `ZIP ${QF.a.zip}. Toca para cambiarlo`);
+                b.addEventListener('click', edit);
+                wrap.replaceChildren(b);
+                return b;
+            }
+            function edit() {
+                const input = el('input', {
+                    class: 'q-zip-input', type: 'text', inputmode: 'numeric', pattern: '[0-9]*', maxlength: 5,
+                    autocomplete: 'postal-code', enterkeyhint: 'done', 'aria-label': 'ZIP donde se guarda el auto'
+                });
+                input.value = QF.a.zip || '';
+                const ok = el('button', { type: 'button', class: 'q-zip-ok', 'aria-label': 'Guardar ZIP' });
+                ok.innerHTML = ICON.tick;
+                const box = el('span', { class: 'q-zip-pill is-editing' }, icon('locate'), input, ok);
+                let done = false;
+                function finish(save, refocus) {
+                    if (done) return;
+                    const v = input.value;
+                    if (save && check.zip(v)) {          // 4 digits and Enter: say so, stay open
+                        box.classList.remove('is-invalid'); void box.offsetWidth; box.classList.add('is-invalid');
+                        input.focus();
+                        return;
+                    }
+                    done = true;
+                    if (save && v !== QF.a.zip) { QF.a.zip = v; onAnswer(); }
+                    const b = show();
+                    if (refocus) b.focus();
+                }
+                input.addEventListener('input', () => {
+                    const t = input.value.replace(/\D/g, '').slice(0, 5);
+                    if (t !== input.value) input.value = t;
+                    box.classList.remove('is-invalid');
+                });
+                input.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') { e.preventDefault(); finish(true, true); }
+                    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); finish(false, true); }
+                });
+                input.addEventListener('blur', () => setTimeout(() => {
+                    if (!done && document.activeElement !== input) finish(!check.zip(input.value), false);
+                }, 0));
+                ok.addEventListener('pointerdown', e => e.preventDefault());   // keep the keyboard up
+                ok.addEventListener('click', () => finish(true, true));
+                wrap.replaceChildren(box);
+                input.focus();
+                input.select();
+            }
+            show();
+            return wrap;
+        }
+
+        // ---- address suggestions: Photon (OpenStreetMap, free, no key) as they
+        //      type; picking one fills the address and its ZIP. Nothing blocks:
+        //      with no answer the box is a plain text field. ----
+        const ADDRESS_API = 'https://photon.komoot.io/api/';
+        const ADDRESS_BIAS = { lat: 25.76, lon: -80.19 };       // Miami first
+        const ADDRESS_BBOX = '-87.7,24.3,-79.8,31.1';           // Florida only: no Cancún or Lisbon in the list
+        // what people type -> what OpenStreetMap stores ("5152 nw 5th st" -> "5152 Northwest 5th Street"),
+        // because the search matches whole words, not abbreviations
+        const QUERY_WORDS = {
+            nw: 'Northwest', ne: 'Northeast', sw: 'Southwest', se: 'Southeast', n: 'North', s: 'South', e: 'East', w: 'West',
+            st: 'Street', ave: 'Avenue', av: 'Avenue', ct: 'Court', rd: 'Road', dr: 'Drive', blvd: 'Boulevard', ln: 'Lane',
+            pl: 'Place', ter: 'Terrace', terr: 'Terrace', pkwy: 'Parkway', cir: 'Circle', hwy: 'Highway', trl: 'Trail', cswy: 'Causeway'
+        };
+        function addressQuery(q) {
+            return q.replace(/\s*(#|\b(apt|unit|ste|suite)\b).*$/i, '')       // the unit is not part of the street
+                .split(/[\s,]+/).filter(Boolean)
+                .map(w => QUERY_WORDS[w.toLowerCase().replace(/\.$/, '')] || w).join(' ');
+        }
+        const US_STATES = { Florida: 'FL', Georgia: 'GA', Alabama: 'AL', 'New York': 'NY', 'New Jersey': 'NJ', Texas: 'TX', California: 'CA', 'North Carolina': 'NC', 'South Carolina': 'SC' };
+        // "Southwest 8th Street" -> "SW 8th St", the way Miami addresses are written (USPS style)
+        const DIRS = { Northeast: 'NE', Northwest: 'NW', Southeast: 'SE', Southwest: 'SW', North: 'N', South: 'S', East: 'E', West: 'W' };
+        const SUFFIXES = { Street: 'St', Avenue: 'Ave', Court: 'Ct', Road: 'Rd', Drive: 'Dr', Boulevard: 'Blvd', Lane: 'Ln', Place: 'Pl', Terrace: 'Ter', Parkway: 'Pkwy', Circle: 'Cir', Highway: 'Hwy', Trail: 'Trl', Square: 'Sq' };
+        function uspsStreet(street) {
+            return street
+                .replace(/^(Northeast|Northwest|Southeast|Southwest|North|South|East|West)\s+(?=\S)/, (m, d) => `${DIRS[d]} `)
+                .replace(/\s+(Street|Avenue|Court|Road|Drive|Boulevard|Lane|Place|Terrace|Parkway|Circle|Highway|Trail|Square)(?=(\s+(Northeast|Northwest|Southeast|Southwest|North|South|East|West))?$)/, (m, w) => ` ${SUFFIXES[w]}`)
+                .replace(/\s+(Northeast|Northwest|Southeast|Southwest|North|South|East|West)$/, (m, d) => ` ${DIRS[d]}`);
+        }
+        function addressSuggest(input, r, f) {
+            const listId = `${input.id}-list`;
+            const list = el('ul', { id: listId, class: 'q-suggest', role: 'listbox', 'aria-label': 'Direcciones sugeridas', hidden: true });
+            input.setAttribute('role', 'combobox');
+            input.setAttribute('aria-autocomplete', 'list');
+            input.setAttribute('aria-expanded', 'false');
+            input.setAttribute('aria-controls', listId);
+            input.setAttribute('autocomplete', 'off');               // one dropdown, not two
+            let seq = 0, timer = null, items = [], active = -1, inflight = null, slow = null;
+            const cache = new Map();                                // query -> suggestions (instant on backspace)
+
+            function close() {
+                list.hidden = true; items = []; active = -1;
+                input.setAttribute('aria-expanded', 'false');
+                input.removeAttribute('aria-activedescendant');
+            }
+            function setActive(k) {
+                active = k;
+                [...list.querySelectorAll('.q-suggest-opt')].forEach((li, j) => li.classList.toggle('is-active', j === k));
+                if (k >= 0) input.setAttribute('aria-activedescendant', `${listId}-${k}`); else input.removeAttribute('aria-activedescendant');
+            }
+            function pick(it) {
+                input.value = it.value;
+                QF.a[f.name] = it.value;
+                if (/^\d{5}$/.test(it.zip)) QF.a.zip = it.zip;       // the address they chose decides the ZIP
+                close();
+                r.setError('');
+                onAnswer();
+            }
+            function render() {
+                list.replaceChildren(...items.map((it, k) => {
+                    const li = el('li', { id: `${listId}-${k}`, class: 'q-suggest-opt', role: 'option' }, icon('pin'),
+                        el('span', {}, el('span', { class: 'q-suggest-main', text: it.main }), el('span', { class: 'q-suggest-sub', text: it.sub })));
+                    li.addEventListener('pointerdown', e => e.preventDefault());   // keep focus in the box
+                    li.addEventListener('click', () => pick(it));
+                    return li;
+                }), el('li', { class: 'q-suggest-credit', role: 'presentation', text: 'Direcciones © OpenStreetMap' }));
+                list.hidden = !items.length;
+                input.setAttribute('aria-expanded', String(!!items.length));
+                setActive(-1);
+                if (items.length) list.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+            }
+            function loading() {                                    // a slow answer still shows life
+                if (items.length) return;
+                list.replaceChildren(el('li', { class: 'q-suggest-credit', role: 'presentation', text: 'Buscando direcciones…' }));
+                list.hidden = false;
+            }
+            function parse(data, q) {
+                const typedNumber = (/^\s*(\d+[a-z]?)\s/i.exec(q) || [])[1] || '';
+                const seen = new Set();
+                return (data && Array.isArray(data.features) ? data.features : []).map(ft => ft.properties || {})
+                    .filter(pr => String(pr.countrycode || '').toUpperCase() === 'US' && (pr.street || pr.housenumber))
+                    .map(pr => {
+                        const street = uspsStreet(pr.street || pr.name || '');
+                        const number = pr.housenumber || typedNumber;      // a street match keeps the number they typed
+                        const main = [number, street].filter(Boolean).join(' ');
+                        const state = US_STATES[pr.state] || pr.state || '';
+                        const zip = String(pr.postcode || '').slice(0, 5);
+                        const sub = [pr.city || pr.district || pr.county, [state, zip].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+                        return { main, sub, zip, value: [main, pr.city].filter(Boolean).join(', ') };
+                    })
+                    .filter(it => it.main && !seen.has(it.main + it.sub) && seen.add(it.main + it.sub))
+                    .slice(0, 5);
+            }
+            function search(q) {
+                const query = addressQuery(q);
+                const my = ++seq;
+                if (cache.has(query)) { items = cache.get(query); render(); return; }
+                if (inflight) inflight.abort();                     // only the latest keystroke matters
+                const ctrl = new AbortController();
+                inflight = ctrl;
+                clearTimeout(slow);
+                slow = setTimeout(() => { if (my === seq) loading(); }, 350);
+                const t = setTimeout(() => ctrl.abort(), 5000);
+                const url = `${ADDRESS_API}?q=${encodeURIComponent(query)}&limit=10&lang=en&lat=${ADDRESS_BIAS.lat}&lon=${ADDRESS_BIAS.lon}&bbox=${ADDRESS_BBOX}`;
+                fetch(url, { signal: ctrl.signal, credentials: 'omit', referrerPolicy: 'no-referrer' })
+                    .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+                    .then(data => {
+                        const found = parse(data, q);
+                        cache.set(query, found);
+                        if (my !== seq || document.activeElement !== input) return;
+                        items = found;
+                        render();
+                    })
+                    .catch(() => { if (my === seq) close(); })              // quietly a plain text box
+                    .finally(() => { clearTimeout(t); clearTimeout(slow); if (inflight === ctrl) inflight = null; });
+            }
+            input.addEventListener('input', () => {
+                clearTimeout(timer);
+                const q = input.value.trim();
+                if (q.length < 4 || !/\p{L}/u.test(q)) { seq++; if (inflight) inflight.abort(); close(); return; }
+                timer = setTimeout(() => search(q), 180);
+            });
+            // capture: runs before the box's own Enter-goes-to-next-field handler
+            input.addEventListener('keydown', e => {
+                if (list.hidden || !items.length) return;
+                if (e.key === 'ArrowDown') { e.preventDefault(); setActive((active + 1) % items.length); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(active <= 0 ? items.length - 1 : active - 1); }
+                else if (e.key === 'Enter' && active >= 0) { e.preventDefault(); e.stopImmediatePropagation(); pick(items[active]); }
+                else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
+            }, true);
+            input.addEventListener('blur', () => setTimeout(close, 150));
+            return list;
+        }
+
         function viewIntro() {
             const { spec } = QF;
             const resumable = !QF.sent && hasProgress(QF.a, spec);
@@ -2509,17 +2907,18 @@
                     el('span', {}, icon('clock'), el('span', { text: 'Unos 2 minutos' })),
                     el('span', {}, icon('shield'), el('span', { text: 'Gratis y sin compromiso' }))),
                 el('p', { class: 'q-lead', text: 'Responde unas preguntas rápidas y te enviamos tu cotización por WhatsApp.' }),
+                spec.intro.zip ? introZip() : null,
                 el('div', { class: 'q-have' },
                     el('p', { class: 'q-have-title', text: 'Ten esto a mano' }),
                     el('ul', {}, ...spec.intro.have.map(t => el('li', {}, icon('checkCircle'), el('span', { text: t }))))));
             if (resumable) v.appendChild(el('p', { class: 'q-note', text: 'Tienes una cotización sin terminar. Puedes seguir donde la dejaste.' }));
 
             const start = primaryButton(resumable ? 'Continuar donde lo dejaste' : 'Empezar');
-            start.addEventListener('click', () => startQuote(resumable));
+            start.addEventListener('click', () => { if (introZipOk()) startQuote(resumable); });
             const foot = [start];
             if (resumable) {
                 const again = el('button', { type: 'button', class: 'q-secondary', text: 'Empezar de nuevo' });
-                again.addEventListener('click', () => startQuote(false, true));
+                again.addEventListener('click', () => { if (introZipOk()) startQuote(false, true); });
                 foot.push(again);
             }
             foot.push(altLink('Prefiero escribir por WhatsApp', () => sendQuote('intro'), true));
@@ -2528,7 +2927,9 @@
 
         function startQuote(resume, reset) {
             if (reset) {
+                const zip = QF.a.zip;              // starting over keeps the ZIP they just gave
                 QF.a = QF.spec.defaults();
+                if (QF.spec.intro.zip && !check.zip(zip || '')) QF.a.zip = zip;
                 QF.tried.clear();
                 QF.sent = false;
                 QF.sentUrl = null;
@@ -2550,10 +2951,9 @@
             const a = QF.a;
             const v = el('div', { class: 'q-view' });
             const form = el('form', { id: 'q-form', novalidate: true, 'aria-labelledby': 'q-title' });
-            if (step.context) {
-                const c = QF.spec.context(a);
-                if (c) form.appendChild(contextChip(c));
-            }
+            const chip = step.context ? QF.spec.context(a) : null;
+            const showZip = QF.spec.intro.zip && !check.zip(a.zip || '') && !step.fields.some(f => f.name === 'zip');
+            if (chip || showZip) form.appendChild(el('div', { class: 'q-toprow' }, chip ? contextChip(chip) : null, showZip ? zipPill() : null));
             form.appendChild(titleEl(resolve(step.title, a)));
             if (step.sub) form.appendChild(el('p', { class: 'q-sub', text: resolve(step.sub, a) }));
             if (step.help) form.appendChild(helpButton(step.help));
@@ -2678,6 +3078,7 @@
                         const v = a[f.name] || '';
                         if (input.value !== v && document.activeElement !== input) input.value = v;
                     };
+                    if (f.suggest === 'address') r.suggestList = addressSuggest(input, r, f);
                     if (f.decode === 'vin') {
                         r.vinStatus = el('p', { id: `${id}-lookup`, class: 'q-vin-status', role: 'status', 'aria-live': 'polite' });
                         input.setAttribute('aria-describedby', `${describedBy} ${id}-lookup`);
@@ -2827,8 +3228,9 @@
                     const years = [];
                     for (let y = THIS_YEAR - 16; y >= THIS_YEAR - 100; y--) years.push([String(y), String(y)]);
                     const parts = [
-                        ['dobD', 'Día', Array.from({ length: 31 }, (_, k) => [String(k + 1), String(k + 1)]), 'bday-day'],
+                        // US order, like their license and their insurance card: month, day, year
                         ['dobM', 'Mes', MONTHS.map((m, k) => [String(k + 1), cap(m.slice(0, 3))]), 'bday-month'],
+                        ['dobD', 'Día', Array.from({ length: 31 }, (_, k) => [String(k + 1), String(k + 1)]), 'bday-day'],
                         ['dobY', 'Año', years, 'bday-year']
                     ];
                     const selects = parts.map(([key, label, options, autocomplete]) => {
@@ -2866,6 +3268,7 @@
             }
             if (f.hint) wrap.appendChild(el('p', { id: hintId, class: 'q-hint', text: f.hint }));
             if (r.vinStatus) wrap.appendChild(r.vinStatus);
+            if (r.suggestList) wrap.appendChild(r.suggestList);
             wrap.appendChild(err);
             return r;
         }
@@ -2948,7 +3351,7 @@
         }
 
         // ---- bottom sheets (pickers and help) ----
-        function openSheet({ onClose } = {}) {
+        function openSheet({ onClose, full } = {}) {
             let pushed = false;
             if (activeSheet) {                 // swap sheets: reuse the open one's history entry
                 pushed = activeSheet.isPushed();
@@ -2956,7 +3359,7 @@
             }
             const opener = document.activeElement;
             const backdrop = el('div', { class: 'sheet-backdrop' });
-            const sheet = el('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'sheet-title' });
+            const sheet = el('div', { class: 'sheet' + (full ? ' is-full' : ''), role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'sheet-title' });
             const head = el('div', { class: 'sheet-head' });
             const body = el('div', { class: 'sheet-body' });
             sheet.append(head, body);
@@ -3066,10 +3469,56 @@
             api.focusTitle();
         }
 
+        // ---- models for a make AND year, from NHTSA vPIC (free, no key), so an
+        //      older or brand-new car is in the list. Passenger cars, trucks and
+        //      SUVs/MPVs only (no motorcycles, trailers or buses). Cached per
+        //      make+year; slow or failed answers fall back to the built-in list. ----
+        const MODELS_TIMEOUT_MS = 4000;
+        const MODEL_TYPES = ['Car', 'Truck', 'Multipurpose'];
+        const NOT_A_CAR = /chassis|motor ?home|cutaway|stripped|glider|\bbus\b|trailer/i;
+        const modelsCache = new Map();
+        const normModel = m => String(m).toLowerCase().replace(/[^a-z0-9]/g, '');
+
+        function modelsKey(make, year) { return `bn-models-v1:${make}|${year}`; }
+        function fetchModels(make, year) {
+            if (!/^\d{4}$/.test(year || '')) return Promise.resolve(null);
+            const key = modelsKey(make, year);
+            if (modelsCache.has(key)) return modelsCache.get(key);
+            try {
+                const saved = JSON.parse(sessionStorage.getItem(key) || 'null');
+                if (Array.isArray(saved)) { const p = Promise.resolve(saved); modelsCache.set(key, p); return p; }
+            } catch (_) { /* private mode */ }
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), MODELS_TIMEOUT_MS);
+            const one = type => fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}/vehicletype/${type}?format=json`,
+                { signal: ctrl.signal, credentials: 'omit', referrerPolicy: 'no-referrer' })
+                .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+                .then(d => (Array.isArray(d && d.Results) ? d.Results : []));
+            const p = Promise.all(MODEL_TYPES.map(one))
+                .then(parts => {
+                    // our spelling when we know the model; NHTSA's otherwise; one row each
+                    const known = new Map((VEHICLES[make] || []).map(m => [normModel(m), m]));
+                    const seen = new Map();
+                    parts.flat().forEach(r => {
+                        const name = String(r.Model_Name || '').trim();
+                        if (!name || NOT_A_CAR.test(name)) return;
+                        const k = normModel(name);
+                        if (k && !seen.has(k)) seen.set(k, known.get(k) || name);
+                    });
+                    const list = [...seen.values()].sort((x, y) => x.localeCompare(y, 'es', { numeric: true, sensitivity: 'base' }));
+                    try { sessionStorage.setItem(key, JSON.stringify(list)); } catch (_) { /* private mode */ }
+                    return list;
+                })
+                .catch(() => { modelsCache.delete(key); return null; })   // the next visit may try again
+                .finally(() => clearTimeout(timer));
+            modelsCache.set(key, p);
+            return p;
+        }
+
         // Year -> make -> model in one sheet, like the CARFAX / State Farm pickers.
         function openVehicleSheet(start, onChange) {
             const a = QF.a;
-            const api = openSheet();
+            const api = openSheet({ full: true });    // one height for year, brand and model: no jumps
             const finish = (make, model) => { a.marca = make; a.modelo = model; onChange(); api.close(); };
 
             function yearView() {
@@ -3098,48 +3547,139 @@
                 const body = api.setView('Marca', { back: start === 'year' ? yearView : null });
                 const search = el('div', { class: 'sheet-search' });
                 search.innerHTML = ICON.search;
-                const input = el('input', { type: 'search', placeholder: 'Buscar marca', 'aria-label': 'Buscar marca', autocomplete: 'off', enterkeyhint: 'search' });
+                const input = el('input', { type: 'search', placeholder: 'Busca marca o modelo (ej. Civic)', 'aria-label': 'Buscar marca o modelo', autocomplete: 'off', enterkeyhint: 'search' });
                 search.appendChild(input);
                 const popularLabel = el('p', { class: 'sheet-section', text: 'Marcas populares' });
                 const grid = el('div', { class: 'make-grid' });
                 POPULAR_MAKES.forEach(make => {
-                    const t = el('button', { type: 'button', class: 'make-tile' },
-                        el('span', { class: 'make-mono', 'aria-hidden': 'true', text: make[0] }), el('span', { text: make }));
+                    const mark = el('span', { class: 'make-mono', 'aria-hidden': 'true', text: make[0] });
+                    let visual = mark;
+                    if (logoUrl(make)) {                 // the logo, or the initial if it can't load
+                        const img = el('img', { src: logoUrl(make), alt: '', decoding: 'async' });
+                        visual = el('span', { class: 'make-logo', 'aria-hidden': 'true' }, img);
+                        img.addEventListener('error', () => visual.replaceWith(mark), { once: true });
+                    }
+                    const t = el('button', { type: 'button', class: 'make-tile' }, visual, el('span', { text: make }));
+                    t.addEventListener('pointerdown', () => fetchModels(make, a.anio), { passive: true });
                     t.addEventListener('click', () => modelsView(make));
                     grid.appendChild(t);
                 });
                 const allLabel = el('p', { class: 'sheet-section', text: 'Todas las marcas' });
                 const list = el('ul', { class: 'sheet-list' });
-                const empty = el('p', { class: 'sheet-empty', text: 'No encontramos esa marca.' });
+                // typing a model goes straight to it: "civic" -> Honda Civic, "f150" -> Ford F-150
+                const modelsLabel = el('p', { class: 'sheet-section', text: 'Modelos' });
+                const modelList = el('ul', { class: 'sheet-list' });
+                const otherList = el('ul', { class: 'sheet-list' });
+                const empty = el('p', { class: 'sheet-empty', text: 'No encontramos esa marca ni ese modelo. Puedes escribirlo en «Otra marca».' });
+                function modelHits(needle) {
+                    if (needle.length < 2) return [];
+                    const hits = [];
+                    Object.entries(VEHICLES).forEach(([make, models]) => {
+                        const nm = normModel(make);
+                        models.forEach(model => {
+                            const both = normModel(make + model);
+                            if (normModel(model).includes(needle) || (needle.length > nm.length && both.startsWith(needle))) hits.push([make, model]);
+                        });
+                    });
+                    return hits.slice(0, 25);
+                }
                 function renderList(q) {
-                    list.replaceChildren();
                     const needle = q.toLowerCase();
                     const makes = Object.keys(VEHICLES).filter(m => m.toLowerCase().includes(needle));
-                    makes.forEach(make => list.appendChild(sheetRow(make, { selected: a.marca === make, onPick: () => modelsView(make) })));
-                    list.appendChild(sheetRow('Otra marca', { muted: true, onPick: () => otherMake(q) }));
-                    empty.style.display = makes.length ? 'none' : '';
+                    list.replaceChildren(...makes.map(make => sheetRow(make, { selected: a.marca === make, onPick: () => modelsView(make) })));
+                    const hits = modelHits(normModel(q));
+                    modelList.replaceChildren(...hits.map(([make, model]) => sheetRow(`${make} ${model}`, {
+                        selected: a.marca === make && a.modelo === model, onPick: () => finish(make, model)
+                    })));
+                    otherList.replaceChildren(sheetRow('Otra marca', { muted: true, onPick: () => otherMake(q) }));
+                    empty.style.display = makes.length || hits.length ? 'none' : '';
                     popularLabel.style.display = grid.style.display = needle ? 'none' : '';
-                    allLabel.textContent = needle ? 'Resultados' : 'Todas las marcas';
+                    allLabel.style.display = makes.length || !needle ? '' : 'none';
+                    allLabel.textContent = needle ? 'Marcas' : 'Todas las marcas';
+                    modelsLabel.style.display = hits.length ? '' : 'none';
                 }
-                input.addEventListener('input', () => renderList(input.value.trim()));
-                body.append(search, popularLabel, grid, allLabel, empty, list);
+                input.addEventListener('input', () => { renderList(input.value.trim()); body.scrollTop = 0; });
+                body.append(search, popularLabel, grid, allLabel, list, modelsLabel, modelList, empty, otherList);
                 renderList('');
                 api.focusTitle();
             }
 
+            // Models: the year's real list from NHTSA (built-in list while it loads
+            // fails), popular ones first, a search box when the list is long.
+            let modelsToken = 0;
             function modelsView(make) {
+                const token = ++modelsToken;
+                const year = /^\d{4}$/.test(a.anio || '') ? a.anio : '';
                 const body = api.setView(`Modelos ${make}`, { back: makesView });
-                const list = el('ul', { class: 'sheet-list' });
-                VEHICLES[make].forEach(model => list.appendChild(sheetRow(model, {
-                    selected: a.marca === make && a.modelo === model,
-                    onPick: () => finish(make, model)
-                })));
-                list.appendChild(sheetRow('Otro modelo', {
-                    muted: true,
-                    onPick: () => otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
-                        () => modelsView(make), ([model]) => finish(make, model))
-                }));
-                body.appendChild(list);
+                const builtIn = VEHICLES[make] || [];
+                if (!year) {                      // no year yet: the built-in list
+                    renderModels(null, false);
+                    api.focusTitle();
+                    return;
+                }
+                const pending = fetchModels(make, year);
+                let settled = false;
+                pending.then(() => { settled = true; });
+
+                const skeleton = el('ul', { class: 'sheet-skeleton', 'aria-hidden': 'true' },
+                    ...[46, 62, 38, 54, 44, 58, 36].map(w => { const li = el('li'); li.style.setProperty('--w', `${w}%`); return li; }));
+                const loading = el('p', { class: 'sheet-section', role: 'status', text: `Buscando modelos ${year}…` });
+
+                function renderModels(models, animate) {
+                    const fromNhtsa = !!year;
+                    if (token !== modelsToken || !body.isConnected) return;    // they moved on
+                    const wrap = el('div', { class: animate ? 'sheet-fade-in' : '' });
+                    const all = models && models.length ? models : builtIn;
+                    const live = fromNhtsa && models && models.length;
+                    const liveName = new Map(all.map(m => [normModel(m), m]));
+                    const popular = live && all.length > 15
+                        ? (POPULAR_MODELS[make] || []).map(m => liveName.get(normModel(m))).filter(Boolean) : [];
+                    const row = model => sheetRow(model, { selected: a.marca === make && a.modelo === model, onPick: () => finish(make, model) });
+                    const other = () => sheetRow('Otro modelo', {
+                        muted: true,
+                        onPick: () => otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
+                            () => modelsView(make), ([model]) => finish(make, model))
+                    });
+
+                    let input = null;
+                    {                                     // always there, pinned while the list scrolls
+                        const search = el('div', { class: 'sheet-search' });
+                        search.innerHTML = ICON.search;
+                        input = el('input', { type: 'search', placeholder: `Buscar modelo ${make}`, 'aria-label': `Buscar modelo ${make}`, autocomplete: 'off', enterkeyhint: 'search' });
+                        search.appendChild(input);
+                        wrap.appendChild(search);
+                    }
+                    const popLabel = el('p', { class: 'sheet-section', text: 'Populares' });
+                    const popList = el('ul', { class: 'sheet-list' }, ...popular.map(row));
+                    const allLabel = el('p', { class: 'sheet-section' });
+                    const list = el('ul', { class: 'sheet-list' });
+                    const empty = el('p', { class: 'sheet-empty', text: 'No encontramos ese modelo. Puedes escribirlo en «Otro modelo».' });
+                    function fill(q) {
+                        const needle = normModel(q);
+                        const hits = needle ? all.filter(m => normModel(m).includes(needle)) : all;
+                        list.replaceChildren(...hits.map(row), other());
+                        const showPop = !needle && popular.length;
+                        popLabel.hidden = popList.hidden = !showPop;
+                        allLabel.replaceChildren(document.createTextNode(needle ? 'Resultados'
+                            : live ? `Todos los modelos ${year}` : showPop ? 'Todos los modelos' : 'Modelos'));
+                        if (!needle && live) allLabel.appendChild(el('span', { class: 'count', text: ` · ${all.length}` }));
+                        empty.hidden = !!hits.length;
+                    }
+                    if (input) input.addEventListener('input', () => fill(input.value.trim()));
+                    wrap.append(popLabel, popList, allLabel, empty, list);
+                    fill('');
+                    body.replaceChildren(wrap);
+                    const sel = wrap.querySelector('.sheet-row.is-selected');
+                    if (sel && !animate) sel.scrollIntoView({ block: 'center' });
+                }
+
+                // A cached list renders at once; otherwise the skeleton holds the
+                // space for a moment (no flash when NHTSA is quick).
+                setTimeout(() => {
+                    if (settled || token !== modelsToken) return;
+                    body.replaceChildren(loading, skeleton);
+                }, 120);
+                pending.then(models => renderModels(models, true));
                 api.focusTitle();
             }
 

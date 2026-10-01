@@ -5,7 +5,7 @@ async function lastMsg(b, qs, full) {
   const p = await ctx.newPage();
   await p.goto(DEMO_URL + qs, { waitUntil: 'networkidle' });
   await p.tap('.app-cta[data-form="auto"]'); await settle(p);
-  if (full) { await p.tap('.q-foot .q-primary'); await settle(p); await p.reload({ waitUntil: 'networkidle' }); await settle(p); await p.tap('.q-alt'); }
+  if (full) { await p.fill('#q-intro-zip', '33125'); await p.tap('.q-foot .q-primary'); await settle(p); await p.reload({ waitUntil: 'networkidle' }); await settle(p); await p.tap('.q-alt'); }
   else await p.tap('.q-alt');
   await settle(p); await p.waitForTimeout(300);
   const m = decode(wa[wa.length - 1]); await ctx.close(); return m;

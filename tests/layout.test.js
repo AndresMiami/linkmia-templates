@@ -21,6 +21,7 @@ async function answerAuto(p) {
     await p.goto(DEMO_URL, { waitUntil: 'networkidle' });
     await p.tap('.app-cta[data-form="auto"]'); await settle(p);
     await p.screenshot({ path: SHOT('320-intro') });
+    await p.fill('#q-intro-zip', '33012');
     await p.tap('.q-foot .q-primary'); await settle(p);
     for (let k = 0; k < 9; k++) {
       const t = await answerAuto(p); await settle(p);
@@ -62,6 +63,7 @@ async function answerAuto(p) {
     const p = await ctx.newPage();
     await p.goto(DEMO_URL, { waitUntil: 'networkidle' });
     await p.tap('.app-cta[data-form="auto"]'); await settle(p);
+    await p.fill('#q-intro-zip', '33012');
     await p.tap('.q-foot .q-primary'); await settle(p);
     const an = await p.evaluate(() => [getComputedStyle(document.querySelector('.q-flow')).animationName, getComputedStyle(document.querySelector('.q-view')).animationName]);
     ok(an.every(x => x === 'none'), 'no slide/fade animations', an);
@@ -74,6 +76,7 @@ async function answerAuto(p) {
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto(DEMO_FILE_URL);
     await p.tap('.app-cta[data-form="auto"]'); await settle(p);
+    await p.fill('#q-intro-zip', '33012');
     await p.tap('.q-foot .q-primary'); await settle(p);
     ok(await txt(p, '#q-title') === '¿Qué auto quieres asegurar?', 'flow works from file://');
     await p.tap('.q-bar .sheet-btn[aria-label="Atrás"]'); await settle(p);
