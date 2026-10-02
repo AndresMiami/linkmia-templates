@@ -1246,6 +1246,27 @@
 
         /* intro */
         .q-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
+        .q-brand .lang-toggle { margin-left: auto; }
+        /* ES | EN */
+        .lang-toggle { display: inline-flex; flex: none; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 9999px; background: var(--surface-control); }
+        .lang-toggle button {
+            min-width: 40px;
+            height: 32px;
+            padding: 0 10px;
+            border: none;
+            border-radius: 9999px;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background var(--ease), color var(--ease);
+        }
+        .lang-toggle button[aria-pressed="true"] { background: var(--primary-color); color: var(--on-primary-color, #1b2150); cursor: default; }
+        .lang-toggle button:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+        .theme-app .app-header-right { display: flex; align-items: center; gap: 8px; }
         .q-brand-mark {
             width: 36px;
             height: 36px;
@@ -1322,20 +1343,17 @@
         .q-done-text { margin: 0 0 24px; font-size: 15px; color: var(--text-muted); }
         .q-done .q-alt { margin-top: 12px; }
         /* the WhatsApp way out: WhatsApp green, so it reads as its own choice */
+        /* the WhatsApp way out: WhatsApp-green words, no box */
         .q-alt.is-wa {
-            align-self: stretch;
-            min-height: 48px;
-            padding: 10px 16px;
-            border: 1.5px solid rgba(37, 211, 102, 0.75);
-            border-radius: var(--r-control);
-            background: rgba(37, 211, 102, 0.12);
+            min-height: 44px;
+            padding: 6px 8px;
             color: #5BE58F;
             font-size: 15px;
             font-weight: 600;
             text-decoration: none;
         }
         .q-alt.is-wa svg { width: 20px; height: 20px; color: #25D366; fill: #25D366; }
-        .q-alt.is-wa:active { background: rgba(37, 211, 102, 0.22); }
+        .q-alt.is-wa:active { opacity: 0.7; }
         .q-alt.is-wa:focus-visible { outline: 2px solid #25D366; outline-offset: 2px; }
         .q-recap { margin-top: 28px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-control); text-align: left; }
         .q-recap-label { display: block; font-size: 13px; color: var(--text-muted); }
@@ -1760,8 +1778,304 @@
         // (State Farm-style pacing in the LinkMia booking-flow look)
         // ============================================
         const THIS_YEAR = new Date().getFullYear();
-        const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-        const WEEKDAYS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+        // ---- English: every Spanish string the page shows, keyed by its Spanish text.
+        //      {name} marks a value filled in at run time. Strings not listed here
+        //      (names, addresses, car models, carriers) are shown as typed. ----
+        const I18N_EN = {
+            // validation
+            'El VIN tiene 17 caracteres: letras y números, sin I, O ni Q.': 'A VIN has 17 characters: letters and numbers, no I, O or Q.',
+            'Escribe un ZIP de 5 dígitos.': 'Enter a 5-digit ZIP code.',
+            'Escribe la calle y el número (ej. 123 SW 8th St).': 'Enter the street and number (e.g. 123 SW 8th St).',
+            'Escribe un email válido.': 'Enter a valid email.',
+            'Escribe un teléfono de 10 dígitos.': 'Enter a 10-digit phone number.',
+            'Escribe tu nombre.': 'Enter your name.',
+            'Escribe solo números (ej. 45000).': 'Numbers only (e.g. 45000).',
+            'Escribe la dirección completa o un ZIP de 5 dígitos.': 'Enter the full address or a 5-digit ZIP code.',
+            'Elige una opción.': 'Choose an option.',
+            'Elige al menos una opción.': 'Choose at least one option.',
+            'Elige la marca y el modelo.': 'Choose the make and model.',
+            'Elige cuándo quieres que empiece.': 'Choose when you want it to start.',
+            'Elige la fecha.': 'Choose the date.',
+            'Elige una fecha entre hoy y los próximos {days} días.': 'Choose a date between today and the next {days} days.',
+            'Elige mes, día y año.': 'Choose month, day and year.',
+            'Esa fecha no existe. Revisa el día.': "That date doesn't exist. Check the day.",
+            'Debes tener al menos 16 años.': 'You must be at least 16.',
+            'Revisa el año de nacimiento.': 'Check the year of birth.',
+            'Este campo es obligatorio.': 'This field is required.',
+            'Elige el año.': 'Choose the year.',
+            'Elige el año o «No estoy seguro».': 'Choose the year or "Not sure".',
+            'Escribe la dirección o el ZIP.': 'Enter the address or ZIP code.',
+            'Escribe tu ZIP de 5 dígitos para empezar.': 'Enter your 5-digit ZIP code to start.',
+            'Completa los campos.': 'Fill in the fields.',
+            // common
+            'Sí': 'Yes', 'No': 'No', 'Sí, con {carrier}': 'Yes, with {carrier}',
+            'No sé': "I don't know", 'No estoy seguro': 'Not sure', 'Otro': 'Other', 'Ninguna': 'None',
+            'Ej. 33125': 'e.g. 33125', ' (opcional)': ' (optional)', 'Elige': 'Choose',
+            // contact step
+            'Último paso: tus datos': 'Last step: your details',
+            'Te respondemos por WhatsApp, al número desde donde nos escribas.': "We'll reply on WhatsApp, to the number you write us from.",
+            'Tus datos se envían solo a Best National Insurance, por WhatsApp, para preparar tu cotización.': 'Your details go only to Best National Insurance, by WhatsApp, to prepare your quote.',
+            'Nombre completo': 'Full name', 'Tu nombre y apellido': 'Your first and last name', 'Nombre': 'Name',
+            'Email': 'Email', 'tu@email.com': 'you@email.com', 'Otro teléfono': 'Other phone',
+            'Solo si es distinto al número de tu WhatsApp.': 'Only if different from your WhatsApp number.',
+            // auto
+            'seguro de auto': 'auto insurance', 'Seguro de auto': 'Auto insurance', 'Cotiza tu seguro de auto': 'Get your auto insurance quote',
+            'Año, marca y modelo del auto': "The car's year, make and model", 'Tu fecha de nacimiento': 'Your date of birth',
+            'El VIN, si lo tienes (opcional)': 'The VIN, if you have it (optional)',
+            'Vehículo': 'Vehicle', 'Cobertura': 'Coverage', 'Tus datos': 'Your details', 'Mis datos': 'My details',
+            'También quiero cotizar el seguro de mi casa': 'I also want a quote for my home insurance',
+            'Agrupar casa y auto suele salir más barato.': 'Bundling home and auto is usually cheaper.',
+            'También me interesa cotizar el seguro de mi casa.': "I'm also interested in a home insurance quote.",
+            '¿Qué auto quieres asegurar?': 'Which car do you want to insure?', 'VIN': 'VIN',
+            '¿Lo tienes a mano? Escríbelo y completamos el año, la marca y el modelo por ti.': "Have it handy? Type it and we'll fill in the year, make and model for you.",
+            'Ej. 1HGCM82633A004352': 'e.g. 1HGCM82633A004352', '¿Dónde lo encuentro?': 'Where do I find it?', '¿Dónde está el VIN?': 'Where is the VIN?',
+            'El VIN es el número de identificación del vehículo: 17 letras y números. Lo encuentras en:': "The VIN is the vehicle identification number: 17 letters and numbers. You'll find it on:",
+            'Tu registro o el título del auto.': "Your car's registration or title.", 'Tu tarjeta de seguro actual.': 'Your current insurance card.',
+            'El tablero, del lado del conductor (se ve a través del parabrisas).': "The dashboard, on the driver's side (seen through the windshield).",
+            'El marco de la puerta del conductor.': "The driver's door frame.",
+            'Año': 'Year', 'Elige el año': 'Choose the year', 'Marca y modelo': 'Make and model', 'Elige marca y modelo': 'Choose make and model',
+            'Auto': 'Car', 'Versión': 'Trim', 'Ej. EX, LE, Sport': 'e.g. EX, LE, Sport', 'Carrocería': 'Body style', 'Ej. Sedán, SUV, Pickup': 'e.g. Sedan, SUV, Pickup',
+            'Millaje aproximado': 'Approximate mileage', 'Lo que marca el odómetro.': 'What the odometer shows.', 'Ej. 45,000': 'e.g. 45,000', 'Millaje': 'Mileage',
+            '{n} millas': '{n} miles',
+            '¿Cómo usas el auto?': 'How do you use the car?', '¿Cuál debo elegir?': 'Which one should I choose?',
+            'Personal:': 'Personal:', 'para ir al trabajo o a la escuela, hacer mandados y el uso diario.': 'commuting to work or school, errands and everyday driving.',
+            'Apps de trabajo:': 'Gig apps:', 'si manejas para Uber o Lyft, o haces entregas (DoorDash, Instacart, Amazon Flex). Normalmente necesitas una cobertura especial para esto.': 'if you drive for Uber or Lyft, or do deliveries (DoorDash, Instacart, Amazon Flex). You usually need special coverage for this.',
+            'Negocio:': 'Business:', 'si el auto es de tu empresa o lo usas para trabajar (visitar clientes, llevar herramientas o mercancía).': "if the car belongs to your company or you use it for work (visiting clients, carrying tools or goods).",
+            'Uso': 'Use', 'Personal': 'Personal', 'Trabajo, escuela y uso diario': 'Work, school and everyday use', 'Apps de trabajo': 'Gig apps',
+            'Uber, Lyft, DoorDash o entregas': 'Uber, Lyft, DoorDash or deliveries', 'Apps de trabajo (Uber, Lyft, entregas)': 'Gig apps (Uber, Lyft, deliveries)',
+            'Negocio': 'Business', 'Auto de empresa o para tu trabajo': 'Company car or used for your work',
+            '¿El auto es tuyo, financiado o en leasing?': 'Is the car paid off, financed or leased?', '¿Por qué preguntamos esto?': 'Why do we ask?',
+            'Si tu auto está financiado o en leasing, el banco o la compañía de leasing normalmente exige cobertura completa y que aparezca en tu póliza.': 'If your car is financed or leased, the bank or leasing company usually requires full coverage and to be listed on your policy.',
+            'Propiedad': 'Property', 'Es mío, está pagado': "It's mine, paid off", 'Pagado': 'Paid off', 'Lo estoy financiando': "I'm financing it",
+            'Tengo un préstamo con un banco o concesionario': 'I have a loan with a bank or dealer', 'Financiado': 'Financed', 'Es leasing': "It's leased",
+            'Lo alquilo a largo plazo': 'Long-term lease', 'Leasing': 'Leased',
+            '¿Cuándo quieres que empiece tu seguro?': 'When do you want your insurance to start?',
+            'Si no estás seguro, elige hoy. Lo puedes ajustar con tu agente.': "If you're not sure, choose today. You can adjust it with your agent.",
+            'Inicio': 'Start date', '¿Qué cobertura buscas?': 'What coverage are you looking for?', '¿Qué incluye cada una?': "What's included in each?",
+            'Lo básico:': 'The basics:', 'lo que exige Florida: tu protección personal (PIP) y los daños que causes a la propiedad de otros.': "what Florida requires: your personal injury protection (PIP) and damage you cause to other people's property.",
+            'Cobertura completa:': 'Full coverage:', 'además protege tu propio auto, por choques (collision) y por robo, inundación, vandalismo y otros daños (comprehensive).': 'also protects your own car, from crashes (collision) and from theft, flood, vandalism and other damage (comprehensive).',
+            'No sé:': "I don't know:", 'un agente te explica las opciones y te recomienda la mejor para ti.': 'an agent explains the options and recommends the best one for you.',
+            'Como tu auto está {status}, el banco normalmente exige cobertura completa. Tu agente te lo confirma.': 'Since your car is {status}, the bank usually requires full coverage. Your agent will confirm.',
+            'financiado': 'financed', 'en leasing': 'leased',
+            'Tipo': 'Type', 'Lo básico': 'The basics', 'Lo mínimo que exige la ley en Florida': 'The minimum Florida law requires', 'Lo básico (mínimo de Florida)': 'The basics (Florida minimum)',
+            'Cobertura completa': 'Full coverage', 'También protege tu auto: choques, robo, inundación': 'Also protects your car: crashes, theft, flood',
+            'No sé, aconséjenme': "I don't know, advise me", 'Un agente te explica las opciones': 'An agent explains the options', 'No sé, quiero que me aconsejen': "I don't know, I'd like advice",
+            '¿Tienes seguro de auto ahora?': 'Do you have auto insurance now?', 'Tener seguro sin interrupciones puede ayudarte a conseguir un mejor precio.': 'Continuous coverage can help you get a better price.',
+            'Seguro actual': 'Current insurance', '¿Con qué compañía?': 'With which company?', 'Ej. GEICO, Progressive': 'e.g. GEICO, Progressive',
+            'Cuéntanos sobre ti': 'Tell us about you', 'Esto nos ayuda a calcular un precio más exacto.': 'This helps us calculate a more accurate price.',
+            'Fecha de nacimiento': 'Date of birth', 'Dirección donde se guarda el auto': 'Address where the car is kept',
+            'Empieza a escribir y elige tu dirección de la lista.': 'Start typing and pick your address from the list.', 'Calle y número': 'Street and number', 'Dirección': 'Address',
+            'ZIP donde se guarda el auto': 'ZIP code where the car is kept', 'Donde el auto pasa la noche.': 'Where the car is parked overnight.', 'ZIP': 'ZIP',
+            '¿Accidentes o multas en los últimos 3 años?': 'Accidents or tickets in the last 3 years?', 'Accidentes o multas (3 años)': 'Accidents or tickets (3 years)',
+            '¿En qué ZIP se guarda el auto?': 'What ZIP code is the car kept in?', 'Tu ZIP': 'Your ZIP', 'Guardar ZIP': 'Save ZIP',
+            'ZIP {zip}. Toca para cambiarlo': 'ZIP {zip}. Tap to change it',
+            // health / medicare / life
+            'Medicare para mi papá o mi mamá': 'Medicare for my father or mother', 'Medicare para mi esposo(a)': 'Medicare for my spouse',
+            'Medicare para mí y mi esposo(a)': 'Medicare for me and my spouse', 'Medicare': 'Medicare',
+            'seguro de vida para mi pareja': 'life insurance for my partner', 'seguro de vida para los dos': 'life insurance for both of us', 'seguro de vida': 'life insurance',
+            'seguro médico para mis hijos': 'health insurance for my children', 'seguro médico familiar': 'family health insurance',
+            'seguro médico para mí y mi pareja': 'health insurance for me and my partner', 'seguro médico para mí y mis hijos': 'health insurance for me and my children', 'seguro médico': 'health insurance',
+            'Salud, Medicare y vida': 'Health, Medicare & life', 'Cotiza tu seguro de salud': 'Get your health insurance quote',
+            'Seguro médico, Medicare o seguro de vida: responde unas preguntas y te enviamos tu cotización por WhatsApp.': "Health insurance, Medicare or life insurance: answer a few questions and we'll send your quote on WhatsApp.",
+            'La fecha de nacimiento de cada persona': "Each person's date of birth", 'El ingreso aproximado de tu hogar (seguro médico)': 'Your approximate household income (health insurance)',
+            'Tu seguro actual, si tienes uno': 'Your current insurance, if you have one', '¿En qué ZIP vives?': 'What ZIP code do you live in?',
+            'No ofrecemos todos los planes disponibles en tu área. La información que te damos se limita a los planes que ofrecemos en tu área. Para conocer todas tus opciones, comunícate con Medicare.gov o al 1-800-MEDICARE (TTY 1-877-486-2048), las 24 horas, los 7 días de la semana.': 'We do not offer every plan available in your area. Any information we provide is limited to those plans we do offer in your area. Please contact Medicare.gov or 1-800-MEDICARE (TTY 1-877-486-2048), 24 hours a day, 7 days a week, to get information on all of your options.',
+            'Tu seguro': 'Your insurance', 'Seguro': 'Insurance', 'Tu hogar': 'Your household', 'Hogar': 'Household', 'Beneficiario': 'Beneficiary', 'Asegurado': 'Insured',
+            '{n} años': '{n} years old', 'Hogar de {n}': 'Household of {n}',
+            'Para mí': 'For me', 'Para mi esposo(a)': 'For my spouse', 'Para los dos': 'For both of us', 'Para mi papá o mamá': 'For my father or mother',
+            'Proteger a mi familia': 'Protect my family', 'Gastos finales': 'Final expenses', 'Ahorro y herencia': 'Savings & inheritance', 'Orientación': 'Guidance',
+            'Seguro de vida': 'Life insurance', 'Solo para mí': 'Just for me', 'Para mí y mi pareja': 'For me and my partner', 'Para mi familia': 'For my family',
+            'Para mí y mis hijos': 'For me and my children', 'Para mis hijos': 'For my children', '6 o más': '6 or more',
+            '¿Qué seguro necesitas?': 'What insurance do you need?', 'Tipo de seguro': 'Type of insurance', 'Seguro médico': 'Health insurance',
+            'Obamacare / Marketplace o privado, para ti o tu familia': 'Obamacare / Marketplace or private, for you or your family',
+            'Para 65 años o más, o con discapacidad': 'For 65 and older, or with a disability', 'Protege a tu familia si llegas a faltar': 'Protect your family if something happens to you',
+            '¿Para quién es el seguro?': 'Who is the insurance for?', 'Para quién': 'For whom', 'Esposo(a) o pareja': 'Spouse or partner', 'Mi pareja y mis hijos': 'My partner and my children',
+            'Familia (pareja e hijos)': 'Family (partner and children)', 'Solo para mis hijos': 'Just for my children', 'Cuéntanos de tus hijos': 'Tell us about your children',
+            '¿Quiénes se aseguran?': "Who's getting covered?", 'La edad es lo que más cambia el precio de un plan médico.': 'Age is what changes the price of a health plan the most.',
+            'Si tienes 65 años o más, normalmente te corresponde Medicare. También te ayudamos con Medicare.': "If you're 65 or older, Medicare is usually the right fit. We can help with Medicare too.",
+            'Año de nacimiento de tu pareja': "Your partner's year of birth", 'Pareja (año de nacimiento)': 'Partner (year of birth)',
+            '¿Cuántos hijos se aseguran?': 'How many children are getting covered?', 'Hijos que se aseguran': 'Children covered',
+            '¿Alguien que se asegura fuma o usa tabaco?': 'Does anyone being covered smoke or use tobacco?', 'Usa tabaco': 'Uses tobacco',
+            '¿Cuántas personas hay en tu hogar?': 'How many people are in your household?',
+            'Cuenta a todos los que van en tu declaración de impuestos, aunque no todos necesiten seguro.': 'Count everyone on your tax return, even if not all of them need insurance.',
+            'El tamaño de tu hogar y tu ingreso deciden si calificas para el crédito fiscal del Marketplace (Obamacare), que baja tu pago mensual.': 'Your household size and income decide whether you qualify for the Marketplace (Obamacare) tax credit, which lowers your monthly payment.',
+            'Personas en el hogar': 'People in the household', '¿Cuál es el ingreso anual de tu hogar?': "What is your household's yearly income?",
+            'Un aproximado de este año está bien.': "An estimate for this year is fine.", '¿Para qué sirve?': "What's it for?", '¿Para qué sirve el ingreso?': 'Why do we ask about income?',
+            'Con tu ingreso y el tamaño de tu hogar vemos si calificas para ayuda del gobierno que baja lo que pagas cada mes.': 'With your income and household size we check whether you qualify for government help that lowers what you pay each month.',
+            'Cuenta el ingreso de todos en tu declaración de impuestos, antes de impuestos. No te pedimos comprobantes ahora.': "Count the income of everyone on your tax return, before taxes. We don't need proof right now.",
+            'Ingreso anual del hogar': 'Yearly household income', 'Menos de $20,000': 'Under $20,000', '$20,000 a $35,000': '$20,000 to $35,000', '$35,000 a $50,000': '$35,000 to $50,000',
+            '$50,000 a $75,000': '$50,000 to $75,000', '$75,000 a $100,000': '$75,000 to $100,000', 'Más de $100,000': 'Over $100,000',
+            'Prefiero no decirlo': "I'd rather not say", 'Prefiero hablarlo con el agente': "I'd rather discuss it with the agent",
+            '¿Tienes seguro médico ahora?': 'Do you have health insurance now?', 'No tengo': "I don't have any", 'Por mi trabajo': 'Through my job',
+            'Obamacare / Marketplace': 'Obamacare / Marketplace', 'Medicaid': 'Medicaid', '{plan}, con {carrier}': '{plan}, with {carrier}',
+            'No tengo seguro': "I don't have insurance", 'Sí, por mi trabajo': 'Yes, through my job', 'Sí, Obamacare / Marketplace': 'Yes, Obamacare / Marketplace',
+            'Sí, Medicaid': 'Yes, Medicaid', 'Sí, otro seguro': 'Yes, other insurance', 'Ej. Florida Blue, Ambetter': 'e.g. Florida Blue, Ambetter',
+            '¿Cuándo necesitas el seguro?': 'When do you need the insurance?', '¿Cuándo me puedo inscribir?': 'When can I enroll?',
+            'Inscripción abierta:': 'Open enrollment:', 'una vez al año, a partir del 1 de noviembre, cualquiera puede inscribirse o cambiar de plan.': 'once a year, starting November 1, anyone can enroll or change plans.',
+            'Cambio de vida:': 'Life change:', 'si perdiste tu seguro, te casaste, tuviste un bebé o te mudaste, normalmente puedes inscribirte en los 60 días siguientes, en cualquier época del año.': 'if you lost your insurance, got married, had a baby or moved, you can usually enroll within the next 60 days, any time of year.',
+            'Medicaid:': 'Medicaid:', 'si calificas, puedes inscribirte en cualquier momento.': 'if you qualify, you can enroll at any time.',
+            'Cuándo': 'When', 'Cuándo lo necesito': 'When I need it', 'Lo antes posible': 'As soon as possible', 'Tuve un cambio de vida': 'I had a life change',
+            'Perdí mi seguro, me casé, tuve un bebé o me mudé': 'I lost my insurance, got married, had a baby or moved', 'Para el próximo año': 'For next year',
+            'En la inscripción abierta, desde el 1 de noviembre': 'In open enrollment, from November 1', 'Inscripción abierta (próximo año)': 'Open enrollment (next year)',
+            'Solo estoy comparando': "I'm just comparing", '¿Qué es lo más importante para ti?': "What's most important to you?", 'Puedes elegir más de una.': 'You can choose more than one.',
+            'Lo más importante': 'Most important', 'Un pago mensual bajo': 'A low monthly payment', 'Un deducible bajo': 'A low deductible', 'Deducible bajo': 'Low deductible',
+            'Mantener a mis médicos': 'Keeping my doctors', 'Cubrir mis medicinas': 'Covering my medications', 'Mis medicinas': 'My medications', 'Dental y visión': 'Dental and vision',
+            '¿Para quién es el plan de Medicare?': 'Who is the Medicare plan for?', 'Para mí y mi esposo(a)': 'For me and my spouse', 'Para mi papá o mi mamá': 'For my father or mother',
+            'Le estoy ayudando a buscar un plan': "I'm helping them find a plan", '¿Cuál es tu fecha de nacimiento?': 'What is your date of birth?', '¿Cuál es su fecha de nacimiento?': 'What is their date of birth?',
+            'La tuya; la de tu esposo(a) te la pedimos por WhatsApp.': "Yours; we'll ask for your spouse's on WhatsApp.", 'Con la edad vemos cuándo puede inscribirse.': 'Their age tells us when they can enroll.',
+            'Medicare normalmente empieza a los 65. Antes de esa edad también se puede calificar, por ejemplo, después de 24 meses recibiendo beneficios por discapacidad (SSDI).': 'Medicare usually starts at 65. You can also qualify earlier, for example after 24 months of disability benefits (SSDI).',
+            'Está cerca de su período de inscripción inicial: empieza 3 meses antes del mes en que cumple 65.': "They're close to their initial enrollment period: it starts 3 months before the month they turn 65.",
+            '¿Ya tiene Medicare Parte A y Parte B?': 'Do they already have Medicare Part A and Part B?', '¿Qué son las partes?': 'What are the parts?', 'Las partes de Medicare': 'The parts of Medicare',
+            'Parte A:': 'Part A:', 'hospital.': 'hospital.', 'Parte B:': 'Part B:', 'médicos, consultas y servicios ambulatorios.': 'doctors, visits and outpatient services.',
+            'Parte C (Medicare Advantage):': 'Part C (Medicare Advantage):', 'un plan privado que reúne A y B, y muchas veces medicinas, dental y visión.': 'a private plan that combines A and B, and often drugs, dental and vision.',
+            'Parte D:': 'Part D:', 'medicinas recetadas.': 'prescription drugs.', 'Parte A y B': 'Part A & B', 'Sí, tiene la Parte A y la Parte B': 'Yes, they have Part A and Part B',
+            'Tiene A y B': 'Has A and B', 'Solo la Parte A': 'Only Part A', 'Todavía no, cumple 65 pronto': 'Not yet, turning 65 soon', 'Todavía no (cumple 65 pronto)': 'Not yet (turning 65 soon)',
+            '¿Qué cobertura tiene ahora?': 'What coverage do they have now?', 'Cobertura actual': 'Current coverage', 'Solo Medicare Original': 'Original Medicare only',
+            'Parte A y B, sin otro plan': 'Part A and B, no other plan', 'Un plan Medicare Advantage': 'A Medicare Advantage plan', 'Por ejemplo Humana, Aetna, UnitedHealthcare': 'For example Humana, Aetna, UnitedHealthcare',
+            'Un suplemento (Medigap)': 'A supplement (Medigap)', 'Medicare y Medicaid': 'Medicare and Medicaid', 'Tiene los dos': 'Has both',
+            'Un seguro de trabajo o de retiro': 'Employer or retiree coverage', 'Nada todavía': 'Nothing yet', '¿Qué le interesa?': 'What are they interested in?',
+            '¿Cuándo se puede cambiar de plan?': 'When can you change plans?', '¿Cuándo se puede inscribir o cambiar?': 'When can you enroll or change?',
+            'Inscripción inicial:': 'Initial enrollment:', '7 meses alrededor de cuando cumple 65 (3 antes, el mes del cumpleaños y 3 después).': '7 months around turning 65 (3 before, the birthday month and 3 after).',
+            'Inscripción anual:': 'Annual enrollment:', 'del 15 de octubre al 7 de diciembre, para cambiar de plan para el año siguiente.': 'October 15 to December 7, to change plans for the following year.',
+            'Otros casos:': 'Other cases:', 'mudanzas, Medicaid o pérdida de otra cobertura pueden abrir un período especial.': 'moving, Medicaid or losing other coverage can open a special period.',
+            'Le interesa': 'Interested in', 'Medicare Advantage (Parte C)': 'Medicare Advantage (Part C)', 'Plan de medicinas (Parte D)': 'Drug plan (Part D)',
+            'Suplemento Medigap': 'Medigap supplement', 'Dental, visión y audición': 'Dental, vision and hearing', 'No sé, quiero orientación': "I don't know, I'd like guidance",
+            'Sus médicos y medicinas': 'Their doctors and medications', 'Así buscamos un plan que los incluya.': 'So we can look for a plan that includes them.',
+            '¿Quiere mantener a sus médicos actuales?': 'Do they want to keep their current doctors?', 'Mantener a sus médicos': 'Keep their doctors',
+            '¿Cuántas medicinas recetadas toma?': 'How many prescription drugs do they take?', 'Medicinas recetadas': 'Prescription drugs', '1 a 3': '1 to 3', '4 o más': '4 or more',
+            '¿Para quién es el seguro de vida?': 'Who is the life insurance for?', 'Para mi pareja': 'For my partner', 'Cuéntanos de tu pareja': 'Tell us about your partner', 'Cuéntanos de ti': 'Tell us about you',
+            'La edad, el sexo y el tabaco son lo que más cambia el precio.': 'Age, sex and tobacco change the price the most.', 'Sexo': 'Sex', 'Hombre': 'Male', 'Mujer': 'Female',
+            '¿Fuma o usa tabaco o nicotina?': 'Do you smoke or use tobacco or nicotine?', 'Tabaco o nicotina': 'Tobacco or nicotine',
+            '¿Qué quieres lograr con el seguro?': 'What do you want the insurance to do?', 'Tipos de seguro de vida': 'Types of life insurance',
+            'Proteger a mi familia:': 'Protect my family:', 'un seguro a término (10, 20 o 30 años). Es el más económico por la cobertura que da.': 'term insurance (10, 20 or 30 years). The most affordable for the coverage it gives.',
+            'Gastos finales:': 'Final expenses:', 'una cobertura pequeña para el funeral y las deudas, fácil de aprobar.': 'a small policy for the funeral and debts, easy to get approved.',
+            'Ahorro y herencia:': 'Savings & inheritance:', 'un seguro permanente que dura toda la vida y puede acumular valor.': 'permanent insurance that lasts your whole life and can build value.',
+            'Objetivo': 'Goal', 'Lo que busco': "What I'm looking for", 'Proteger a mi familia si falto': 'Protect my family if I pass away',
+            'Reemplazar mi ingreso, la hipoteca, los estudios': 'Replace my income, the mortgage, education', 'Cubrir los gastos finales': 'Cover final expenses', 'Funeral y deudas': 'Funeral and debts',
+            'Una póliza para toda la vida': 'A policy for life', 'Quiero que me orienten': "I'd like guidance", 'Quiero orientación': "I'd like guidance",
+            '¿Cuánta cobertura te gustaría?': 'How much coverage would you like?', 'Un aproximado está bien. El agente te ayuda a calcularlo.': 'An estimate is fine. The agent will help you work it out.',
+            '$1 millón o más': '$1 million or more', '¿Cómo describirías tu salud en general?': 'How would you describe your overall health?',
+            'Solo una idea. Los detalles los ve el agente contigo, en privado.': 'Just a rough idea. The agent goes over details with you, privately.',
+            'Salud en general': 'Overall health', 'Excelente': 'Excellent', 'Buena': 'Good', 'Regular': 'Fair', 'Tengo algunas condiciones de salud': 'I have some health conditions',
+            'Con algunas condiciones': 'With some conditions', '¿Tienes seguro de vida ahora?': 'Do you have life insurance now?', 'Seguro de vida actual': 'Current life insurance',
+            // home
+            'seguro de inquilino (renters)': 'renters insurance', 'seguro para una propiedad que alquilo': 'insurance for a property I rent out', 'seguro de casa': 'home insurance',
+            'Seguro de casa': 'Home insurance', 'Cotiza tu seguro de casa': 'Get your home insurance quote', 'La dirección o el ZIP de la propiedad': "The property's address or ZIP code",
+            'El año de construcción y la edad del techo (aproximados)': 'The year built and the roof age (approximate)', 'Tu póliza actual, si tienes una': 'Your current policy, if you have one',
+            'También quiero cotizar el seguro de mi auto': 'I also want a quote for my auto insurance', 'También me interesa cotizar el seguro de mi auto.': "I'm also interested in an auto insurance quote.",
+            '¿Dónde está la propiedad?': 'Where is the property?', 'Con el ZIP basta para empezar.': 'The ZIP code is enough to start.', 'Dirección o ZIP': 'Address or ZIP',
+            'Ej. 123 SW 8th St, Miami, FL 33130': 'e.g. 123 SW 8th St, Miami, FL 33130', '¿Qué tipo de propiedad es?': 'What type of property is it?',
+            'Casa': 'House', 'Casa independiente': 'Single-family home', 'Townhouse': 'Townhouse', 'Casa adosada': 'Attached home', 'Condo o apartamento': 'Condo or apartment',
+            'Unidad en un edificio o condominio': 'A unit in a building or condominium', 'Condo / apartamento': 'Condo / apartment', 'Casa móvil': 'Mobile home', 'Mobile home o prefabricada': 'Mobile or manufactured home',
+            '¿Vives ahí o la alquilas?': 'Do you live there or rent it out?', 'Vivo ahí:': 'I live there:', 'es tu casa principal.': 'it is your primary home.',
+            'Segunda casa:': 'Second home:', 'la usas por temporadas o de vacaciones.': 'you use it seasonally or for vacations.', 'La alquilo a otros:': 'I rent it to others:',
+            'es una propiedad de inversión que rentas a inquilinos.': "it's an investment property you rent to tenants.", 'Soy inquilino:': "I'm a renter:",
+            'alquilas donde vives. Lo que necesitas es un seguro de inquilino (renters), que protege tus pertenencias y tu responsabilidad, no el edificio.': 'you rent where you live. What you need is renters insurance, which protects your belongings and your liability, not the building.',
+            'Uso de la propiedad': 'Property use', 'Vivo ahí': 'I live there', 'Es mi casa principal': "It's my primary home", 'Es mi segunda casa': "It's my second home",
+            'Casa de vacaciones o de temporada': 'Vacation or seasonal home', 'Segunda casa': 'Second home', 'La alquilo a otros': 'I rent it to others',
+            'Es una propiedad de inversión': "It's an investment property", 'Soy inquilino': "I'm a renter", 'Alquilo el lugar donde vivo': 'I rent the place where I live', 'Soy inquilino (renters)': "I'm a renter (renters)",
+            '¿En qué año se construyó?': 'What year was it built?', 'Un aproximado está bien.': 'An estimate is fine.', '¿Dónde encuentro el año de construcción?': 'Where do I find the year built?',
+            'Aparece en el registro de la propiedad del condado. En Miami-Dade, búscalo con tu dirección en el sitio del Property Appraiser.': "It's in the county property records. In Miami-Dade, look it up by address on the Property Appraiser website.",
+            'Año de construcción': 'Year built', '¿Qué edad tiene el techo?': 'How old is the roof?', '¿Por qué importa?': 'Why does it matter?', '¿Por qué importa la edad del techo?': 'Why does the roof age matter?',
+            'En Florida, la edad del techo es uno de los factores que más influyen en el precio y en la aprobación del seguro de casa.': 'In Florida, the roof age is one of the factors that most affect the price and approval of home insurance.',
+            'Si lo cambiaste, ten a mano el año o el permiso de construcción.': 'If you replaced it, have the year or the building permit handy.',
+            'Edad del techo': 'Roof age', 'Menos de 5 años': 'Less than 5 years', 'Entre 5 y 10 años': 'Between 5 and 10 years', '5 a 10 años': '5 to 10 years',
+            'Entre 11 y 15 años': 'Between 11 and 15 years', '11 a 15 años': '11 to 15 years', 'Más de 15 años': 'More than 15 years',
+            '¿Tiene protección contra huracanes?': 'Does it have hurricane protection?', 'Protección contra huracanes': 'Hurricane protection',
+            'Las ventanas y puertas de impacto y los shutters pueden darte descuentos en Florida.': 'Impact windows and doors and shutters can get you discounts in Florida.',
+            'Normalmente se comprueban con una inspección de mitigación de viento (wind mitigation).': "They're usually verified with a wind mitigation inspection.",
+            'Ventanas y puertas de impacto': 'Impact windows and doors', 'Shutters (contraventanas)': 'Shutters', 'No tiene': 'None',
+            '¿Tienes seguro de inquilino ahora?': 'Do you have renters insurance now?', '¿Tienes seguro para esta propiedad ahora?': 'Do you have insurance on this property now?',
+            'Ej. Citizens, Universal': 'e.g. Citizens, Universal', '¿En qué mes se renueva?': 'What month does it renew?', 'Elige el mes': 'Choose the month', 'Renovación': 'Renewal',
+            'Enero': 'January', 'Febrero': 'February', 'Marzo': 'March', 'Abril': 'April', 'Mayo': 'May', 'Junio': 'June', 'Julio': 'July', 'Agosto': 'August',
+            'Septiembre': 'September', 'Octubre': 'October', 'Noviembre': 'November', 'Diciembre': 'December',
+            // VIN + models
+            'Coupé': 'Coupe', 'Sedán': 'Sedan',
+            'Buscando tu vehículo…': 'Looking up your vehicle…',
+            'No encontramos un auto con ese VIN. Revísalo, o elige el año, la marca y el modelo abajo.': "We couldn't find a car with that VIN. Check it, or choose the year, make and model below.",
+            'Este VIN es de un {car}, distinto al auto que elegiste. Revisa cuál es el correcto.': 'This VIN belongs to a {car}, not the car you chose. Check which one is right.',
+            'Encontramos tu {car}. Completamos los datos que faltaban; revisa que estén bien.': "We found your {car}. We filled in what was missing; check that it's right.",
+            'VIN verificado: {car}.': 'VIN verified: {car}.',
+            'No pudimos verificar el VIN en este momento. Puedes seguir y completar los datos a mano.': "We couldn't check the VIN right now. You can continue and fill in the details by hand.",
+            'Año del vehículo': 'Vehicle year', 'Marca': 'Make', 'Busca marca o modelo (ej. Civic)': 'Search make or model (e.g. Civic)', 'Buscar marca o modelo': 'Search make or model',
+            'Marcas populares': 'Popular makes', 'Todas las marcas': 'All makes', 'Modelos': 'Models', 'Marcas': 'Makes',
+            'No encontramos esa marca ni ese modelo. Puedes escribirlo en «Otra marca».': 'We couldn\'t find that make or model. You can type it under "Other make".',
+            'Otra marca': 'Other make', 'Modelos {make}': '{make} models', 'Buscando modelos {year}…': 'Looking up {year} models…', 'Otro modelo': 'Other model',
+            'Otro modelo {make}': 'Other {make} model', 'Modelo': 'Model', 'Escribe el modelo': 'Type the model', 'Buscar modelo {make}': 'Search {make} models', 'Populares': 'Popular',
+            'No encontramos ese modelo. Puedes escribirlo en «Otro modelo».': 'We couldn\'t find that model. You can type it under "Other model".',
+            'Resultados': 'Results', 'Todos los modelos {year}': 'All {year} models', 'Todos los modelos': 'All models', 'Escribe la marca': 'Type the make',
+            // address
+            'Direcciones sugeridas': 'Suggested addresses', 'Direcciones © OpenStreetMap': 'Addresses © OpenStreetMap', 'Buscando direcciones…': 'Searching addresses…',
+            // flow chrome
+            'Atrás': 'Back', 'Cerrar': 'Close', 'Progreso': 'Progress', 'Revisión': 'Review', 'Enviado': 'Sent', 'Paso {n} de {total}': 'Step {n} of {total}',
+            'Unos 2 minutos': 'About 2 minutes', 'Gratis y sin compromiso': 'Free, no obligation',
+            'Responde unas preguntas rápidas y te enviamos tu cotización por WhatsApp.': "Answer a few quick questions and we'll send your quote on WhatsApp.",
+            'Ten esto a mano': 'Have this handy', 'Tienes una cotización sin terminar. Puedes seguir donde la dejaste.': 'You have an unfinished quote. You can pick up where you left off.',
+            'Continuar donde lo dejaste': 'Continue where you left off', 'Empezar': 'Start', 'Empezar de nuevo': 'Start over', 'Prefiero escribir por WhatsApp': "I'd rather chat on WhatsApp",
+            'Guardar y volver': 'Save and go back', 'Continuar': 'Continue', 'Prefiero terminar por WhatsApp': "I'd rather finish on WhatsApp",
+            'Hoy': 'Today', 'Mañana': 'Tomorrow', 'Otra fecha': 'Another date', 'Elegir': 'Choose', 'Elige la fecha': 'Choose the date',
+            'Tu seguro empezaría el {date}.': 'Your insurance would start on {date}.', 'Hoy, {date}': 'Today, {date}', 'Mañana, {date}': 'Tomorrow, {date}',
+            'Mes': 'Month', 'Día': 'Day', 'Revisa tu información': 'Review your information', 'Toca cualquier dato si quieres cambiarlo.': 'Tap any item to change it.',
+            'Falta completar': 'Missing', 'Enviar por WhatsApp': 'Send on WhatsApp', 'Se abrirá WhatsApp con tu información lista. Solo toca Enviar.': 'WhatsApp will open with your information ready. Just tap Send.',
+            '{label}: {value}. Editar': '{label}: {value}. Edit', 'Abrir WhatsApp': 'Open WhatsApp', 'Volver al inicio': 'Back to start',
+            '¡Listo! Te estamos conectando por WhatsApp…': "Done! We're connecting you on WhatsApp…", 'Solo toca Enviar en WhatsApp. Si no se abrió, usa este botón:': "Just tap Send in WhatsApp. If it didn't open, use this button:",
+            'Cotización': 'Quote', 'Entendido': 'Got it', 'Listo': 'Done',
+            // WhatsApp message
+            'Hola Best National{who}. Quiero una cotización de *{product}*.': "Hi Best National{who}. I'd like a quote for *{product}*.", ', soy {name}': ", I'm {name}",
+            'No terminé el formulario; prefiero continuar por aquí.': "I didn't finish the form; I'd rather continue here.", 'Prefiero hacer la cotización por aquí.': "I'd rather do the quote here.",
+            'Vía: {source}': 'Via: {source}', 'publicación': 'post', 'historia': 'story', 'destacada': 'highlight', 'bio': 'bio', 'Código QR': 'QR code', 'tarjeta': 'card', 'volante': 'flyer', 'reel': 'reel',
+            // landing
+            'Horario': 'Hours', 'Llámanos': 'Call us', 'Sitio web': 'Website', 'Cotiza tu seguro de': 'Get a quote for', 'Salud': 'Health',
+            'Médico · Medicare · Vida': 'Health · Medicare · Life', 'Asegurando un futuro brillante': 'Insuring a bright future',
+            'Lun–Vie': 'Mon–Fri', 'Sáb': 'Sat', 'Dom': 'Sun'
+        };
+
+        // Language: ?lang=en|es wins and is remembered; then the saved choice; Spanish by default.
+        const LANG = (() => {
+            let l = '';
+            try { l = (new URLSearchParams(location.search).get('lang') || '').toLowerCase(); } catch (_) { /* no URL API */ }
+            if (l === 'en' || l === 'es') { try { localStorage.setItem('bn-lang', l); } catch (_) { /* private mode */ } return l; }
+            try { l = localStorage.getItem('bn-lang') || ''; } catch (_) { /* private mode */ }
+            return l === 'en' ? 'en' : 'es';
+        })();
+        document.documentElement.lang = LANG;
+        const I18N_EN_VALUES = new Set(Object.values(I18N_EN));
+        // t('Spanish text') -> the English text when the page is in English; {name} slots
+        // are filled from vars in both languages. Anything not in the dictionary (names,
+        // addresses, car models) comes back unchanged.
+        function t(s, vars) {
+            if (typeof s !== 'string' || !s) return s;
+            let out = s;
+            if (LANG === 'en') {
+                if (Object.prototype.hasOwnProperty.call(I18N_EN, s)) out = I18N_EN[s];
+                else if (window.__i18nMiss && !vars && !I18N_EN_VALUES.has(s)) window.__i18nMiss.add(s);
+            }
+            return vars ? out.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m)) : out;
+        }
+        function setLang(l) {
+            try { localStorage.setItem('bn-lang', l); } catch (_) { /* private mode */ }
+            const u = new URL(location.href); u.searchParams.delete('lang');
+            history.replaceState(history.state, '', u.toString());
+            location.reload();                   // a flow in progress reopens where it was (history + draft)
+        }
+        function langToggle(extraClass) {
+            const box = el('div', { class: 'lang-toggle' + (extraClass ? ` ${extraClass}` : ''), role: 'group', 'aria-label': LANG === 'en' ? 'Language' : 'Idioma' });
+            [['es', 'ES', 'Español'], ['en', 'EN', 'English']].forEach(([code, label, name]) => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.textContent = label; b.lang = code;
+                b.setAttribute('aria-label', name);
+                b.setAttribute('aria-pressed', String(code === LANG));
+                if (code !== LANG) b.addEventListener('click', () => setLang(code));
+                box.appendChild(b);
+            });
+            return box;
+        }
+
+        const MONTHS_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const MONTHS = LANG === 'en' ? MONTHS_EN : MONTHS_ES;
+        const WEEKDAYS = LANG === 'en' ? ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            : ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
         const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
         function el(tag, props, ...children) {
@@ -1769,7 +2083,8 @@
             Object.entries(props || {}).forEach(([k, v]) => {
                 if (v === undefined || v === null || v === false) return;
                 if (k === 'class') n.className = v;
-                else if (k === 'text') n.textContent = v;
+                else if (k === 'text') n.textContent = t(v);
+                else if (k === 'placeholder' || k === 'aria-label' || k === 'title') n.setAttribute(k, t(v));
                 else n.setAttribute(k, v === true ? '' : v);
             });
             children.forEach(c => c && n.appendChild(c));
@@ -1792,8 +2107,8 @@
             const d = new Date(+m[1], +m[2] - 1, +m[3]);
             return d.getMonth() === +m[2] - 1 && d.getDate() === +m[3] ? d : null;
         }
-        const longDate = d => `${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
-        const shortDate = d => `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`;
+        const longDate = d => (LANG === 'en' ? `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}` : `${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}`);
+        const shortDate = d => (LANG === 'en' ? `${MONTHS[d.getMonth()].slice(0, 3)} ${d.getDate()}` : `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`);
         function startDateOf(a) {
             if (a.inicio === 'hoy') return today();
             if (a.inicio === 'manana') return addDays(today(), 1);
@@ -1834,8 +2149,8 @@
 
         const YES_NO = [{ value: 'si', label: 'Sí' }, { value: 'no', label: 'No' }];
         const currentInsurance = a => (a.seguroActual === 'si'
-            ? ((a.aseguradora || '').trim() ? `Sí, con ${a.aseguradora.trim()}` : 'Sí')
-            : a.seguroActual === 'no' ? 'No' : '');
+            ? ((a.aseguradora || '').trim() ? t('Sí, con {carrier}', { carrier: a.aseguradora.trim() }) : t('Sí'))
+            : a.seguroActual === 'no' ? t('No') : '');
 
         // Last screen of both flows. The WhatsApp message itself carries the
         // customer's number, so phone is only for a different number.
@@ -1906,7 +2221,7 @@
                                 inputmode: 'numeric', pattern: '[0-9,.]*', maxlength: 9, autocomplete: 'off', placeholder: 'Ej. 45,000', sum: 'Millaje',
                                 display: a => {
                                     const v = (a.millaje || '').trim();
-                                    return v && !check.miles(v) ? `${Number(v.replace(/\D/g, '')).toLocaleString('en-US')} millas` : '';
+                                    return v && !check.miles(v) ? t('{n} millas', { n: Number(v.replace(/\D/g, '')).toLocaleString('en-US') }) : '';
                                 }
                             }
                         ]
@@ -1942,7 +2257,7 @@
                         },
                         fields: [
                             {
-                                name: 'propiedad', kind: 'choice', hideLabel: true, label: 'Propiedad', required: true, sum: 'Propiedad',
+                                name: 'propiedad', kind: 'choice', hideLabel: true, label: 'Propiedad', required: true, sum: 'Propiedad', sum_en: 'Ownership',
                                 options: [
                                     { value: 'pagado', label: 'Es mío, está pagado', msg: 'Pagado' },
                                     { value: 'financiado', label: 'Lo estoy financiando', desc: 'Tengo un préstamo con un banco o concesionario', msg: 'Financiado' },
@@ -1969,7 +2284,7 @@
                             ]
                         },
                         note: a => (a.cobertura === 'basica' && (a.propiedad === 'financiado' || a.propiedad === 'leasing')
-                            ? `Como tu auto está ${a.propiedad === 'leasing' ? 'en leasing' : 'financiado'}, el banco normalmente exige cobertura completa. Tu agente te lo confirma.`
+                            ? t('Como tu auto está {status}, el banco normalmente exige cobertura completa. Tu agente te lo confirma.', { status: t(a.propiedad === 'leasing' ? 'en leasing' : 'financiado') })
                             : ''),
                         fields: [
                             {
@@ -2039,17 +2354,17 @@
                 ],
                 context: a => {
                     const d = dobOf(a);
-                    const age = d && d !== 'invalid' ? `${ageOn(d, today())} años` : '';
+                    const age = d && d !== 'invalid' ? t('{n} años', { n: ageOn(d, today()) }) : '';
                     if (a.tipoSalud === 'medicare') {
                         const who = { yo: 'Para mí', pareja: 'Para mi esposo(a)', ambos: 'Para los dos', padre: 'Para mi papá o mamá' }[a.paraM];
-                        return who ? { icon: 'heart', text: ['Medicare', who, age].filter(Boolean).join(' · ') } : { icon: 'heart', text: 'Medicare' };
+                        return who ? { icon: 'heart', text: ['Medicare', t(who), age].filter(Boolean).join(' · ') } : { icon: 'heart', text: 'Medicare' };
                     }
                     if (a.tipoSalud === 'vida') {
                         const g = { familia: 'Proteger a mi familia', gastos: 'Gastos finales', ahorro: 'Ahorro y herencia', nose: 'Orientación' }[a.objetivo];
-                        return { icon: 'heart', text: ['Seguro de vida', age, g].filter(Boolean).join(' · ') };
+                        return { icon: 'heart', text: [t('Seguro de vida'), age, t(g)].filter(Boolean).join(' · ') };
                     }
                     const who = { yo: 'Solo para mí', pareja: 'Para mí y mi pareja', familia: 'Para mi familia', yohijos: 'Para mí y mis hijos', hijos: 'Para mis hijos' }[a.para];
-                    return who ? { icon: 'heart', text: who + (a.hogar ? ` · Hogar de ${a.hogar === '6' ? '6 o más' : a.hogar}` : '') } : null;
+                    return who ? { icon: 'heart', text: t(who) + (a.hogar ? ' · ' + t('Hogar de {n}', { n: a.hogar === '6' ? t('6 o más') : a.hogar }) : '') } : null;
                 },
                 bundle: null,
                 defaults: () => ({}),
@@ -2150,7 +2465,7 @@
                                 display: a => {
                                     const o = { no: 'No tengo', trabajo: 'Por mi trabajo', marketplace: 'Obamacare / Marketplace', medicaid: 'Medicaid', otro: 'Otro' }[a.actual] || '';
                                     const c = (a.aseguradoraSalud || '').trim();
-                                    return o && c && a.actual !== 'no' ? `${o}, con ${c}` : o;
+                                    return o && c && a.actual !== 'no' ? t('{plan}, con {carrier}', { plan: t(o), carrier: c }) : t(o);
                                 },
                                 options: [
                                     { value: 'no', label: 'No tengo seguro' },
@@ -2521,7 +2836,7 @@
                             { name: 'aseguradora', kind: 'text', label: '¿Con qué compañía?', showIf: a => a.seguroActual === 'si', list: 'q-carriers-home', autocomplete: 'off', autocapitalize: 'words', placeholder: 'Ej. Citizens, Universal', sumHidden: true },
                             {
                                 name: 'renovacion', kind: 'select', label: '¿En qué mes se renueva?', showIf: a => a.seguroActual === 'si', placeholder: 'Elige el mes', sum: 'Renovación',
-                                options: MONTHS.map((m, i) => ({ value: String(i + 1), label: cap(m) })).concat({ value: 'nose', label: 'No sé' })
+                                options: MONTHS_ES.map((m, i) => ({ value: String(i + 1), label: cap(m) })).concat({ value: 'nose', label: 'No sé' })
                             }
                         ]
                     },
@@ -2547,7 +2862,7 @@
             [/sport utility|\bsuv\b/i, 'SUV'], [/crossover/i, 'Crossover'], [/pickup/i, 'Pickup'],
             [/minivan/i, 'Minivan'], [/hatchback/i, 'Hatchback'], [/wagon/i, 'Wagon'], [/\bvan\b/i, 'Van']
         ];
-        const titleCase = t => t.toLowerCase().replace(/(^|[\s-])\p{L}/gu, m => m.toUpperCase());
+        const titleCase = str => str.toLowerCase().replace(/(^|[\s-])\p{L}/gu, m => m.toUpperCase());
 
         // one vPIC result row -> our answer fields ('' when vPIC has nothing)
         function vinVehicle(row) {
@@ -2588,7 +2903,7 @@
         const VIN_LOOKUP = { seq: 0, last: '' };
         function setVinStatus(node, state, text) {
             node.className = 'q-vin-status' + (state ? ` is-${state}` : '');
-            node.textContent = text || '';
+            node.textContent = t(text) || '';
         }
         function lookupVin(vin, status) {
             if (check.vin(vin)) {                       // not 17 valid characters (yet)
@@ -2621,11 +2936,11 @@
                     const same = (x, y) => !x || !y || String(x).toLowerCase() === String(y).toLowerCase();
                     const a = q.a;
                     if (!same(a.anio, got.anio) || !same(a.marca, got.marca) || !same(a.modelo, got.modelo)) {
-                        setVinStatus(status, 'error', `Este VIN es de un ${car}, distinto al auto que elegiste. Revisa cuál es el correcto.`);
+                        setVinStatus(status, 'error', t('Este VIN es de un {car}, distinto al auto que elegiste. Revisa cuál es el correcto.', { car }));
                     } else {
                         setVinStatus(status, 'ok', filled.length
-                            ? `Encontramos tu ${car}. Completamos los datos que faltaban; revisa que estén bien.`
-                            : `VIN verificado: ${car}.`);
+                            ? t('Encontramos tu {car}. Completamos los datos que faltaban; revisa que estén bien.', { car })
+                            : t('VIN verificado: {car}.', { car }));
                     }
                 })
                 .catch(() => {
@@ -2832,7 +3147,7 @@
                     if (!v) return 'Elige cuándo quieres que empiece.';
                     const d = startDateOf(a);
                     if (!d) return 'Elige la fecha.';
-                    if (d < today() || d > addDays(today(), f.maxDays)) return `Elige una fecha entre hoy y los próximos ${f.maxDays} días.`;
+                    if (d < today() || d > addDays(today(), f.maxDays)) return t('Elige una fecha entre hoy y los próximos {days} días.', { days: f.maxDays });
                     return '';
                 }
                 case 'dob': {
@@ -2862,13 +3177,13 @@
             const v = a[f.name];
             switch (f.kind) {
                 case 'choice':
-                case 'select': { const o = optionOf(f, v); return o ? o.msg || o.label : ''; }
-                case 'multi': return (v || []).map(x => optionOf(f, x)).filter(Boolean).map(o => o.msg || o.label).join(', ');
-                case 'year': return v === 'unknown' ? f.unknown || 'No sé' : v || '';
+                case 'select': { const o = optionOf(f, v); return o ? t(o.msg || o.label) : ''; }
+                case 'multi': return (v || []).map(x => optionOf(f, x)).filter(Boolean).map(o => t(o.msg || o.label)).join(', ');
+                case 'year': return v === 'unknown' ? t(f.unknown || 'No sé') : v || '';
                 case 'startDate': {
                     if (fieldError(f, a)) return '';
                     const d = startDateOf(a);
-                    return (a.inicio === 'hoy' ? 'Hoy, ' : a.inicio === 'manana' ? 'Mañana, ' : '') + longDate(d);
+                    return a.inicio === 'hoy' ? t('Hoy, {date}', { date: longDate(d) }) : a.inicio === 'manana' ? t('Mañana, {date}', { date: longDate(d) }) : longDate(d);
                 }
                 case 'dob': return fieldError(f, a) ? '' : longDate(dobOf(a));
                 default: return fieldError(f, a) ? '' : (v || '').trim().replace(/\s+/g, ' ');
@@ -2879,7 +3194,7 @@
             visibleSteps().filter(s => s.section === secId).forEach(step => step.fields.forEach(f => {
                 if (f.sumHidden || !fieldShown(f, QF.a)) return;
                 const value = displayValue(f, QF.a);
-                if (value) rows.push({ key: f.name, label: f.sum || f.label, value, step: step.id, rank: f.rank || 50 });
+                if (value) rows.push({ key: f.name, label: LANG === 'en' && f.sum_en ? f.sum_en : t(f.sum || f.label), value, step: step.id, rank: f.rank || 50 });
             }));
             // a flow whose ZIP lives only in the pill still sends it (first section, first row)
             const spec = QF.spec;
@@ -2894,16 +3209,16 @@
         function composeMessage(mode) {        // mode: 'full' | 'partial' | 'intro'
             const { spec, a } = QF;
             const name = mode === 'intro' ? '' : displayValue(CONTACT_STEP.fields[0], a);
-            const lines = [`Hola Best National${name ? `, soy ${name}` : ''}. Quiero una cotización de *${spec.product(a)}*.`];
+            const lines = [t('Hola Best National{who}. Quiero una cotización de *{product}*.', { who: name ? t(', soy {name}', { name }) : '', product: t(spec.product(a)) })];
             if (mode !== 'intro') {
                 spec.sections.forEach(sec => {
                     const rows = sectionRows(sec.id).filter(r => r.key !== 'nombre');
-                    if (rows.length) lines.push('', `*${sec.msg}*`, ...rows.map(r => `• ${r.label}: ${r.value}`));
+                    if (rows.length) lines.push('', `*${t(sec.msg)}*`, ...rows.map(r => `• ${r.label}: ${r.value}`));
                 });
-                if (a.bundle && spec.bundle) lines.push('', spec.bundle.msg);
+                if (a.bundle && spec.bundle) lines.push('', t(spec.bundle.msg));
             }
-            if (mode === 'partial') lines.push('', 'No terminé el formulario; prefiero continuar por aquí.');
-            if (mode === 'intro') lines.push('', 'Prefiero hacer la cotización por aquí.');
+            if (mode === 'partial') lines.push('', t('No terminé el formulario; prefiero continuar por aquí.'));
+            if (mode === 'intro') lines.push('', t('Prefiero hacer la cotización por aquí.'));
             const via = sourceLine();
             if (via) lines.push('', via);
             return lines.join('\n');
@@ -2926,9 +3241,9 @@
             if (!s || !s.source) return '';
             const SOURCES = { instagram: 'Instagram', ig: 'Instagram', facebook: 'Facebook', fb: 'Facebook', whatsapp: 'WhatsApp', qr: 'Código QR', tiktok: 'TikTok', google: 'Google' };
             const MEDIUMS = { story: 'historia', stories: 'historia', highlight: 'destacada', bio: 'bio', post: 'publicación', reel: 'reel', card: 'tarjeta', flyer: 'volante' };
-            const src = SOURCES[s.source.toLowerCase()] || s.source;
-            const med = s.medium ? ` (${MEDIUMS[s.medium.toLowerCase()] || s.medium})` : '';
-            return `Vía: ${src}${med}${s.campaign ? ` · ${s.campaign}` : ''}`;
+            const src = t(SOURCES[s.source.toLowerCase()] || s.source);
+            const med = s.medium ? ` (${t(MEDIUMS[s.medium.toLowerCase()] || s.medium)})` : '';
+            return t('Vía: {source}', { source: `${src}${med}${s.campaign ? ` · ${s.campaign}` : ''}` });
         }
 
         // ---- navigation ----
@@ -3096,8 +3411,8 @@
             if (QF.ctl) { refreshStep(); QF.ctl.ready = true; }
             saveDraft();
             requestAnimationFrame(() => {
-                const t = document.getElementById('q-title');
-                if (t) t.focus({ preventScroll: true });
+                const titleNode = document.getElementById('q-title');
+                if (titleNode) titleNode.focus({ preventScroll: true });
             });
         }
 
@@ -3111,13 +3426,13 @@
             const idx = view === 'summary' ? total : step ? steps.indexOf(step) + 1 : 0;
             const sec = step ? QF.spec.sections.find(s => s.id === step.section) : null;
             const { els } = QF;
-            els.section.textContent = view === 'summary' ? 'Revisión' : view === 'done' ? 'Enviado' : sec ? sec.title : QF.spec.intro.eyebrow;
-            els.count.textContent = idx ? `Paso ${idx} de ${total}` : '';
+            els.section.textContent = t(view === 'summary' ? 'Revisión' : view === 'done' ? 'Enviado' : sec ? sec.title : QF.spec.intro.eyebrow);
+            els.count.textContent = idx ? t('Paso {n} de {total}', { n: idx, total }) : '';
             els.progress.hidden = !idx;
             els.fill.style.width = idx ? `${(idx / total) * 100}%` : '0';
             els.progress.setAttribute('aria-valuemax', String(total));
             els.progress.setAttribute('aria-valuenow', String(idx));
-            els.progress.setAttribute('aria-valuetext', idx ? `Paso ${idx} de ${total}` : '');
+            els.progress.setAttribute('aria-valuetext', idx ? t('Paso {n} de {total}', { n: idx, total }) : '');
             els.back.classList.toggle('is-hidden', view === 'intro');
         }
 
@@ -3157,9 +3472,9 @@
             });
             input.value = value || '';
             input.addEventListener('input', () => {
-                const t = input.value.replace(/\D/g, '').slice(0, 5);
-                if (t !== input.value) input.value = t;
-                onInput(t);
+                const digits = input.value.replace(/\D/g, '').slice(0, 5);
+                if (digits !== input.value) input.value = digits;
+                onInput(digits);
             });
             input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); onEnter(); } });
             const box = el('div', { class: 'q-zip-box' }, icon('locate'), input);
@@ -3188,7 +3503,7 @@
             if (!msg) return true;
             const z = QF.introZip;
             if (z) {
-                z.err.textContent = 'Escribe tu ZIP de 5 dígitos para empezar.';
+                z.err.textContent = t('Escribe tu ZIP de 5 dígitos para empezar.');
                 z.input.setAttribute('aria-invalid', 'true');
                 z.input.focus();
             }
@@ -3201,7 +3516,7 @@
             function show() {
                 const b = el('button', { type: 'button', class: 'q-zip-pill' },
                     icon('locate'), el('span', { class: 'q-zip-value', text: QF.a.zip }), icon('edit', { class: 'q-zip-edit' }));
-                b.setAttribute('aria-label', `ZIP ${QF.a.zip}. Toca para cambiarlo`);
+                b.setAttribute('aria-label', t('ZIP {zip}. Toca para cambiarlo', { zip: QF.a.zip }));
                 b.addEventListener('click', edit);
                 wrap.replaceChildren(b);
                 return b;
@@ -3230,8 +3545,8 @@
                     if (refocus) b.focus();
                 }
                 input.addEventListener('input', () => {
-                    const t = input.value.replace(/\D/g, '').slice(0, 5);
-                    if (t !== input.value) input.value = t;
+                    const digits = input.value.replace(/\D/g, '').slice(0, 5);
+                    if (digits !== input.value) input.value = digits;
                     box.classList.remove('is-invalid');
                 });
                 input.addEventListener('keydown', e => {
@@ -3352,7 +3667,7 @@
                 inflight = ctrl;
                 clearTimeout(slow);
                 slow = setTimeout(() => { if (my === seq) loading(); }, 350);
-                const t = setTimeout(() => ctrl.abort(), 5000);
+                const timeout = setTimeout(() => ctrl.abort(), 5000);
                 const url = `${ADDRESS_API}?q=${encodeURIComponent(query)}&limit=10&lang=en&lat=${ADDRESS_BIAS.lat}&lon=${ADDRESS_BIAS.lon}&bbox=${ADDRESS_BBOX}`;
                 fetch(url, { signal: ctrl.signal, credentials: 'omit', referrerPolicy: 'no-referrer' })
                     .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
@@ -3364,7 +3679,7 @@
                         render();
                     })
                     .catch(() => { if (my === seq) close(); })              // quietly a plain text box
-                    .finally(() => { clearTimeout(t); clearTimeout(slow); if (inflight === ctrl) inflight = null; });
+                    .finally(() => { clearTimeout(timeout); clearTimeout(slow); if (inflight === ctrl) inflight = null; });
             }
             input.addEventListener('input', () => {
                 clearTimeout(timer);
@@ -3389,7 +3704,7 @@
             const resumable = !QF.sent && hasProgress(QF.a, spec);
             const v = el('div', { class: 'q-view' });
             v.append(
-                el('div', { class: 'q-brand' }, brandMark(), el('span', { text: PAGE ? PAGE.name : '' })),
+                el('div', { class: 'q-brand' }, brandMark(), el('span', { text: PAGE ? PAGE.name : '' }), langToggle('is-in-flow')),
                 titleEl(spec.intro.title),
                 el('p', { class: 'q-meta' },
                     el('span', {}, icon('clock'), el('span', { text: 'Unos 2 minutos' })),
@@ -3398,7 +3713,7 @@
                 spec.intro.zip ? introZip() : null,
                 el('div', { class: 'q-have' },
                     el('p', { class: 'q-have-title', text: 'Ten esto a mano' }),
-                    el('ul', {}, ...spec.intro.have.map(t => el('li', {}, icon('checkCircle'), el('span', { text: t }))))));
+                    el('ul', {}, ...spec.intro.have.map(item => el('li', {}, icon('checkCircle'), el('span', { text: item }))))));
             if (resumable) v.appendChild(el('p', { class: 'q-note', text: 'Tienes una cotización sin terminar. Puedes seguir donde la dejaste.' }));
 
             const start = primaryButton(resumable ? 'Continuar donde lo dejaste' : 'Empezar');
@@ -3480,7 +3795,7 @@
             });
             const note = ctl.step.note ? ctl.step.note(QF.a) : '';
             const appeared = note && !ctl.note.textContent;
-            ctl.note.textContent = note;
+            ctl.note.textContent = t(note);
             if (appeared && ctl.ready) {
                 ctl.note.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
             }
@@ -3547,7 +3862,7 @@
             const err = el('p', { id: errId, class: 'q-error', 'aria-live': 'polite' });
             const r = { f, wrap, controls: [], errorShown: false, focusTarget: null };
             r.setError = msg => {
-                err.textContent = msg || '';
+                err.textContent = t(msg) || '';
                 r.errorShown = !!msg;
                 r.controls.forEach(c => (msg ? c.setAttribute('aria-invalid', 'true') : c.removeAttribute('aria-invalid')));
             };
@@ -3557,7 +3872,7 @@
             };
 
             if (!f.hideLabel) {
-                const kids = [document.createTextNode(f.label)];
+                const kids = [document.createTextNode(t(f.label))];
                 if (!f.required) kids.push(el('span', { class: 'opt', text: ' (opcional)' }));
                 const isFor = f.kind === 'text' || f.kind === 'select';
                 const label = el(isFor ? 'label' : 'span', { id: labelId, class: 'q-label', for: isFor ? id : null }, ...kids);
@@ -3578,8 +3893,8 @@
                     input.value = a[f.name] || '';
                     input.addEventListener('input', () => {
                         if (f.transform) {
-                            const t = f.transform(input.value);
-                            if (t !== input.value) input.value = t;
+                            const fixed = f.transform(input.value);
+                            if (fixed !== input.value) input.value = fixed;
                         }
                         a[f.name] = input.value;
                         onAnswer();
@@ -3673,7 +3988,7 @@
                             main = a[f.name] === 'unknown' ? f.unknown : a[f.name];
                         }
                         row.classList.toggle('is-set', !!main);
-                        value.textContent = main || f.placeholder;
+                        value.textContent = t(main || f.placeholder);
                         sub.textContent = under;
                     };
                     row.addEventListener('click', () => {
@@ -3688,16 +4003,16 @@
 
                 case 'startDate': {
                     if (!a[f.name]) a[f.name] = 'hoy';     // State Farm-style default: today
-                    const t = today();
+                    const day0 = today();
                     const opts = [
-                        { value: 'hoy', label: 'Hoy', desc: shortDate(t) },
-                        { value: 'manana', label: 'Mañana', desc: shortDate(addDays(t, 1)) },
+                        { value: 'hoy', label: 'Hoy', desc: shortDate(day0) },
+                        { value: 'manana', label: 'Mañana', desc: shortDate(addDays(day0, 1)) },
                         { value: 'fecha', label: 'Otra fecha', desc: 'Elegir' }
                     ];
                     const group = el('div', { class: 'q-options is-chips', role: 'radiogroup', 'aria-labelledby': labelledBy, 'aria-describedby': describedBy });
                     const dateInput = el('input', {
                         type: 'date', id: `${id}-date`, class: 'q-input',
-                        min: isoDate(t), max: isoDate(addDays(t, f.maxDays)), 'aria-describedby': errId
+                        min: isoDate(day0), max: isoDate(addDays(day0, f.maxDays)), 'aria-describedby': errId
                     });
                     dateInput.value = a.inicioFecha || '';
                     const dateField = el('div', { class: 'q-field' }, el('label', { class: 'q-label', for: dateInput.id, text: 'Elige la fecha' }), dateInput);
@@ -3726,7 +4041,7 @@
                     r.sync = () => {
                         dateField.hidden = a[f.name] !== 'fecha';
                         const d = startDateOf(a);
-                        line.textContent = d && !fieldError(f, a) ? `Tu seguro empezaría el ${WEEKDAYS[d.getDay()]} ${longDate(d)}.` : '';
+                        line.textContent = d && !fieldError(f, a) ? t('Tu seguro empezaría el {date}.', { date: `${WEEKDAYS[d.getDay()]}${LANG === 'en' ? ', ' : ' '}${longDate(d)}` }) : '';
                     };
                     wrap.append(group, dateField, line);
                     r.controls.push(group, dateInput);
@@ -3821,7 +4136,7 @@
         }
 
         function summaryRow(label, value, stepId, missing) {
-            const b = el('button', { type: 'button', class: 'q-row' + (missing ? ' is-missing' : ''), 'aria-label': `${label}: ${value}. Editar` },
+            const b = el('button', { type: 'button', class: 'q-row' + (missing ? ' is-missing' : ''), 'aria-label': t('{label}: {value}. Editar', { label, value }) },
                 el('span', { class: 'q-row-text' }, el('span', { class: 'q-row-label', text: label }), el('span', { class: 'q-row-value', text: value })));
             b.insertAdjacentHTML('beforeend', chevronSVG);
             b.addEventListener('click', () => go(stepId, { edit: 1 }));
@@ -3861,7 +4176,9 @@
                 open, home,
                 el('div', { class: 'q-recap' },
                     el('span', { class: 'q-recap-label', text: 'Cotización' }),
-                    el('span', { class: 'q-recap-value', text: cap(spec.product(a)) + (ctx ? ` · ${ctx.text}` : '') })));
+                    // product first, then the chip's details; a detail that repeats the product is dropped
+                    el('span', { class: 'q-recap-value', text: [cap(t(spec.product(a)))].concat(ctx ? ctx.text.split(' · ') : [])
+                        .filter((x, k, all) => x && all.findIndex(y => y.toLowerCase() === x.toLowerCase()) === k).join(' · ') })));
             return { node: v, foot: [] };
         }
 
@@ -3918,7 +4235,7 @@
                 const st = Object.assign({}, QF.st, { i: QF.st.i + 1, sheet: true });
                 try { history.pushState(st, ''); QF.st = st; pushed = true; } catch (_) { /* in-page only */ }
             }
-            Object.assign(api, { setView, close, isPushed: () => pushed, focusTitle: () => { const t = sheet.querySelector('#sheet-title'); if (t) t.focus({ preventScroll: true }); } });
+            Object.assign(api, { setView, close, isPushed: () => pushed, focusTitle: () => { const titleNode = sheet.querySelector('#sheet-title'); if (titleNode) titleNode.focus({ preventScroll: true }); } });
             activeSheet = api;
             return api;
         }
@@ -3938,7 +4255,7 @@
             (help.paras || []).forEach(p => box.appendChild(el('p', { text: p })));
             if (help.items) {
                 box.appendChild(el('ul', {}, ...help.items.map(([lead, text]) =>
-                    el('li', {}, lead ? el('strong', { text: `${lead} ` }) : null, document.createTextNode(text)))));
+                    el('li', {}, lead ? el('strong', { text: `${t(lead)} ` }) : null, document.createTextNode(t(text))))));
             }
             const ok = primaryButton('Entendido');
             ok.addEventListener('click', () => api.close());
@@ -3961,7 +4278,7 @@
             wrap.addEventListener('submit', e => {
                 e.preventDefault();
                 const vals = inputs.map(i => i.value.trim());
-                if (vals.some(v => !v)) { err.textContent = 'Completa los campos.'; inputs[vals.findIndex(v => !v)].focus(); return; }
+                if (vals.some(v => !v)) { err.textContent = t('Completa los campos.'); inputs[vals.findIndex(v => !v)].focus(); return; }
                 done(vals);
             });
             body.appendChild(wrap);
@@ -4074,10 +4391,10 @@
                         visual = el('span', { class: 'make-logo', 'aria-hidden': 'true' }, img);
                         img.addEventListener('error', () => visual.replaceWith(mark), { once: true });
                     }
-                    const t = el('button', { type: 'button', class: 'make-tile' }, visual, el('span', { text: make }));
-                    t.addEventListener('pointerdown', () => fetchModels(make, a.anio), { passive: true });
-                    t.addEventListener('click', () => modelsView(make));
-                    grid.appendChild(t);
+                    const tile = el('button', { type: 'button', class: 'make-tile' }, visual, el('span', { text: make }));
+                    tile.addEventListener('pointerdown', () => fetchModels(make, a.anio), { passive: true });
+                    tile.addEventListener('click', () => modelsView(make));
+                    grid.appendChild(tile);
                 });
                 const allLabel = el('p', { class: 'sheet-section', text: 'Todas las marcas' });
                 const list = el('ul', { class: 'sheet-list' });
@@ -4110,7 +4427,7 @@
                     empty.style.display = makes.length || hits.length ? 'none' : '';
                     popularLabel.style.display = grid.style.display = needle ? 'none' : '';
                     allLabel.style.display = makes.length || !needle ? '' : 'none';
-                    allLabel.textContent = needle ? 'Marcas' : 'Todas las marcas';
+                    allLabel.textContent = t(needle ? 'Marcas' : 'Todas las marcas');
                     modelsLabel.style.display = hits.length ? '' : 'none';
                 }
                 input.addEventListener('input', () => { renderList(input.value.trim()); body.scrollTop = 0; });
@@ -4125,7 +4442,7 @@
             function modelsView(make) {
                 const token = ++modelsToken;
                 const year = /^\d{4}$/.test(a.anio || '') ? a.anio : '';
-                const body = api.setView(`Modelos ${make}`, { back: makesView });
+                const body = api.setView(t('Modelos {make}', { make }), { back: makesView });
                 const builtIn = VEHICLES[make] || [];
                 if (!year) {                      // no year yet: the built-in list
                     renderModels(null, false);
@@ -4138,7 +4455,7 @@
 
                 const skeleton = el('ul', { class: 'sheet-skeleton', 'aria-hidden': 'true' },
                     ...[46, 62, 38, 54, 44, 58, 36].map(w => { const li = el('li'); li.style.setProperty('--w', `${w}%`); return li; }));
-                const loading = el('p', { class: 'sheet-section', role: 'status', text: `Buscando modelos ${year}…` });
+                const loading = el('p', { class: 'sheet-section', role: 'status', text: t('Buscando modelos {year}…', { year }) });
 
                 function renderModels(models, animate) {
                     const fromNhtsa = !!year;
@@ -4152,7 +4469,7 @@
                     const row = model => sheetRow(model, { selected: a.marca === make && a.modelo === model, onPick: () => finish(make, model) });
                     const other = () => sheetRow('Otro modelo', {
                         muted: true,
-                        onPick: () => otherView(api, `Otro modelo ${make}`, [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
+                        onPick: () => otherView(api, t('Otro modelo {make}', { make }), [{ name: 'modelo', label: 'Modelo', placeholder: 'Escribe el modelo' }],
                             () => modelsView(make), ([model]) => finish(make, model))
                     });
 
@@ -4160,7 +4477,7 @@
                     {                                     // always there, pinned while the list scrolls
                         const search = el('div', { class: 'sheet-search' });
                         search.innerHTML = ICON.search;
-                        input = el('input', { type: 'search', placeholder: `Buscar modelo ${make}`, 'aria-label': `Buscar modelo ${make}`, autocomplete: 'off', enterkeyhint: 'search' });
+                        input = el('input', { type: 'search', placeholder: t('Buscar modelo {make}', { make }), 'aria-label': t('Buscar modelo {make}', { make }), autocomplete: 'off', enterkeyhint: 'search' });
                         search.appendChild(input);
                         wrap.appendChild(search);
                     }
@@ -4175,8 +4492,8 @@
                         list.replaceChildren(...hits.map(row), other());
                         const showPop = !needle && popular.length;
                         popLabel.hidden = popList.hidden = !showPop;
-                        allLabel.replaceChildren(document.createTextNode(needle ? 'Resultados'
-                            : live ? `Todos los modelos ${year}` : showPop ? 'Todos los modelos' : 'Modelos'));
+                        allLabel.replaceChildren(document.createTextNode(needle ? t('Resultados')
+                            : live ? t('Todos los modelos {year}', { year }) : t(showPop ? 'Todos los modelos' : 'Modelos')));
                         if (!needle && live) allLabel.appendChild(el('span', { class: 'count', text: ` · ${all.length}` }));
                         empty.hidden = !!hits.length;
                     }
@@ -4223,6 +4540,10 @@
             document.getElementById('app-location-text').textContent = loc;
             if (!loc) document.getElementById('app-location').remove();
             renderSocial(config.social || {}, 'app-social');
+            const social = document.getElementById('app-social');
+            const right = el('div', { class: 'app-header-right' });
+            social.replaceWith(right);
+            right.append(langToggle(), social);
 
             // identity: logo if there is one, otherwise initials
             const avatar = document.getElementById('app-avatar');
@@ -4244,7 +4565,7 @@
                 img.src = logo;
             }
             document.getElementById('app-name').textContent = config.name;
-            document.getElementById('app-tagline').textContent = config.tagline || '';
+            document.getElementById('app-tagline').textContent = t(config.tagline || '');
 
             // buttons: type "primary" -> gradient CTA, anything else -> tappable box
             const slug = config.slug;
@@ -4285,11 +4606,14 @@
                 // "Cotiza tu Seguro de Auto" -> small "Cotiza tu seguro de" over a big "Auto"
                 const split = primary && /^(.+\sde)\s+(\S.*)$/i.exec(button.text || '');
                 if (split) {
-                    text.append(el('span', { class: 'app-cta-eyebrow', text: split[1].charAt(0) + split[1].slice(1).toLowerCase() }),
-                        el('span', { class: 'app-cta-main', text: split[2] }));
-                    text.setAttribute('aria-label', button.text + (button.hint ? ` (${button.hint})` : ''));
+                    const eyebrow = t(split[1].charAt(0) + split[1].slice(1).toLowerCase());
+                    const main = LANG === 'en' && button.en && button.en.label ? button.en.label : t(split[2]);
+                    const mainEl = el('span', { class: 'app-cta-main' });
+                    mainEl.textContent = main;           // already in the page language (e.g. "Auto" in English stays "Auto")
+                    text.append(el('span', { class: 'app-cta-eyebrow', text: eyebrow }), mainEl);
+                    text.setAttribute('aria-label', `${eyebrow} ${main}` + (button.hint ? ` (${t(button.hint)})` : ''));
                 } else if (primary) text.appendChild(el('span', { class: 'app-cta-main', text: button.text }));
-                else text.textContent = button.text;
+                else text.textContent = t(button.text);
                 if (primary && button.hint) text.appendChild(el('span', { class: 'app-cta-hint', text: button.hint }));
                 const textBox = primary ? text : el('span', { class: 'app-option-text' }, text);
                 a.appendChild(textBox);
@@ -4314,7 +4638,7 @@
             // hours: "Lun–Vie 9am–6:30pm · Sáb 10am–2pm" -> label/value rows
             const hours = (config.hours || '').split('·').map(s => s.trim()).filter(Boolean);
             if (hours.length) {
-                document.getElementById('app-hours-label').textContent = config.labels?.hours || 'Horario';
+                document.getElementById('app-hours-label').textContent = t(config.labels?.hours || 'Horario');
                 const rows = document.getElementById('app-hours');
                 hours.forEach(part => {
                     const cut = part.indexOf(' ');
@@ -4325,7 +4649,7 @@
                     const value = document.createElement('span');
                     value.className = 'app-row-value';
                     if (cut > 0) {
-                        label.textContent = part.slice(0, cut);
+                        label.textContent = t(part.slice(0, cut));
                         value.textContent = part.slice(cut + 1);
                     } else {
                         value.textContent = part;
@@ -4556,6 +4880,7 @@
             "buttons": [
                 {
                     "text": "Cotiza tu Seguro de Auto",
+                    "en": { "label": "Auto" },
                     "emoji": "🚙",
                     "icon": "/demos/icons/medal-auto.webp",
                     "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20auto",
@@ -4564,6 +4889,7 @@
                 },
                 {
                     "text": "Cotiza tu Seguro de Casa",
+                    "en": { "label": "Home" },
                     "emoji": "🏠",
                     "icon": "/demos/icons/medal-casa.webp",
                     "url": "https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n%20para%20mi%20casa",
@@ -4582,7 +4908,7 @@
                 {
                     "text": "Llámanos",
                     "emoji": "📞",
-                    "url": "tel:+13054047151",
+                    "url": "tel:+13054070139",
                     "type": "secondary"
                 },
                 {
