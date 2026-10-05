@@ -2,6 +2,10 @@
 
 [build]
   publish = "."
+  # Checks the pages before every deploy and stamps /version.json with the
+  # commit being deployed. If the check fails, the build fails and Netlify
+  # keeps the last good deploy live. See scripts/predeploy-check.js.
+  command = "node scripts/predeploy-check.js"
 
 # Redirects for dynamic pages
 # /p/anything -> /p/index.html (SPA style routing)
@@ -43,6 +47,12 @@
   for = "/data/*.json"
   [headers.values]
     Cache-Control = "public, max-age=60"
+
+# Which commit is live: never cache, so it always tells the truth.
+[[headers]]
+  for = "/version.json"
+  [headers.values]
+    Cache-Control = "no-store"
 
 # Client redesign concepts: shareable by link, but kept out of search results
 # so they never compete with the client's real site.
