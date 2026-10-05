@@ -1,0 +1,74 @@
+# Uptime monitor: opens the live client pages in a real browser every ~10
+# minutes and sends a Telegram message when one is down (and once when it's
+# back). See scripts/monitor.js.
+#
+# Setup (once): Settings -> Secrets and variables -> Actions -> New repository
+# secret: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.
+# Test: Actions -> Uptime monitor -> Run workflow -> tick "Send a test message".
+name: Uptime monitor
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # GitHub may start scheduled runs a few minutes late
+  workflow_dispatch:
+    inputs:
+      test_alert:
+        description: 'Send a test Telegram message'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: uptime-monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Uses the Google Chrome already installed on the runner: no browser download.
+      - name: Install Playwright
+        run: npm install --no-save --no-package-lock --no-audit --no-fund playwright@1.56.1
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+      # So the monitor can say "back up" once, after a run that failed.
+      - name: Previous result
+        id: prev
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          c=$(gh api "repos/${{ github.repository }}/actions/workflows/monitor.yml/runs?status=completed&per_page=1" --jq '.workflow_runs[0].conclusion // ""' || true)
+          echo "conclusion=$c" >> "$GITHUB_OUTPUT"
+
+      - name: Check the live pages
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PREV_CONCLUSION: ${{ steps.prev.outputs.conclusion }}
+          TEST_ALERT: ${{ inputs.test_alert }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          BROWSER_CHANNEL: chrome
+        run: node scripts/monitor.js
+
+      # Screenshots of anything that failed, kept 14 days on the run's page.
+      - name: Keep screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitor-screenshots
+          path: monitor-shots/
+          retention-days: 14
+          if-no-files-found: ignore

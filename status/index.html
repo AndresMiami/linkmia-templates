@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#1C1C1E">
+    <title>LinkMia Status</title>
+    <style>
+        :root {
+            --bg: #1C1C1E;
+            --panel: #2C2C2E;
+            --panel-2: #3A3A3C;
+            --text: #F2F2F7;
+            --muted: #A1A1A6;
+            --up: #32D74B;
+            --down: #FF453A;
+            --wait: #FFD60A;
+            --brand: linear-gradient(135deg, #FF9933, #FF5733);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; background: var(--bg); color: var(--text);
+            font: 15px/1.45 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        main { max-width: 960px; margin: 0 auto; padding: 20px 16px 48px; }
+        header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        h1 { font-size: 22px; margin: 0; flex: 1; }
+        h1 span { background: var(--brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 28px 0 10px; }
+        button {
+            font: inherit; font-weight: 600; color: #1C1C1E; background: var(--brand);
+            border: 0; border-radius: 999px; padding: 10px 18px; min-height: 44px; cursor: pointer;
+        }
+        button:disabled { opacity: .5; cursor: default; }
+        a { color: #FF9933; }
+
+        .banner {
+            margin-top: 16px; border-radius: 16px; padding: 16px 18px; display: flex; gap: 12px; align-items: center;
+            background: var(--panel); border-left: 6px solid var(--wait);
+        }
+        .banner.up { border-left-color: var(--up); }
+        .banner.down { border-left-color: var(--down); }
+        .banner strong { font-size: 18px; display: block; }
+        .banner small { color: var(--muted); }
+
+        .card { background: var(--panel); border-radius: 16px; padding: 14px 16px; }
+        .kv { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; }
+        .kv dt { color: var(--muted); }
+        .kv dd { margin: 0; overflow-wrap: anywhere; }
+
+        .history { display: flex; gap: 3px; align-items: flex-end; height: 34px; margin: 4px 0 8px; }
+        .history a { flex: 1; max-width: 18px; height: 100%; border-radius: 3px; background: var(--panel-2); display: block; }
+        .history a.ok { background: var(--up); }
+        .history a.bad { background: var(--down); }
+        .history a.run { background: var(--wait); }
+        .legend { color: var(--muted); font-size: 13px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        .tile { background: var(--panel); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 2px solid transparent; }
+        .tile.up { border-color: rgba(50, 215, 75, .35); }
+        .tile.down { border-color: var(--down); }
+        .tile-head { padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--wait); flex: none; margin-top: 5px; }
+        .up .dot { background: var(--up); }
+        .down .dot { background: var(--down); }
+        .tile-title { font-weight: 600; }
+        .tile-url { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+        .tile-verdict { font-size: 13px; margin-top: 2px; }
+        .down .tile-verdict { color: var(--down); font-weight: 600; }
+        .preview {
+            position: relative; height: 300px; background: #000; overflow: hidden; display: block;
+        }
+        .preview iframe {
+            position: absolute; top: 0; left: 50%; width: 390px; height: 760px; border: 0;
+            transform: translateX(-50%) scale(.395); transform-origin: top center; pointer-events: none;
+        }
+        .help { color: var(--muted); font-size: 14px; }
+        .help li { margin: 4px 0; }
+        @media (prefers-reduced-motion: no-preference) { .tile { transition: border-color .3s; } }
+    </style>
+</head>
+<body>
+<main>
+    <header>
+        <h1><span>LinkMia</span> status</h1>
+        <button id="recheck" type="button">Check again</button>
+    </header>
+
+    <div class="banner" id="banner" role="status" aria-live="polite">
+        <div><strong id="banner-title">Checking every page…</strong><small id="banner-sub">This takes a few seconds.</small></div>
+    </div>
+
+    <h2>What's live right now</h2>
+    <div class="card"><dl class="kv" id="version"><dt>Version</dt><dd>Loading…</dd></dl></div>
+
+    <h2>Automatic monitor (last runs, every ~10 min)</h2>
+    <div class="card">
+        <div class="history" id="history" aria-label="Recent monitor runs"></div>
+        <div class="legend" id="history-legend">Loading…</div>
+    </div>
+
+    <h2>Client pages, as a phone sees them</h2>
+    <div class="grid" id="grid"></div>
+
+    <h2>If something is red</h2>
+    <div class="card help">
+        <ol>
+            <li><b>Everything red, and the version above says "not found" or an old date:</b> Netlify is serving an old version. Netlify → linkmia-links → Deploys → open the newest <i>main</i> deploy → <b>Publish deploy</b>. If it says "Auto publishing is locked", unlock it.</li>
+            <li><b>Only one page red:</b> tap its picture to open it, and send a screenshot to Claude.</li>
+            <li><b>This status page won't load at all:</b> the whole site or the domain is down. Check <a href="https://www.netlifystatus.com/" target="_blank" rel="noopener">netlifystatus.com</a>.</li>
+        </ol>
+    </div>
+</main>
+
+<script>
+    const REPO = 'AndresMiami/linkmia-templates';
+    const TIMEOUT_MS = 15000;
+    const $ = id => document.getElementById(id);
+    const el = (tag, props = {}, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
+    const miami = d => new Date(d).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    function ago(d) {
+        const m = Math.round((Date.now() - new Date(d)) / 60000);
+        if (m < 1) return 'just now';
+        if (m < 60) return `${m} min ago`;
+        const h = Math.round(m / 60);
+        return h < 48 ? `${h} h ago` : `${Math.round(h / 24)} days ago`;
+    }
+
+    // ---- which commit Netlify is serving ----
+    async function loadVersion() {
+        const box = $('version');
+        try {
+            const r = await fetch('/version.json', { cache: 'no-store' });
+            if (!r.ok) throw new Error(`not found (HTTP ${r.status}) — Netlify may be serving an old version`);
+            const v = await r.json();
+            const commit = String(v.commit || '');
+            box.replaceChildren(
+                el('dt', { textContent: 'Commit' }),
+                el('dd', {}, commit.length > 7 ? el('a', { href: `https://github.com/${REPO}/commit/${commit}`, target: '_blank', rel: 'noopener', textContent: commit.slice(0, 7) }) : commit),
+                el('dt', { textContent: 'Deployed' }), el('dd', { textContent: v.builtAt ? `${miami(v.builtAt)} Miami (${ago(v.builtAt)})` : '—' }),
+                el('dt', { textContent: 'Branch' }), el('dd', { textContent: v.branch || '—' }),
+                el('dt', { textContent: 'Kind' }), el('dd', { textContent: v.context === 'production' ? 'production (the real site)' : v.context || '—' }),
+            );
+            return v.context === 'production' || location.hostname !== 'link.linkmia.com';
+        } catch (e) {
+            box.replaceChildren(el('dt', { textContent: 'Version' }), el('dd', { textContent: String(e.message), style: 'color: var(--down)' }));
+            return false;
+        }
+    }
+
+    // ---- the monitor's recent runs (public GitHub API) ----
+    async function loadHistory() {
+        const strip = $('history'), legend = $('history-legend');
+        try {
+            const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/monitor.yml/runs?per_page=36&exclude_pull_requests=true`, { headers: { Accept: 'application/vnd.github+json' } });
+            if (!r.ok) throw new Error(r.status === 404 ? 'No monitor runs yet.' : `GitHub answered ${r.status} (try again in a minute).`);
+            const runs = (await r.json()).workflow_runs || [];
+            if (!runs.length) throw new Error('No monitor runs yet.');
+            strip.replaceChildren(...runs.slice().reverse().map(run => {
+                const cls = run.status !== 'completed' ? 'run' : run.conclusion === 'success' ? 'ok' : run.conclusion === 'failure' ? 'bad' : '';
+                const label = `${miami(run.created_at)}: ${run.status !== 'completed' ? 'running' : run.conclusion}`;
+                return el('a', { className: cls, href: run.html_url, target: '_blank', rel: 'noopener', title: label, ariaLabel: label });
+            }));
+            const fails = runs.filter(r => r.conclusion === 'failure').length;
+            legend.replaceChildren(
+                `Green = all pages up, red = something was down. ${fails ? `${fails} of the last ${runs.length} runs found a problem.` : `All of the last ${runs.length} runs passed.`} Last run ${ago(runs[0].created_at)}. `,
+                el('a', { href: `https://github.com/${REPO}/actions/workflows/monitor.yml`, target: '_blank', rel: 'noopener', textContent: 'All runs →' }));
+        } catch (e) {
+            strip.replaceChildren();
+            legend.textContent = e.message;
+        }
+    }
+
+    // ---- every client page, loaded in a mini phone ----
+    async function targets() {
+        const list = [];
+        try {
+            const r = await fetch('/data/pages.json', { cache: 'no-store' });
+            const pages = (await r.json()).pages.filter(p => p.isActive !== false);
+            for (const p of pages) {
+                const url = p.type === 'custom' && p.url ? p.url : `/p/${p.slug}`;
+                list.push({ title: p.name, url, expect: url });
+                if (url === '/bnseguros') list.push({ title: `${p.name} (backup link)`, url: '/demos/bnseguros.html', expect: '/demos/bnseguros.html' });
+                if (p.shortCode) list.push({ title: `${p.name} (short link)`, url: `/s/${p.shortCode}`, expect: url });
+            }
+        } catch (e) {
+            list.push({ title: 'Page list (pages.json)', url: '/data/pages.json', broken: 'pages.json could not be read — every /p/ and /s/ link is down' });
+        }
+        return list;
+    }
+
+    // What a working page looks like, by kind of page.
+    function inspect(doc, t) {
+        const err = doc.getElementById('error-state') || doc.getElementById('error');
+        const errVisible = err && !err.classList.contains('hidden') && getComputedStyle(err).display !== 'none';
+        if (errVisible) return { done: true, ok: false, why: 'shows "Not Found" instead of the page' };
+        const body = (doc.body && doc.body.innerText) || '';
+        if (/Looks like you.ve followed a broken link|Page not found/i.test(doc.title + ' ' + body.slice(0, 300)) && !doc.querySelector('.app-cta, #restaurant-name, #card-restaurant-name'))
+            return { done: true, ok: false, why: 'Netlify 404: this file is not in the live version' };
+        const path = doc.location.pathname.replace(/\/$/, '') || '/';
+        const expect = t.expect.replace(/\/$/, '') || '/';
+        if (path !== expect) return { done: false };
+        if (doc.querySelector('.app-cta')) return { done: true, ok: doc.querySelectorAll('.app-cta').length >= 3, why: 'quote buttons missing' };
+        const name = doc.getElementById('restaurant-name') || doc.getElementById('card-restaurant-name');
+        if (name) return name.textContent.trim() ? { done: true, ok: true } : { done: false };
+        if (body.trim().length > 40 && !doc.getElementById('loading')) return { done: true, ok: true };
+        return { done: false };
+    }
+
+    function checkTile(t) {
+        const verdict = el('div', { className: 'tile-verdict', textContent: 'Checking…' });
+        const frame = el('iframe', { title: `Preview of ${t.title}`, loading: 'eager', tabIndex: -1 });
+        const tile = el('article', { className: 'tile' },
+            el('div', { className: 'tile-head' }, el('span', { className: 'dot', ariaHidden: 'true' }),
+                el('div', {}, el('div', { className: 'tile-title', textContent: t.title }), el('div', { className: 'tile-url', textContent: t.url }), verdict)),
+            el('a', { className: 'preview', href: t.url, target: '_blank', rel: 'noopener', ariaLabel: `Open ${t.title}` }, frame));
+        $('grid').append(tile);
+        const set = (ok, text) => { tile.classList.remove('up', 'down'); tile.classList.add(ok ? 'up' : 'down'); verdict.textContent = text; return ok; };
+        if (t.broken) { frame.remove(); return Promise.resolve(set(false, t.broken)); }
+        // Short links always jump to link.linkmia.com, which a preview copy can't look inside.
+        if (t.url.startsWith('/s/') && location.hostname !== 'link.linkmia.com') {
+            frame.remove(); tile.classList.add('up'); verdict.textContent = 'Not checked here (short links open the live site)'; return Promise.resolve(true);
+        }
+
+        return fetch(t.url, { cache: 'no-store' }).then(r => r.status, () => 0).then(status => new Promise(resolve => {
+            if (status !== 200) { frame.src = t.url; return resolve(set(false, status ? `DOWN · HTTP ${status}: this page is not in the live version` : 'DOWN · no answer from the server')); }
+            const started = performance.now();
+            let finished = false;
+            const finish = (ok, text) => { if (finished) return; finished = true; clearInterval(poll); clearTimeout(timer); resolve(set(ok, text)); };
+            const poll = setInterval(() => {
+                let doc; try { doc = frame.contentDocument; } catch (_) { return; }
+                if (!doc || doc.readyState === 'loading' || doc.location.href === 'about:blank') return;
+                const r = inspect(doc, t);
+                if (r.done) finish(r.ok, r.ok ? `Up · loaded in ${((performance.now() - started) / 1000).toFixed(1)}s` : `DOWN · ${r.why}`);
+            }, 300);
+            const timer = setTimeout(() => finish(false, `DOWN · did not finish loading in ${TIMEOUT_MS / 1000}s`), TIMEOUT_MS);
+            frame.src = t.url + (t.url.includes('?') ? '&' : '?') + 'status-check=' + Date.now();
+        }));
+    }
+
+    async function run() {
+        const btn = $('recheck');
+        btn.disabled = true;
+        $('grid').replaceChildren();
+        $('banner').className = 'banner';
+        $('banner-title').textContent = 'Checking every page…';
+        $('banner-sub').textContent = 'This takes a few seconds.';
+        loadHistory();
+        const [versionOk, list] = await Promise.all([loadVersion(), targets()]);
+        const results = [];
+        for (let i = 0; i < list.length; i += 3) results.push(...await Promise.all(list.slice(i, i + 3).map(checkTile)));
+        const down = results.filter(ok => !ok).length + (versionOk ? 0 : 1);
+        $('banner').className = 'banner ' + (down ? 'down' : 'up');
+        $('banner-title').textContent = down ? `${down} problem${down > 1 ? 's' : ''} found` : 'All client pages are up';
+        $('banner-sub').textContent = `Checked ${miami(Date.now())} Miami time from this phone.`;
+        btn.disabled = false;
+    }
+
+    $('recheck').addEventListener('click', run);
+    run();
+</script>
+</body>
+</html>

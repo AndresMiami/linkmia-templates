@@ -37,7 +37,9 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "DENY"
+    # SAMEORIGIN (not DENY) so /status/ can show live previews of our own
+    # pages; other sites still can't frame them.
+    X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
@@ -52,6 +54,13 @@
 [[headers]]
   for = "/version.json"
   [headers.values]
+    Cache-Control = "no-store"
+
+# Status page: for us, not for search engines; always fresh.
+[[headers]]
+  for = "/status/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "no-store"
 
 # Client redesign concepts: shareable by link, but kept out of search results
