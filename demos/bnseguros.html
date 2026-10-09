@@ -5,10 +5,13 @@
     <!-- DEMO / mock for client review: standalone copy of p/index.html. Not indexed. -->
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="page-title">LinkMia</title>
+    <!-- Everything in <head> and the loading/noscript blocks below is what tools
+         that don't run JavaScript (link previews, curl, AI fetchers) see, so it
+         names the business and never reads as an error page. JS refines it on render. -->
+    <title id="page-title">Best National Insurance · Cotiza tu seguro</title>
 
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" id="theme-color" content="#FF6B35">
+    <meta name="theme-color" id="theme-color" content="#1b2150">
     <meta name="mobile-web-app-capable" content="yes">
 
     <!-- iOS Meta Tags -->
@@ -16,10 +19,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- SEO & Social -->
-    <meta name="description" id="page-description" content="Connect with us">
-    <meta property="og:title" id="og-title" content="LinkMia">
-    <meta property="og:description" id="og-description" content="Connect with us">
-    <meta property="og:image" id="og-image" content="">
+    <meta name="description" id="page-description" content="Cotiza tu seguro de auto, casa, salud, Medicare y vida con Best National Insurance en Miami. Por WhatsApp, en minutos.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://link.linkmia.com/bnseguros">
+    <meta property="og:title" id="og-title" content="Best National Insurance">
+    <meta property="og:description" id="og-description" content="Cotiza tu seguro de auto, casa y salud por WhatsApp, en minutos.">
+    <meta property="og:image" id="og-image" content="https://link.linkmia.com/demos/bnseguros-logo-3d.webp">
+    <meta name="twitter:card" content="summary">
+
+    <!-- Without JavaScript the loading screen would cover the page forever. -->
+    <noscript><style>#loading { display: none !important; }</style></noscript>
 
     <style>
         * {
@@ -354,17 +363,22 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--background-color);
+            background: #1b2150;   /* Best National navy, before JS applies the theme */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 9999;
+            padding: 0 16px;
+            text-align: center;
         }
 
+        .loading-name { font-size: 1.15rem; font-weight: 700; color: #fff; }
+        .loading-text { margin-top: 4px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.72); }
+
         .loading-spinner {
-            border: 3px solid #333;
-            border-top: 3px solid var(--primary-color);
+            border: 3px solid rgba(255, 255, 255, 0.18);
+            border-top: 3px solid #ffd200;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -377,25 +391,54 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Error State */
-        .error-state {
+        /* If the page fails to draw (showError) or JavaScript is off (noscript):
+           a self-contained contact card, so the visitor can still reach Best
+           National. Plain colors, no theme variables: nothing else may have run. */
+        .error-state,
+        .noscript-card {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            overflow-y: auto;
+            background: #1b2150;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 32px 16px;
             text-align: center;
-            padding: 60px 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        .error-state h1 {
-            font-size: 1.5rem;
-            margin-bottom: 12px;
-        }
+        .error-state h1,
+        .noscript-card h1 { font-size: 1.4rem; font-weight: 700; }
 
-        .error-state p {
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
+        .error-state p,
+        .noscript-card p { max-width: 340px; color: rgba(255, 255, 255, 0.8); line-height: 1.45; }
 
-        .error-state a {
-            color: var(--primary-color);
+        .fallback-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: min(320px, 100%);
+            min-height: 52px;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
             text-decoration: none;
+        }
+
+        .fallback-btn.is-wa { background: #25D366; color: #0b2414; }
+        .fallback-btn.is-call { background: #ffd200; color: #1b2150; }
+
+        .fallback-retry {
+            margin-top: 4px;
+            padding: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.95rem;
+            text-decoration: underline;
         }
 
         .hidden {
@@ -1561,15 +1604,24 @@
 </head>
 <body>
     <div class="loading" id="loading">
-        <div class="loading-spinner"></div>
-        <p>Loading...</p>
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <p class="loading-name">Best National Insurance</p>
+        <p class="loading-text">Cotiza tu seguro de auto, casa y salud</p>
     </div>
 
-    <div id="error-state" class="error-state hidden">
-        <h1>Page Not Found</h1>
-        <p>This link page doesn't exist or has been removed.</p>
-        <a href="https://link.linkmia.com">Go to LinkMia</a>
-    </div>
+    <!-- Same phone as the Llámanos button in DEMO_PAGE (tests/fallback.test.js keeps them in sync). -->
+    <noscript>
+        <div class="noscript-card">
+            <h1>Best National Insurance</h1>
+            <p>Cotiza tu seguro de auto, casa, salud, Medicare y vida. Escríbenos por WhatsApp o llámanos.</p>
+            <a class="fallback-btn is-wa" href="https://wa.me/13054070139?text=Hola%20Best%20National%2C%20quiero%20una%20cotizaci%C3%B3n">WhatsApp</a>
+            <a class="fallback-btn is-call" href="tel:+13054070139">Llamar (305) 407-0139</a>
+        </div>
+    </noscript>
+
+    <!-- Filled in by showError() only if the page fails to draw. Empty on
+         purpose: static text here is what non-JS readers would report. -->
+    <div id="error-state" class="error-state hidden" role="alert"></div>
 
     <!-- Minimal & Hero Layout -->
     <div id="content-default" class="hidden">
@@ -4835,9 +4887,35 @@
             });
         }
 
+        // If the page fails to draw, the visitor still gets Best National's
+        // WhatsApp and phone, never a dead end. Built here with plain
+        // DOM calls (none of the page's helpers, which may be what failed), and
+        // not in the HTML, so tools that skip JavaScript never read it as an error.
+        // Same numbers as the Llámanos button in DEMO_PAGE (tests/fallback.test.js).
+        const FALLBACK_CONTACT = { whatsapp: '13054070139', phone: '+13054070139', phoneLabel: '(305) 407-0139' };
+
         function showError() {
+            const box = document.getElementById('error-state');
+            try {
+                const en = document.documentElement.lang === 'en';
+                const C = FALLBACK_CONTACT;
+                const node = (tag, props) => Object.assign(document.createElement(tag), props);
+                const greeting = en ? 'Hi Best National, I would like an insurance quote' : 'Hola Best National, quiero una cotización';
+                box.replaceChildren(
+                    node('h1', { textContent: 'Best National Insurance' }),
+                    node('p', { textContent: en
+                        ? "We're having trouble showing the quote form. Message us on WhatsApp or call us and we'll help you right away."
+                        : 'Estamos teniendo un problema para mostrar el cotizador. Escríbenos por WhatsApp o llámanos y te atendemos enseguida.' }),
+                    node('a', { className: 'fallback-btn is-wa', href: `https://wa.me/${C.whatsapp}?text=${encodeURIComponent(greeting)}`,
+                        textContent: en ? 'Message on WhatsApp' : 'Escribir por WhatsApp' }),
+                    node('a', { className: 'fallback-btn is-call', href: `tel:${C.phone}`, textContent: `${en ? 'Call' : 'Llamar'} ${C.phoneLabel}` }),
+                    // Reload without the saved quote position, in case that is what failed.
+                    node('a', { className: 'fallback-retry', href: location.pathname + location.search,
+                        textContent: en ? 'Try again' : 'Volver a intentar',
+                        onclick: e => { e.preventDefault(); location.replace(location.pathname + location.search); } }));
+            } catch (_) { /* show whatever could be built */ }
             document.getElementById('loading').style.display = 'none';
-            document.getElementById('error-state').classList.remove('hidden');
+            box.classList.remove('hidden');
         }
 
         // ============================================
