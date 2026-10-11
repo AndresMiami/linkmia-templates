@@ -519,13 +519,18 @@ function wa(text) {
   var go = document.getElementById('claim-go');
   var hint = document.getElementById('claim-hint');
   var hintText = hint.textContent;
+  // "Café Luna & Bar" -> "cafe-luna-bar": accents become plain letters (é -> e, ñ -> n)
+  // instead of disappearing. A trailing dash stays so the next word can still be typed.
   function clean(v) {
-    return String(v || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').slice(0, 40);
+    return String(v || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+      .replace(/-{2,}/g, '-').replace(/^-/, '').slice(0, 40);
   }
   function refresh() {
     var v = clean(input.value);
     if (input.value !== v) input.value = v;
-    go.href = wa(v ? TEXT.claim + v : TEXT.start);
+    var slug = v.replace(/-+$/, '');   // the link never ends in a dash
+    go.href = wa(slug ? TEXT.claim + slug : TEXT.start);
     hint.textContent = hintText;
     hint.classList.remove('error');
   }
