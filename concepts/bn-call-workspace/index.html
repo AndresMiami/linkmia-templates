@@ -30,7 +30,10 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+/* --demo-h is the demo bar's real height, measured by the script (it wraps to
+   more rows on narrow screens). The page reserves that much space so nothing
+   can end up underneath the bar, and scrolling to an element stops above it. */
+html { -webkit-text-size-adjust: 100%; scroll-padding-bottom: calc(var(--demo-h, 210px) + 16px); }
 body {
   margin: 0;
   background: var(--bg);
@@ -39,7 +42,7 @@ body {
   font-size: 16px;
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: calc(170px + env(safe-area-inset-bottom, 0px)); /* room for the demo bar */
+  padding-bottom: calc(var(--demo-h, 210px) + 16px);
 }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
@@ -166,6 +169,11 @@ button { font: inherit; color: inherit; }
   border-radius: 14px; background: #000; color: #E5E5EA;
   font: 13.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
   white-space: pre-wrap; overflow-wrap: anywhere;
+}
+/* On shorter screens the prompt box shrinks (it scrolls inside) so the whole
+   panel, Copy button included, fits above the demo bar. */
+@supports (height: 100svh) {
+  .prompt { max-height: clamp(120px, calc(100svh - var(--demo-h, 210px) - 320px), 340px); }
 }
 .row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .btn {
@@ -491,7 +499,9 @@ button { font: inherit; color: inherit; }
   var rank = function (s) { return STATUSES.indexOf(s); };
 
   function renderBadge(r) {
-    var b = BADGE[r.status];
+    // "Draft ready" waits for the draft to finish appearing, the same moment
+    // Approve turns on, so the badge and the button always agree.
+    var b = r.status === 'draft_ready' && !ui.draftRevealDone ? ['Preparing draft…', 'work'] : BADGE[r.status];
     $('status-text').textContent = b[0];
     $('status-badge').setAttribute('data-tone', b[1]);
   }
@@ -582,11 +592,14 @@ button { font: inherit; color: inherit; }
     }
     tasks.replaceChildren.apply(tasks, parts);
 
-    // The Approve button lights up once the whole draft is on screen.
+    // The badge flips to "Draft ready" and Approve lights up together, once the
+    // whole draft is on screen (straight away when animations are turned off).
     var shownFor = r.draft;
-    later(Math.round((t + 0.45) * 1000), function () {
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    later(still ? 0 : Math.round((t + 0.45) * 1000), function () {
       if (ui.draftShownFor !== shownFor) return;
       ui.draftRevealDone = true;
+      renderBadge(record);
       renderApprove(record);
     });
   }
@@ -641,8 +654,14 @@ button { font: inherit; color: inherit; }
       console.log('[Live Call Workspace] API mode — Agency Compass not connected yet. Draft:', JSON.parse(JSON.stringify(record)));
     }
     renderApprove(record);
+    // Bring the panel into view above the demo bar: all of it when it fits,
+    // otherwise down to its buttons, since Copy is what comes next.
     var panel = record.mode === 'demo' ? $('handoff') : $('api-stub');
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    var r = panel.getBoundingClientRect();
+    var floor = demoBar.getBoundingClientRect().top - 16;
+    var actions = panel.querySelector('.row') || panel;
+    var dy = r.height <= floor - 16 ? r.bottom - floor : actions.getBoundingClientRect().bottom - floor;
+    if (dy > 0) window.scrollBy({ top: dy, behavior: 'smooth' });
   }
 
   function copyText(text) {
@@ -690,6 +709,15 @@ button { font: inherit; color: inherit; }
     var target = document.querySelector('.mode [data-mode="' + next + '"]');
     target.click(); target.focus();
   });
+
+  // Keep the page's bottom padding equal to the demo bar's height (see --demo-h).
+  var demoBar = document.querySelector('.demo-bar');
+  function syncDemoBarSpace() {
+    document.documentElement.style.setProperty('--demo-h', demoBar.offsetHeight + 'px');
+  }
+  syncDemoBarSpace();
+  if (window.ResizeObserver) new ResizeObserver(syncDemoBarSpace).observe(demoBar);
+  window.addEventListener('resize', syncDemoBarSpace);
 
   $('d-incoming').addEventListener('click', mock.incoming);
   $('d-answer').addEventListener('click', mock.answer);
