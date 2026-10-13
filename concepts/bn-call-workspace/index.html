@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0A0A0B">
+<title>Live Call Workspace · Best National</title>
+<style>
+/* Live Call Workspace — frontend-only prototype. No network calls: a mock
+   pipeline (bottom of the script) produces the same call-record shape the
+   real backend will send later. */
+:root {
+  --bg: #0A0A0B;
+  --card: #1C1C1E;
+  --card-2: #2C2C2E;
+  --line: #3A3A3C;
+  --text: #F5F5F7;
+  --muted: #A1A1A6;
+  --faint: #8E8E93;
+  --green: #32D74B;
+  --green-ink: #062B10;
+  --green-soft: rgba(50, 215, 75, 0.14);
+  --amber: #FFB340;
+  --amber-ink: #2E1C00;
+  --amber-soft: rgba(255, 179, 64, 0.14);
+  --radius: 20px;
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+/* --demo-h is the demo bar's real height, measured by the script (it wraps to
+   more rows on narrow screens). The page reserves that much space so nothing
+   can end up underneath the bar, and scrolling to an element stops above it. */
+html { -webkit-text-size-adjust: 100%; scroll-padding-bottom: calc(var(--demo-h, 210px) + 16px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: calc(var(--demo-h, 210px) + 16px);
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+.app { max-width: 1080px; margin: 0 auto; padding: max(16px, env(safe-area-inset-top, 0px)) 16px 24px; }
+
+/* ---------- Header ---------- */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 4px 0 16px; }
+.title { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.title span { color: var(--muted); font-weight: 600; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 34px; padding: 0 14px; border-radius: 999px;
+  font-size: 14px; font-weight: 700; white-space: nowrap;
+  background: var(--card-2); color: var(--muted);
+}
+.badge .dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; flex: none; }
+.badge[data-tone="live"] { background: var(--green-soft); color: var(--green); }
+.badge[data-tone="live"] .dot { animation: pulse 1.4s ease-out infinite; }
+.badge[data-tone="work"] { background: var(--amber-soft); color: var(--amber); }
+.badge[data-tone="work"] .dot { animation: blink 1s ease-in-out infinite; }
+.badge[data-tone="ready"] { background: var(--green); color: var(--green-ink); }
+.badge[data-tone="ready"] .dot { background: var(--green-ink); }
+.badge[data-tone="saved"] { background: var(--green); color: var(--green-ink); }
+.badge .check { display: none; }
+.badge[data-tone="saved"] .dot { display: none; }
+.badge[data-tone="saved"] .check { display: inline; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(50, 215, 75, 0.7); }
+  100% { box-shadow: 0 0 0 10px rgba(50, 215, 75, 0); }
+}
+@keyframes blink { 50% { opacity: 0.35; } }
+
+/* ---------- Mode toggle ---------- */
+.mode { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin-bottom: 16px; border-radius: 16px; background: var(--card); }
+.mode button {
+  min-height: 48px; padding: 6px 10px; border: 0; border-radius: 12px;
+  background: transparent; color: var(--muted);
+  font-size: 15px; font-weight: 600; cursor: pointer; line-height: 1.2;
+}
+.mode button[aria-checked="true"] { background: var(--text); color: #000; }
+.mode button:not([aria-checked="true"]):hover { background: var(--card-2); color: var(--text); }
+
+/* ---------- Cards ---------- */
+.grid { display: grid; gap: 14px; }
+.card { background: var(--card); border-radius: var(--radius); padding: 18px; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.card-title { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; min-height: 26px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.pill.amber { background: var(--amber-soft); color: var(--amber); }
+.empty { margin: 0; color: var(--faint); font-size: 15px; }
+
+/* Live conversation */
+.quote { margin: 0; font-size: 21px; line-height: 1.35; font-weight: 600; }
+.quote::before { content: "“"; color: var(--faint); }
+.quote::after { content: "”"; color: var(--faint); }
+.interp { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+.interp strong { color: var(--text); font-weight: 600; }
+.listening { display: flex; align-items: center; gap: 12px; color: var(--muted); }
+.wave { display: inline-flex; align-items: center; gap: 3px; height: 22px; }
+.wave i { display: block; width: 4px; height: 8px; border-radius: 2px; background: var(--green); animation: wave 1s ease-in-out infinite; }
+.wave i:nth-child(2) { animation-delay: 0.15s; }
+.wave i:nth-child(3) { animation-delay: 0.3s; }
+.wave i:nth-child(4) { animation-delay: 0.45s; }
+.wave i:nth-child(5) { animation-delay: 0.6s; }
+@keyframes wave { 50% { height: 22px; } }
+
+/* CRM fields */
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { padding: 12px 14px; border-radius: 14px; background: var(--card-2); min-width: 0; }
+.field.wide { grid-column: 1 / -1; }
+.field-label { margin: 0 0 4px; font-size: 13px; color: var(--muted); }
+.field-value { margin: 0; min-height: 26px; font-size: 18px; font-weight: 650; overflow-wrap: anywhere; }
+.field-status { margin: 6px 0 0; font-size: 13px; font-weight: 600; min-height: 18px; }
+.field-status.ok { color: var(--green); }
+.field-status.warn { color: var(--amber); }
+.field-status.wait { color: var(--faint); font-weight: 500; }
+
+/* Skeleton placeholders while the pipeline works */
+.skel { display: block; height: 14px; border-radius: 7px; background: linear-gradient(90deg, #2C2C2E 0%, #3A3A3C 50%, #2C2C2E 100%); background-size: 200% 100%; animation: shimmer 1.3s linear infinite; }
+.skel + .skel { margin-top: 10px; }
+.skel.w60 { width: 60%; } .skel.w80 { width: 80%; } .skel.w40 { width: 40%; }
+.field .skel { height: 20px; margin-top: 3px; width: 70%; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* Notes + tasks */
+.notes { margin: 0; font-size: 16px; line-height: 1.55; }
+.tasks, .verify { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tasks label { display: flex; align-items: flex-start; gap: 12px; min-height: 48px; padding: 12px 14px; border-radius: 14px; background: var(--card-2); cursor: pointer; }
+.tasks input { flex: none; width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--green); cursor: pointer; }
+.tasks input:checked + span { color: var(--muted); text-decoration: line-through; }
+.sub-title { margin: 18px 0 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--amber); }
+.verify li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: 14px; background: var(--amber-soft); color: #FFD8A0; font-size: 15px; }
+.verify li::before { content: "!"; flex: none; display: grid; place-items: center; width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; background: var(--amber); color: var(--amber-ink); font-size: 13px; font-weight: 800; }
+
+/* Items fade in one after another, so the panel never fills all at once */
+.reveal { opacity: 0; transform: translateY(6px); animation: reveal 0.45s ease-out forwards; animation-delay: var(--d, 0s); }
+@keyframes reveal { to { opacity: 1; transform: none; } }
+
+/* ---------- Approve ---------- */
+.approve-wrap { margin-top: 16px; }
+.approve {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; min-height: 64px; padding: 0 20px; border: 0; border-radius: 18px;
+  font-size: 19px; font-weight: 800; letter-spacing: 0.01em; cursor: pointer;
+  background: var(--green); color: var(--green-ink);
+  box-shadow: 0 10px 30px rgba(50, 215, 75, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.approve:not(:disabled):active { transform: scale(0.98); }
+.approve:disabled { background: #2C2C2E; color: #6E6E73; box-shadow: none; cursor: not-allowed; }
+.approve.done { background: var(--card-2); color: var(--green); box-shadow: none; }
+.approve-hint { margin: 10px 2px 0; text-align: center; color: var(--faint); font-size: 14px; }
+
+/* ---------- Handoff (demo) + API stub ---------- */
+.handoff { margin-top: 14px; border: 1px solid #2F5A37; }
+.handoff h2, .stub h2 { margin: 0; font-size: 18px; }
+.handoff .instr { margin: 6px 0 14px; color: var(--muted); }
+.handoff .instr strong { color: var(--text); }
+.prompt {
+  margin: 0; max-height: 340px; overflow: auto; padding: 14px;
+  border-radius: 14px; background: #000; color: #E5E5EA;
+  font: 13.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+/* On shorter screens the prompt box shrinks (it scrolls inside) so the whole
+   panel, Copy button included, fits above the demo bar. */
+@supports (height: 100svh) {
+  .prompt { max-height: clamp(120px, calc(100svh - var(--demo-h, 210px) - 320px), 340px); }
+}
+.row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 50px; padding: 0 20px; border: 0; border-radius: 14px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.btn.primary { background: var(--text); color: #000; flex: 1 1 200px; }
+.btn.primary.copied { background: var(--green); color: var(--green-ink); }
+.btn.ghost { background: var(--card-2); color: var(--text); flex: 1 1 200px; }
+.stub { margin-top: 14px; border: 1px dashed var(--line); }
+.stub p { margin: 8px 0 0; color: var(--muted); }
+
+/* ---------- Demo controls ---------- */
+.demo-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(0, 0, 0, 0.94); border-top: 2px dashed #5A4310;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.demo-inner { max-width: 1080px; margin: 0 auto; }
+.demo-label { margin: 0 0 8px; font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: var(--amber); }
+.demo-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.demo-btns button {
+  flex: none; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--card); color: var(--text); font-size: 14px; font-weight: 650; cursor: pointer; white-space: nowrap;
+}
+.demo-btns button:hover:not(:disabled) { background: var(--card-2); }
+.demo-btns button:disabled { opacity: 0.4; cursor: not-allowed; }
+.demo-btns .play { background: var(--amber); border-color: var(--amber); color: var(--amber-ink); }
+
+/* ---------- Wider screens ---------- */
+@media (min-width: 900px) {
+  .app { padding-top: 28px; }
+  .title { font-size: 24px; }
+  .mode { max-width: 520px; }
+  .grid { grid-template-columns: 1fr 1fr; align-items: start; }
+  .col { display: grid; gap: 14px; }
+  .approve-wrap, .panels { max-width: 1080px; }
+}
+@media (max-width: 899px) { .col { display: contents; } }
+@media (max-width: 380px) { .fields { grid-template-columns: 1fr; } .mode button { font-size: 14px; } }
+@media (prefers-reduced-motion: reduce) {
+  .badge .dot, .wave i, .skel { animation: none !important; }
+  .reveal { animation: none; opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <h1 class="title">Best National <span>· Live Call Workspace</span></h1>
+    <span class="badge" id="status-badge" data-tone="idle" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span><span class="check" aria-hidden="true">✓</span><span id="status-text">Idle</span>
+    </span>
+  </header>
+
+  <div class="mode" role="radiogroup" aria-label="After approval">
+    <button type="button" role="radio" data-mode="demo" aria-checked="true">Demo: Claude extension</button>
+    <button type="button" role="radio" data-mode="api" aria-checked="false">API: Agency Compass</button>
+  </div>
+
+  <main class="grid">
+    <div class="col">
+      <section class="card" aria-labelledby="conv-title">
+        <div class="card-head"><h2 class="card-title" id="conv-title">Live conversation</h2></div>
+        <div id="conversation"></div>
+      </section>
+
+      <section class="card" aria-labelledby="crm-title">
+        <div class="card-head">
+          <h2 class="card-title" id="crm-title">CRM fields being prepared</h2>
+          <span class="pill amber">Draft only</span>
+        </div>
+        <div class="fields">
+          <div class="field"><p class="field-label">First name</p><p class="field-value" id="f-first"></p><p class="field-status" id="s-first"></p></div>
+          <div class="field"><p class="field-label">Last name</p><p class="field-value" id="f-last"></p><p class="field-status" id="s-last"></p></div>
+          <div class="field wide"><p class="field-label">Phone</p><p class="field-value" id="f-phone"></p><p class="field-status" id="s-phone"></p></div>
+          <div class="field wide"><p class="field-label">Request type</p><p class="field-value" id="f-request"></p><p class="field-status" id="s-request"></p></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="card" aria-labelledby="notes-title">
+        <div class="card-head"><h2 class="card-title" id="notes-title">Automatically prepared notes</h2></div>
+        <div id="notes"></div>
+      </section>
+
+      <section class="card" aria-labelledby="tasks-title">
+        <div class="card-head"><h2 class="card-title" id="tasks-title">Follow-up tasks</h2></div>
+        <div id="tasks"></div>
+      </section>
+    </div>
+  </main>
+
+  <div class="approve-wrap">
+    <button type="button" class="approve" id="approve" disabled>Approve draft</button>
+    <p class="approve-hint" id="approve-hint">Available when the draft is ready.</p>
+  </div>
+
+  <div class="panels">
+    <section class="card handoff" id="handoff" hidden aria-labelledby="handoff-title">
+      <h2 id="handoff-title">Hand off to Claude</h2>
+      <p class="instr"><strong>Paste this into the Claude Chrome extension sidebar.</strong> Claude enters it into Agency Compass as a draft note.</p>
+      <pre class="prompt" id="prompt" tabindex="0" aria-label="Prompt for Claude"></pre>
+      <div class="row">
+        <button type="button" class="btn primary" id="copy">Copy prompt</button>
+        <button type="button" class="btn ghost" id="mark-saved">Claude entered it — mark as saved</button>
+      </div>
+    </section>
+
+    <section class="card stub" id="api-stub" hidden>
+      <h2>API mode — coming soon</h2>
+      <p>Needs the Agency Compass API docs. The draft was logged to the browser console instead.</p>
+    </section>
+  </div>
+</div>
+
+<div class="demo-bar" role="region" aria-label="Demo controls">
+  <div class="demo-inner">
+    <p class="demo-label">DEMO CONTROLS — remove before production</p>
+    <div class="demo-btns">
+      <button type="button" id="d-incoming">Simulate incoming call</button>
+      <button type="button" id="d-answer" disabled>Answer</button>
+      <button type="button" id="d-hangup" disabled>Hang up</button>
+      <button type="button" id="d-play" class="play">▶ Play full sequence</button>
+      <button type="button" id="d-reset">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================
+     1. THE CLAUDE PROMPT
+     Built entirely from the call record — nothing here is hardcoded to
+     María's call. The real backend's record plugs straight in.
+     ===================================================================== */
+  function formatPhone(e164) {
+    var d = String(e164 || '').replace(/\D/g, '');
+    if (d.length === 11 && d[0] === '1') d = d.slice(1);
+    return d.length === 10 ? '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6) : String(e164 || 'Unknown');
+  }
+
+  function buildClaudePrompt(callRecord) {
+    var crm = callRecord.crm || {};
+    var draft = callRecord.draft || {};
+    var name = [crm.firstName, crm.lastName].filter(Boolean).join(' ') || 'Unknown caller';
+    var bullets = function (items) {
+      return items && items.length ? items.map(function (x) { return '  - ' + x; }) : ['  - None'];
+    };
+    var lines = [
+      'Enter the following call summary into Agency Compass.',
+      '',
+      'RULES:',
+      '- Enter this as a DRAFT / pending-review note only. Do NOT modify any existing policy data, coverage, premiums, or effective dates.',
+      '- If no contact matches the phone number, create a new prospect with name and phone only.',
+      "- Quote the customer's own words verbatim in Spanish where provided.",
+      '',
+      'CONTACT:',
+      '- Name: ' + name + ' (' + (crm.match ? '✓ CRM match' : '✗ no match') + ')',
+      '- Phone: ' + formatPhone(callRecord.callerNumber) + ' (' + (crm.phoneVerified ? 'Caller ID verified' : 'Caller ID not verified') + ')',
+      '',
+      'CALL SUMMARY:',
+      '- Request type: ' + (draft.requestType || 'Not detected'),
+      '- Notes: ' + (draft.notes || 'None')
+    ];
+    // The rule above asks Claude to quote the customer verbatim, so give it the words.
+    if (callRecord.liveQuote && callRecord.liveQuote.spanish) {
+      lines.push('- Customer\'s words (Spanish, verbatim): "' + callRecord.liveQuote.spanish + '"');
+    }
+    lines.push('- Follow-up tasks:');
+    lines = lines.concat(bullets(draft.followUpTasks));
+    lines.push('- Needs verification:');
+    lines = lines.concat(bullets(draft.verificationNeeded));
+    lines.push('', 'When done, reply with a one-line confirmation of what you entered and nothing else.');
+    return lines.join('\n');
+  }
+
+  /* =====================================================================
+     2. CALL STORE — the single source of truth the panel renders from.
+     Shape matches the real backend:
+     { id, direction, callerNumber, status, crm, liveQuote, draft, mode }
+     ===================================================================== */
+  var STATUSES = ['idle', 'ringing', 'active', 'ended', 'processing', 'transcribing', 'draft_ready', 'saved'];
+
+  function blankRecord(mode) {
+    return {
+      id: 'call_001',
+      direction: 'inbound',
+      callerNumber: '+13055550142',
+      status: 'idle',
+      crm: null,          // filled by the CRM lookup on caller ID
+      liveQuote: null,    // null until the transcript arrives
+      draft: null,        // null until draft_ready
+      mode: mode || 'demo'
+    };
+  }
+
+  var record = blankRecord('demo');
+  var ui = { approved: false, draftShownFor: null, quoteShownFor: null, draftRevealDone: false };
+  var listeners = [];
+
+  function update(patch) {
+    if (patch.status && STATUSES.indexOf(patch.status) === -1) throw new Error('Unknown status ' + patch.status);
+    record = Object.assign({}, record, patch);
+    listeners.forEach(function (fn) { fn(record); });
+  }
+
+  /* =====================================================================
+     3. MOCK PIPELINE — stands in for the telephony + transcription + AI
+     backend. Remove with the demo bar; the real backend calls update().
+     ===================================================================== */
+  var MOCK = {
+    crm: { firstName: 'María', lastName: 'García', match: true, phoneVerified: false },
+    liveQuote: {
+      spanish: 'Quiero agregar otro carro a mi póliza y necesito saber cuánto subiría el pago.',
+      interpretation: 'Customer requests a quote for adding a vehicle. No policy change authorized.'
+    },
+    draft: {
+      requestType: 'Add vehicle · Quote',
+      notes: 'Customer asked for a premium estimate to add another vehicle to an existing auto policy. Vehicle details have not yet been provided. No coverage change was requested to take effect immediately.',
+      followUpTasks: ['Collect VIN, vehicle details and effective date', 'Run premium estimate for additional vehicle', 'Confirm no coverage change authorized yet'],
+      verificationNeeded: ['Vehicle VIN not provided', 'Effective date not specified']
+    }
+  };
+  var DELAYS = { ring: 3000, active: 8000, ended: 1200, processing: 4000, transcribing: 4000, crmLookup: 700 };
+
+  var timers = [];
+  function later(ms, fn) { timers.push(setTimeout(fn, ms)); }
+  function cancelAll() { timers.forEach(clearTimeout); timers = []; }
+
+  var mock = {
+    reset: function () {
+      cancelAll();
+      ui.approved = false; ui.draftShownFor = null; ui.quoteShownFor = null; ui.draftRevealDone = false;
+      record = blankRecord(record.mode);
+      update({});
+    },
+    incoming: function () {
+      mock.reset();
+      update({ status: 'ringing' });
+      later(DELAYS.crmLookup, function () { update({ crm: Object.assign({}, MOCK.crm) }); });
+    },
+    answer: function () {
+      if (record.status !== 'ringing') return;
+      if (!record.crm) update({ crm: Object.assign({}, MOCK.crm) });
+      update({ status: 'active' });
+    },
+    hangUp: function () {
+      if (record.status !== 'active') return;
+      update({ status: 'ended' });
+      later(DELAYS.ended, function () {
+        update({ status: 'processing' });
+        later(DELAYS.processing, function () {
+          update({ status: 'transcribing', liveQuote: Object.assign({}, MOCK.liveQuote) });
+          later(DELAYS.transcribing, function () {
+            update({
+              status: 'draft_ready',
+              draft: {
+                requestType: MOCK.draft.requestType,
+                notes: MOCK.draft.notes,
+                followUpTasks: MOCK.draft.followUpTasks.slice(),
+                verificationNeeded: MOCK.draft.verificationNeeded.slice()
+              }
+            });
+          });
+        });
+      });
+    },
+    playFull: function () {
+      mock.incoming();
+      later(DELAYS.ring, function () {
+        mock.answer();
+        later(DELAYS.active, mock.hangUp);
+      });
+    }
+  };
+
+  /* =====================================================================
+     4. RENDER — every stage updates the panel; pieces fade in one by one.
+     ===================================================================== */
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, props, kids) {
+    var n = document.createElement(tag);
+    Object.keys(props || {}).forEach(function (k) {
+      if (k === 'text') n.textContent = props[k];
+      else if (k === 'class') n.className = props[k];
+      else if (k === 'style') n.setAttribute('style', props[k]);
+      else n.setAttribute(k, props[k]);
+    });
+    (kids || []).forEach(function (c) { n.appendChild(c); });
+    return n;
+  }
+  function skeleton(widths) {
+    var box = el('div', { 'aria-hidden': 'true' });
+    widths.forEach(function (w) { box.appendChild(el('span', { class: 'skel ' + w })); });
+    return box;
+  }
+  function setStatusLine(id, text, tone) {
+    var n = $(id); n.textContent = text || ''; n.className = 'field-status' + (tone ? ' ' + tone : '');
+  }
+  function setValue(id, text, loading) {
+    var n = $(id); n.replaceChildren();
+    if (loading) n.appendChild(el('span', { class: 'skel', 'aria-hidden': 'true' }));
+    else n.textContent = text || '—';
+  }
+
+  var BADGE = {
+    idle: ['Idle', 'idle'],
+    ringing: ['Incoming call', 'live'],
+    active: ['Call active', 'live'],
+    ended: ['Call ended', 'idle'],
+    processing: ['Processing…', 'work'],
+    transcribing: ['Processing…', 'work'],
+    draft_ready: ['Draft ready', 'ready'],
+    saved: ['Saved to CRM', 'saved']
+  };
+  var rank = function (s) { return STATUSES.indexOf(s); };
+
+  function renderBadge(r) {
+    // "Draft ready" waits for the draft to finish appearing, the same moment
+    // Approve turns on, so the badge and the button always agree.
+    var b = r.status === 'draft_ready' && !ui.draftRevealDone ? ['Preparing draft…', 'work'] : BADGE[r.status];
+    $('status-text').textContent = b[0];
+    $('status-badge').setAttribute('data-tone', b[1]);
+  }
+
+  function renderConversation(r) {
+    var box = $('conversation');
+    if (r.liveQuote) {
+      if (ui.quoteShownFor === r.liveQuote) return;          // already on screen; don't replay the fade
+      ui.quoteShownFor = r.liveQuote;
+      var interp = el('p', { class: 'interp reveal', style: '--d:0.8s' });
+      interp.appendChild(el('strong', { text: 'AI interpretation: ' }));
+      interp.appendChild(document.createTextNode(r.liveQuote.interpretation));
+      box.replaceChildren(el('p', { class: 'quote reveal', lang: 'es', text: r.liveQuote.spanish }), interp);
+      return;
+    }
+    ui.quoteShownFor = null;
+    if (r.status === 'ringing') box.replaceChildren(el('p', { class: 'empty', text: 'Incoming call from ' + formatPhone(r.callerNumber) + '…' }));
+    else if (r.status === 'active') {
+      var wave = el('span', { class: 'wave', 'aria-hidden': 'true' }, [el('i'), el('i'), el('i'), el('i'), el('i')]);
+      box.replaceChildren(el('div', { class: 'listening' }, [wave, el('span', { text: 'Call in progress — listening…' })]));
+    } else if (r.status === 'ended' || r.status === 'processing') {
+      box.replaceChildren(el('p', { class: 'empty', text: 'Call ended. Transcribing the conversation…' }), skeleton(['w80', 'w60']));
+    } else box.replaceChildren(el('p', { class: 'empty', text: 'Waiting for a call.' }));
+  }
+
+  function renderFields(r) {
+    var looking = rank(r.status) >= rank('ringing') && !r.crm;
+    var crm = r.crm;
+    setValue('f-first', crm ? crm.firstName : '', looking);
+    setValue('f-last', crm ? crm.lastName : '', looking);
+    var matchLine = crm ? (crm.match ? ['✓ CRM match', 'ok'] : ['✗ No CRM match — new prospect', 'warn']) : (looking ? ['Looking up caller…', 'wait'] : ['', '']);
+    setStatusLine('s-first', matchLine[0], matchLine[1]);
+    setStatusLine('s-last', matchLine[0], matchLine[1]);
+
+    var hasCall = rank(r.status) >= rank('ringing');
+    setValue('f-phone', hasCall ? formatPhone(r.callerNumber) : '', false);
+    if (!hasCall) setStatusLine('s-phone', '', '');
+    else if (crm && crm.phoneVerified) setStatusLine('s-phone', '✓ Caller ID verified', 'ok');
+    else setStatusLine('s-phone', 'Caller ID · Not verified', 'warn');
+
+    if (r.draft) {
+      if ($('f-request').dataset.shown !== r.id + r.draft.requestType) {
+        $('f-request').dataset.shown = r.id + r.draft.requestType;
+        $('f-request').replaceChildren(el('span', { class: 'reveal', text: r.draft.requestType }));
+        setStatusLine('s-request', '✓ Detected in conversation', 'ok');
+      }
+    } else {
+      $('f-request').dataset.shown = '';
+      var working = rank(r.status) >= rank('ended');
+      setValue('f-request', '', working);
+      setStatusLine('s-request', working ? 'Detecting from the conversation…' : (hasCall ? 'Waiting for the conversation' : ''), 'wait');
+    }
+  }
+
+  function renderDraft(r) {
+    var notes = $('notes'), tasks = $('tasks');
+    if (!r.draft) {
+      ui.draftShownFor = null; ui.draftRevealDone = false;
+      var working = rank(r.status) >= rank('ended');
+      notes.replaceChildren(working ? skeleton(['w80', 'w80', 'w60']) : el('p', { class: 'empty', text: 'Notes are written after the call ends.' }));
+      tasks.replaceChildren(working ? skeleton(['w60', 'w80', 'w40']) : el('p', { class: 'empty', text: 'Tasks detected in the call appear here.' }));
+      return;
+    }
+    if (ui.draftShownFor === r.draft) return;   // already on screen
+    ui.draftShownFor = r.draft;
+    ui.draftRevealDone = false;
+
+    // One piece at a time: request type (fields card) → notes → each task → verification.
+    var step = 0.35, t = 0.35;
+    notes.replaceChildren(el('p', { class: 'notes reveal', style: '--d:' + t + 's', text: r.draft.notes }));
+    t += step * 1.5;
+    var list = el('ul', { class: 'tasks' });
+    r.draft.followUpTasks.forEach(function (task, i) {
+      var id = 'task-' + i;
+      var cb = el('input', { type: 'checkbox', id: id });
+      list.appendChild(el('li', { class: 'reveal', style: '--d:' + t + 's' }, [el('label', { for: id }, [cb, el('span', { text: task })])]));
+      t += step;
+    });
+    var parts = [list];
+    if (r.draft.verificationNeeded && r.draft.verificationNeeded.length) {
+      parts.push(el('p', { class: 'sub-title reveal', style: '--d:' + t + 's', text: 'Needs verification' }));
+      var v = el('ul', { class: 'verify' });
+      r.draft.verificationNeeded.forEach(function (item) {
+        t += step;
+        v.appendChild(el('li', { class: 'reveal', style: '--d:' + t + 's', text: item }));
+      });
+      parts.push(v);
+    }
+    tasks.replaceChildren.apply(tasks, parts);
+
+    // The badge flips to "Draft ready" and Approve lights up together, once the
+    // whole draft is on screen (straight away when animations are turned off).
+    var shownFor = r.draft;
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    later(still ? 0 : Math.round((t + 0.45) * 1000), function () {
+      if (ui.draftShownFor !== shownFor) return;
+      ui.draftRevealDone = true;
+      renderBadge(record);
+      renderApprove(record);
+    });
+  }
+
+  function renderApprove(r) {
+    var btn = $('approve'), hint = $('approve-hint');
+    var ready = r.status === 'draft_ready' && ui.draftRevealDone;
+    btn.classList.toggle('done', ui.approved || r.status === 'saved');
+    if (r.status === 'saved') {
+      btn.disabled = true; btn.textContent = '✓ Saved to CRM';
+      hint.textContent = 'Done. Simulate another call from the demo controls.';
+    } else if (ui.approved) {
+      btn.disabled = true; btn.textContent = 'Approved ✓';
+      hint.textContent = r.mode === 'demo' ? 'Copy the prompt below and paste it into Claude.' : 'API mode is not connected yet.';
+    } else {
+      btn.disabled = !ready;
+      btn.textContent = 'Approve draft';
+      hint.textContent = ready
+        ? (r.mode === 'demo' ? 'Approving creates a prompt for the Claude Chrome extension.' : 'Approving sends the draft to Agency Compass (coming soon).')
+        : (rank(r.status) >= rank('ended') ? 'Preparing the draft…' : 'Available when the draft is ready.');
+    }
+    $('handoff').hidden = !(ui.approved && r.mode === 'demo');
+    $('api-stub').hidden = !(ui.approved && r.mode === 'api');
+  }
+
+  function renderMode(r) {
+    document.querySelectorAll('.mode [data-mode]').forEach(function (b) {
+      b.setAttribute('aria-checked', String(b.getAttribute('data-mode') === r.mode));
+    });
+  }
+
+  function renderDemoControls(r) {
+    $('d-answer').disabled = r.status !== 'ringing';
+    $('d-hangup').disabled = r.status !== 'active';
+  }
+
+  listeners.push(function (r) {
+    renderBadge(r); renderMode(r); renderConversation(r); renderFields(r); renderDraft(r); renderApprove(r); renderDemoControls(r);
+  });
+
+  /* =====================================================================
+     5. ACTIONS
+     ===================================================================== */
+  function approve() {
+    if (record.status !== 'draft_ready' || !ui.draftRevealDone || ui.approved) return;
+    ui.approved = true;
+    if (record.mode === 'demo') {
+      $('prompt').textContent = buildClaudePrompt(record);
+      $('copy').textContent = 'Copy prompt';
+      $('copy').classList.remove('copied');
+    } else {
+      console.log('[Live Call Workspace] API mode — Agency Compass not connected yet. Draft:', JSON.parse(JSON.stringify(record)));
+    }
+    renderApprove(record);
+    // Bring the panel into view above the demo bar: all of it when it fits,
+    // otherwise down to its buttons, since Copy is what comes next.
+    var panel = record.mode === 'demo' ? $('handoff') : $('api-stub');
+    var r = panel.getBoundingClientRect();
+    var floor = demoBar.getBoundingClientRect().top - 16;
+    var actions = panel.querySelector('.row') || panel;
+    var dy = r.height <= floor - 16 ? r.bottom - floor : actions.getBoundingClientRect().bottom - floor;
+    if (dy > 0) window.scrollBy({ top: dy, behavior: 'smooth' });
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise(function (resolve, reject) {
+      var ta = el('textarea', { readonly: '', style: 'position:fixed;top:0;left:0;opacity:0' });
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? resolve() : reject(new Error('copy failed')); }
+      catch (e) { reject(e); }
+      finally { ta.remove(); }
+    });
+  }
+
+  $('approve').addEventListener('click', approve);
+  $('copy').addEventListener('click', function () {
+    var btn = this;
+    copyText($('prompt').textContent).then(function () {
+      btn.textContent = 'Copied ✓'; btn.classList.add('copied');
+      setTimeout(function () { btn.textContent = 'Copy prompt'; btn.classList.remove('copied'); }, 2200);
+    }, function () {
+      // Last resort: select the text so it can be copied by hand.
+      var range = document.createRange(); range.selectNodeContents($('prompt'));
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      btn.textContent = 'Press Copy on your keyboard';
+    });
+  });
+  $('mark-saved').addEventListener('click', function () {
+    if (!ui.approved || record.status !== 'draft_ready') return;
+    update({ status: 'saved' });
+  });
+
+  document.querySelectorAll('.mode [data-mode]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var mode = b.getAttribute('data-mode');
+      if (mode === record.mode) return;
+      if (record.status !== 'saved') ui.approved = false;   // switching modes changes what Approve does
+      update({ mode: mode });
+    });
+  });
+  // Arrow keys move between the two modes (radio group pattern).
+  document.querySelector('.mode').addEventListener('keydown', function (e) {
+    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(e.key) === -1) return;
+    e.preventDefault();
+    var next = record.mode === 'demo' ? 'api' : 'demo';
+    var target = document.querySelector('.mode [data-mode="' + next + '"]');
+    target.click(); target.focus();
+  });
+
+  // Keep the page's bottom padding equal to the demo bar's height (see --demo-h).
+  var demoBar = document.querySelector('.demo-bar');
+  function syncDemoBarSpace() {
+    document.documentElement.style.setProperty('--demo-h', demoBar.offsetHeight + 'px');
+  }
+  syncDemoBarSpace();
+  if (window.ResizeObserver) new ResizeObserver(syncDemoBarSpace).observe(demoBar);
+  window.addEventListener('resize', syncDemoBarSpace);
+
+  $('d-incoming').addEventListener('click', mock.incoming);
+  $('d-answer').addEventListener('click', mock.answer);
+  $('d-hangup').addEventListener('click', mock.hangUp);
+  $('d-play').addEventListener('click', mock.playFull);
+  $('d-reset').addEventListener('click', mock.reset);
+
+  // For the console and for tests.
+  window.LiveCallWorkspace = {
+    buildClaudePrompt: buildClaudePrompt,
+    formatPhone: formatPhone,
+    getRecord: function () { return JSON.parse(JSON.stringify(record)); },
+    update: update,
+    mock: mock,
+    DELAYS: DELAYS
+  };
+  window.buildClaudePrompt = buildClaudePrompt;
+
+  update({});
+})();
+</script>
+</body>
+</html>
